@@ -1,4 +1,39 @@
 @extends('layouts.app')
+@yield('styles')
+<style>
+    .project-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-radius: 12px;
+}
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+.project-card .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+.project-card:hover .overlay {
+    opacity: 1;
+}
+.btn-hover-bg:hover {
+    background-color: #0056b3 !important;
+    color: #fff !important;
+}
+.progress {
+    border-radius: 0;
+    margin-bottom: 0;
+}
+</style>
+@endsection
 @section('content')
            <!-- Carousel Start -->
            <div class="container-fluid carousel-header vh-100 px-0">
@@ -627,40 +662,5 @@
                 </div>
             </div>
         </div>
-        <!-- Our Team End -->
-<style>
-.project-card {
-    transition: transform 0.3s, box-shadow 0.3s;
-    border-radius: 12px;
-}
-.project-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-}
-.project-card .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.5);
-    opacity: 0;
-    transition: opacity 0.3s;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
-.project-card:hover .overlay {
-    opacity: 1;
-}
-.btn-hover-bg:hover {
-    background-color: #0056b3 !important;
-    color: #fff !important;
-}
-.progress {
-    border-radius: 0;
-    margin-bottom: 0;
-}
-</style>
-
         
 @endsection
