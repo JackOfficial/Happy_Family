@@ -143,7 +143,7 @@
 
 <body class="bg-light">
 
-  <div 
+  {{-- <div 
     x-data="{ loading: true }" 
     x-init="window.onload = () => { loading = false }; setTimeout(() => loading = false, 3000)" 
     x-show="loading" 
@@ -157,7 +157,7 @@
         <div class="spinner-grow text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
         <p class="mt-3 text-uppercase tracking-widest small text-muted font-weight-bold">Happy Family Rwanda</p>
     </div>
-</div>
+</div> --}}
 
     <header :class="{ 'scrolled-nav': scrolled }" class="glass-nav sticky-top">
         <livewire:navbar-component />
