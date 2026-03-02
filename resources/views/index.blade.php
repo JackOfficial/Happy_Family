@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@yield('styles')
+@section('styles')
 <style>
     .project-card {
     transition: transform 0.3s, box-shadow 0.3s;
