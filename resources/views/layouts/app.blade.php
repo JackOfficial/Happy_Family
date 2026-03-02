@@ -143,11 +143,21 @@
 
 <body class="bg-light">
 
-    <div x-data="{ loading: true }" x-init="setTimeout(() => loading = false, 500)" 
-         x-show="loading" x-transition.opacity
-         class="fixed-top w-100 h-100 bg-white d-flex align-items-center justify-content-center" style="z-index: 9999;">
-        <div class="spinner-border text-primary" role="status"></div>
+  <div 
+    x-data="{ loading: true }" 
+    x-init="window.onload = () => { loading = false }; setTimeout(() => loading = false, 3000)" 
+    x-show="loading" 
+    x-transition:leave="transition ease-in duration-500"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+    class="fixed-top w-100 vh-100 bg-white d-flex align-items-center justify-content-center" 
+    style="z-index: 99999;"
+>
+    <div class="text-center">
+        <div class="spinner-grow text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+        <p class="mt-3 text-uppercase tracking-widest small text-muted font-weight-bold">Happy Family Rwanda</p>
     </div>
+</div>
 
     <header :class="{ 'scrolled-nav': scrolled }" class="glass-nav sticky-top">
         <livewire:navbar-component />
