@@ -32,75 +32,141 @@
     border-radius: 0;
     margin-bottom: 0;
 }
+
+    /* Hero Image Effects */
+    .banner-img {
+        object-fit: cover;
+        filter: brightness(0.65); /* Darkens image for text readability */
+    }
+
+    /* Gradient Overlay for extra readability */
+    .carousel-item::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
+    }
+
+    .carousel-caption {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 10;
+    }
+
+    /* Custom Typography */
+    .tracking-widest { letter-spacing: 4px; }
+    .display-3 { font-size: calc(1.5rem + 3.5vw); line-height: 1.1; }
+    .opacity-90 { opacity: 0.9; }
+
+    /* Modern Buttons */
+    .btn-modern {
+        border-radius: 50px;
+        padding: 15px 40px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+    }
+    .btn-modern:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Custom Indicators */
+    .custom-indicators li {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin: 0 8px;
+        background-color: rgba(255,255,255,0.5);
+        border: none;
+    }
+    .custom-indicators li.active {
+        background-color: var(--primary);
+        width: 30px;
+        border-radius: 10px;
+    }
+
+    /* Control Icons */
+    .control-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(5px);
+        transition: 0.3s;
+    }
+    .control-icon:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .display-3 { font-size: 2.5rem; }
+    }
 </style>
 @endsection
 @section('content')
-           <!-- Carousel Start -->
-           <div class="container-fluid carousel-header vh-100 px-0">
-            <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
-                <ol class="carousel-indicators">
-                    <li data-bs-target="#carouselId" data-bs-slide-to="0" class="active"></li>
-                    <li data-bs-target="#carouselId" data-bs-slide-to="1"></li>
-                    <li data-bs-target="#carouselId" data-bs-slide-to="2"></li>
-                </ol>
-                <div class="carousel-inner" role="listbox">
-                    <div class="carousel-item active">
-                        <img src="{{ asset('images/banner1.png') }}" class="img-fluid" alt="Image">
-                        <div class="carousel-caption">
-                            <div class="p-3" style="max-width: 900px;">
-                                <h4 class="text-white text-uppercase fw-bold mb-4" style="letter-spacing: 3px;">Building Awareness, One Step at a Time</h4>
-                                <h1 class="display-1 text-capitalize text-white mb-4">Building Awareness</h1>
-                                <p class="mb-5 fs-5">
-                                    Join us in spreading awareness and preventing teenage pregnancy through knowledge and empowerment.
-                                </p>
-                                <div class="d-flex align-items-center justify-content-center">
-                                    <a class="btn-hover-bg btn btn-primary text-white py-3 px-5" href="#">Join With Us</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="{{ asset('storage/carousel/Happy Family Rwanda Survey.jpeg') }}" class="img-fluid" alt="Image">
-                        <div class="carousel-caption">
-                            <div class="p-3" style="max-width: 900px;">
-                                <h4 class="text-white text-uppercase fw-bold mb-4" style="letter-spacing: 3px;">Transforming Education</h4>
-                                <h1 class="display-1 text-capitalize text-white mb-4">Education is Key</h1>
-                                <p class="mb-5 fs-5">
-                                    Our programs educate teens on reproductive health, making informed choices, and building a better future.
-                                </p>
-                                <div class="d-flex align-items-center justify-content-center">
-                                    <a class="btn-hover-bg btn btn-primary text-white py-3 px-5" href="#">Join With Us</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="{{ asset('images/banner2.jpg') }}" class="img-fluid" alt="Image">
-                        <div class="carousel-caption">
-                            <div class="p-3" style="max-width: 900px;">
-                                <h4 class="text-white text-uppercase fw-bold mb-4" style="letter-spacing: 3px;">Your Future, Our Mission</h4>
-                                <h1 class="display-1 text-capitalize text-white mb-4">Building a Brighter Future</h1>
-                                <p class="mb-5 fs-5">
-                                    Dedicated to reducing teenage pregnancy, we address its root causes through entertaining and educational content, guiding teens towards a safer and healthier future.
-                                </p>
-                                <div class="d-flex align-items-center justify-content-center">
-                                    <a class="btn-hover-bg btn btn-primary text-white py-3 px-5" href="#">Join With Us</a>
-                                </div>
-                            </div>
+
+<div class="container-fluid carousel-header vh-100 px-0">
+    <div id="carouselId" class="carousel slide carousel-fade" data-ride="carousel">
+        <ol class="carousel-indicators custom-indicators">
+            <li data-target="#carouselId" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselId" data-slide-to="1"></li>
+            <li data-target="#carouselId" data-slide-to="2"></li>
+        </ol>
+        
+        <div class="carousel-inner" role="listbox">
+            <div class="carousel-item active vh-100">
+                <img src="{{ asset('images/banner1.png') }}" class="w-100 h-100 banner-img" alt="Building Awareness">
+                <div class="carousel-caption d-flex align-items-center justify-content-center">
+                    <div class="p-3 text-center hero-content" x-data="{ show: false }" x-init="setTimeout(() => show = true, 300)" x-show="show" x-transition:enter="transition ease-out duration-1000" x-transition:enter-start="opacity-0 translateY-50">
+                        <h4 class="text-primary text-uppercase font-weight-bold mb-3 tracking-widest">Building Awareness</h4>
+                        <h1 class="display-3 text-white font-weight-bold mb-4">Empowering Youth,<br>Preventing Pregnancies</h1>
+                        <p class="mb-5 mx-auto text-light opacity-90 lead" style="max-width: 700px;">
+                            Join us in spreading awareness and preventing teenage pregnancy through knowledge and empowerment. Every step counts toward a brighter future.
+                        </p>
+                        <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center">
+                            <a class="btn btn-primary btn-modern shadow-lg mx-2 mb-3 mb-sm-0" href="#">Get Involved</a>
+                            <a class="btn btn-outline-light btn-modern mx-2 mb-3 mb-sm-0" href="/causes">Learn More</a>
                         </div>
                     </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+            </div>
+
+            <div class="carousel-item vh-100">
+                <img src="{{ asset('storage/carousel/Happy Family Rwanda Survey.jpeg') }}" class="w-100 h-100 banner-img" alt="Education">
+                <div class="carousel-caption d-flex align-items-center justify-content-center">
+                    <div class="p-3 text-center hero-content">
+                        <h4 class="text-primary text-uppercase font-weight-bold mb-3 tracking-widest">Transforming Education</h4>
+                        <h1 class="display-3 text-white font-weight-bold mb-4">Education is the Key</h1>
+                        <p class="mb-5 mx-auto text-light opacity-90 lead" style="max-width: 700px;">
+                            Our programs educate teens on reproductive health, making informed choices, and reclaiming their potential.
+                        </p>
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-primary btn-modern shadow-lg" href="#">Support Our Mission</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- Carousel End -->
+
+        <a class="carousel-control-prev" href="#carouselId" role="button" data-slide="prev">
+            <span class="control-icon"><i class="fas fa-chevron-left"></i></span>
+        </a>
+        <a class="carousel-control-next" href="#carouselId" role="button" data-slide="next">
+            <span class="control-icon"><i class="fas fa-chevron-right"></i></span>
+        </a>
+    </div>
+</div>
 
         <!-- About Start -->
         <div class="container-fluid about  py-5">
