@@ -130,7 +130,7 @@
 
 <body class="bg-light">
 
-    <div 
+    {{-- <div 
         x-data="{ loading: true }" 
         x-init="window.onload = () => { loading = false }; setTimeout(() => loading = false, 2500)" 
         x-show="loading" 
@@ -144,7 +144,7 @@
                 Happy Family Rwanda
             </p>
         </div>
-    </div>
+    </div> --}}
 
     <header :class="{ 'scrolled-nav': scrolled }" class="glass-nav sticky-top">
         <div class="container">
