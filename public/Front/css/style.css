@@ -1,4 +1,13 @@
 @import url("https://fonts.googleapis.com/css?family=Catamaran:400,500,600,700,700|Source+Sans+Pro:400,600");
+:root {
+  --primary-purple: var(--primary-purple);
+  --accent-pink: var(--accent-pink);
+  /* Modern UI Settings */
+  --border-radius-sm: 4px;
+  --transition-speed: 0.3s;
+  --font-main: "Source Sans Pro", sans-serif;
+  --font-heading: "Catamaran", sans-serif;
+}
 body {
   line-height: 1.4;
   font-family: "Source Sans Pro", sans-serif;
@@ -48,7 +57,7 @@ a, a:focus, a:hover {
 }
 
 a:focus, a:hover {
-  color: #ec409e;
+  color: var(--accent-pink);
 }
 
 /* footer a:hover{
@@ -56,20 +65,20 @@ a:focus, a:hover {
 } */
 
 .btn-main {
-  background: #f12795;
-  border: 1px solid #f12795;
+  background: var(--primary-purple);
+  border: 1px solid var(--primary-purple);
   color: #fff;
   display: inline-block;
   font-size: 14px;
   letter-spacing: 1px;
-  padding: 12px 40px;
+  padding: 12px var(--border-radius-sm);
   text-transform: uppercase;
-  border-radius: 40px;
+  border-radius: var(--border-radius-sm);
 }
 
 .btn-main:hover {
-  background: #ec409e;
-  border: 1px solid #ec409e;
+  background: var(--accent-pink);
+  border: 1px solid var(--accent-pink);
   color: #fff;
 }
 
@@ -81,7 +90,7 @@ a:focus, a:hover {
   letter-spacing: 1px;
   padding: 14px 35px;
   text-transform: uppercase;
-  border-radius: 40px;
+  border-radius: var(--border-radius-sm);
 }
 
 .btn-transparent:hover {
@@ -101,7 +110,7 @@ a:focus, a:hover {
 }
 
 .mt-40 {
-  margin-top: 40px;
+  margin-top: var(--border-radius-sm);
 }
 
 .mt-50 {
@@ -129,7 +138,7 @@ a:focus, a:hover {
 }
 
 .section-xs {
-  padding: 40px 0;
+  padding: var(--border-radius-sm) 0;
 }
 
 #preloader {
@@ -218,13 +227,13 @@ a:focus, a:hover {
     height: 30px;
     -webkit-transform: translateY(15px);
     transform: translateY(15px);
-    background: #631084;
+    background: var(--primary-purple);
   }
   50% {
     height: 30px;
     -webkit-transform: translateY(15px);
     transform: translateY(15px);
-    background: #f12795;
+    background: var(--primary-purple);
   }
   75% {
     height: 5px;
@@ -236,7 +245,7 @@ a:focus, a:hover {
     height: 5px;
     -webkit-transform: translateY(0);
     transform: translateY(0);
-    background: #d93d39;
+    background: var(--primary-purple);
   }
 }
 
@@ -251,13 +260,13 @@ a:focus, a:hover {
     height: 30px;
     -webkit-transform: translateY(15px);
     transform: translateY(15px);
-    background: #631084;
+    background: var(--primary-purple);
   }
   50% {
     height: 30px;
     -webkit-transform: translateY(15px);
     transform: translateY(15px);
-    background: #f12795;
+    background: var(--primary-purple);
   }
   75% {
     height: 5px;
@@ -269,7 +278,7 @@ a:focus, a:hover {
     height: 5px;
     -webkit-transform: translateY(0);
     transform: translateY(0);
-    background: #d93d39;
+    background: var(--primary-purple);
   }
 }
 
@@ -299,7 +308,7 @@ a:focus, a:hover {
   margin: 20px auto 20px;
   position: relative;
   width: 80px;
-  background: #ec409e;
+  background: var(--accent-pink);
 }
 
 .bg-gray {
@@ -317,7 +326,7 @@ a:focus, a:hover {
 }
 
 .header-bradcrumb a:hover {
-  color: #ec409e;
+  color: var(--accent-pink);
 }
 
 .colors-switcher {
@@ -380,7 +389,7 @@ a:focus, a:hover {
 }
 
 .colors-switcher .colors-list a.light-red {
-  background-color: #d93d39;
+  background-color: var(--primary-purple);
 }
 
 .colors-switcher .colors-list li a:hover {
@@ -388,23 +397,23 @@ a:focus, a:hover {
 }
 
 .colors-switcher .colors-list a.light-red {
-  background-color: #d93d39;
+  background-color: var(--primary-purple);
 }
 
 .colors-switcher .colors-list a.blue {
-  background-color: #ec409e;
+  background-color: var(--accent-pink);
 }
 
 .colors-switcher .colors-list a.light-blue {
-  background-color: #f12795;
+  background-color: var(--primary-purple);
 }
 
 .colors-switcher .colors-list a.green {
-  background-color: #631084;
+  background-color: var(--primary-purple);
 }
 
 .colors-switcher .colors-list a.light-green {
-  background-color: #d93d39;
+  background-color: var(--primary-purple);
 }
 
 .colors-switcher .colors-list a.yellow {
@@ -422,7 +431,7 @@ a:focus, a:hover {
 
 .single-page-header {
   background-size: cover;
-  padding: 140px 0 70px;
+  padding: 1var(--border-radius-sm) 0 70px;
   text-align: center;
   color: #fff;
   position: relative;
@@ -461,11 +470,11 @@ a:focus, a:hover {
 
 .navigation .navbar-light .navbar-nav .nav-item .nav-link:hover, .navigation .navbar-light .navbar-nav .nav-item .nav-link:active, .navigation .navbar-light .navbar-nav .nav-item .nav-link:focus {
   background: none;
-  color: #ec409e;
+  color: var(--accent-pink);
 }
 
 .navigation .navbar-light .navbar-nav .nav-item.active .nav-link {
-  color: #ec409e;
+  color: var(--accent-pink);
 }
 
 @media (max-width: 991px) {
@@ -743,7 +752,7 @@ a:focus, a:hover {
   z-index: 9;
   height: 70px;
   width: 70px;
-  background: #631084;
+  background: var(--primary-purple);
   color: #fff;
   border: 0;
   line-height: 70px;
@@ -781,7 +790,7 @@ a:focus, a:hover {
 }
 
 .slick-arrow:hover {
-  background: #ec409e;
+  background: var(--accent-pink);
 }
 
 .prevArrow {
@@ -822,7 +831,7 @@ a:focus, a:hover {
 }
 
 .about .btn-about {
-  background: #ec409e;
+  background: var(--accent-pink);
 }
 
 .about h4 {
@@ -844,7 +853,7 @@ a:focus, a:hover {
 }
 
 .about .feature-list li i {
-  color: #ec409e;
+  color: var(--accent-pink);
   margin-right: 8px;
 }
 
@@ -931,7 +940,7 @@ a:focus, a:hover {
 }
 
 .contact-form {
-  margin-bottom: 40px;
+  margin-bottom: var(--border-radius-sm);
 }
 
 .contact-form .form-control {
@@ -949,7 +958,7 @@ a:focus, a:hover {
 .contact-form input:hover,
 .contact-form textarea:hover,
 .contact-form #contact-submit:hover {
-  border-color: #ec409e;
+  border-color: var(--accent-pink);
 }
 
 .contact-form #contact-submit {
@@ -957,7 +966,7 @@ a:focus, a:hover {
   padding: 15px 0;
   width: 100%;
   margin: 0;
-  background: #ec409e;
+  background: var(--accent-pink);
   color: #fff;
   border-radius: 0;
 }
@@ -995,9 +1004,9 @@ a:focus, a:hover {
 }
 
 .social-icon ul li a:hover {
-  background: #ec409e;
+  background: var(--accent-pink);
   color: #fff;
-  border: 1px solid #ec409e;
+  border: 1px solid var(--accent-pink);
 }
 
 .social-icon ul li a:hover i {
@@ -1078,9 +1087,9 @@ a:focus, a:hover {
 }
 
 .counters-item i {
-  font-size: 40px;
+  font-size: var(--border-radius-sm);
   display: inline-block;
-  color: #ec409e;
+  color: var(--accent-pink);
 }
 
 .counters-item h3 {
@@ -1119,7 +1128,7 @@ a:focus, a:hover {
 }
 
 .pricing-table .pricing-item {
-  padding: 40px 55px 65px;
+  padding: var(--border-radius-sm) 55px 65px;
   background: #fff;
   margin-bottom: 20px;
 }
@@ -1158,7 +1167,7 @@ a:focus, a:hover {
 }
 
 .pricing-table .price-title .value {
-  color: #ec409e;
+  color: var(--accent-pink);
   font-size: 50px;
   padding: 10px 0;
 }
@@ -1167,7 +1176,7 @@ a:focus, a:hover {
   Portfolio section
 ==================================================================*/
 .portfolio-filter {
-  margin-bottom: 40px;
+  margin-bottom: var(--border-radius-sm);
   text-align: center;
 }
 
@@ -1177,14 +1186,14 @@ a:focus, a:hover {
   font-size: 14px;
   padding: 8px 20px;
   text-transform: uppercase;
-  background: #ec409e;
+  background: var(--accent-pink);
   border: none;
   color: #fff;
   outline: none;
 }
 
 .portfolio-filter button.active {
-  background: #ec409e;
+  background: var(--accent-pink);
   color: #fff;
   border-radius: 50px;
 }
@@ -1240,7 +1249,7 @@ a:focus, a:hover {
 }
 
 .portfolio-block .caption .search-icon {
-  background: #ec409e;
+  background: var(--accent-pink);
   color: #fff;
   display: inline-block;
   padding: 4px 13px;
@@ -1256,7 +1265,7 @@ a:focus, a:hover {
 }
 
 .services .service-block.color-bg {
-  background: #ec409e;
+  background: var(--accent-pink);
   color: #fff;
 }
 
@@ -1270,7 +1279,7 @@ a:focus, a:hover {
 
 .services .service-block i {
   font-size: 75px;
-  color: #ec409e;
+  color: var(--accent-pink);
 }
 
 .services .service-block h3 {
@@ -1302,13 +1311,13 @@ a:focus, a:hover {
 
 .service-2 .service-item:hover i {
   background: #fff;
-  color: #ec409e;
+  color: var(--accent-pink);
 }
 
 .service-2 .service-item i {
   font-size: 30px;
   display: inline-block;
-  background: #ec409e none repeat scroll 0 0;
+  background: var(--accent-pink) none repeat scroll 0 0;
   border-radius: 30px;
   box-shadow: 0 5px 6px 0 rgba(0, 0, 0, 0.1);
   color: #fff;
@@ -1323,7 +1332,7 @@ a:focus, a:hover {
   Our skills
 ==================================================================*/
 .team-skills .progress-block {
-  margin-top: 40px;
+  margin-top: var(--border-radius-sm);
 }
 
 .team-skills .progress-block span {
@@ -1339,7 +1348,7 @@ a:focus, a:hover {
 }
 
 .team-skills .progress-block .progress .progress-bar {
-  background: #ec409e;
+  background: var(--accent-pink);
   box-shadow: none;
 }
 
@@ -1384,7 +1393,7 @@ a:focus, a:hover {
 }
 
 .development-steps .step-2 {
-  background-color: #ec409e;
+  background-color: var(--accent-pink);
 }
 
 .development-steps .step-2 h4, .development-steps .step-2 p {
@@ -1392,7 +1401,7 @@ a:focus, a:hover {
 }
 
 .development-steps .step-3 {
-  background: #f12795;
+  background: var(--primary-purple);
 }
 
 .development-steps .step-3 h4, .development-steps .step-3 p {
@@ -1400,7 +1409,7 @@ a:focus, a:hover {
 }
 
 .development-steps .step-4 {
-  background: #f12795;
+  background: var(--primary-purple);
 }
 
 .development-steps .step-4 h4, .development-steps .step-4 p {
@@ -1455,7 +1464,7 @@ a:focus, a:hover {
 }
 
 .team .member-photo .mask {
-  background: #f12795;
+  background: var(--primary-purple);
   position: absolute;
   width: 100%;
   bottom: 0;
@@ -1574,7 +1583,7 @@ a:focus, a:hover {
 	margin-left: 0;
 }
 .carousel .testimonial p {
-	text-indent: 40px;
+	text-indent: var(--border-radius-sm);
     line-height: 21px;
 	margin: 0;
 }
@@ -1597,7 +1606,7 @@ a:focus, a:hover {
 }
 .carousel .overview b {
 	text-transform: uppercase;
-	color: #631084;
+	color: var(--primary-purple);
 }
 .carousel-control-prev, .carousel-control-next {
 	width: 30px;
@@ -1611,7 +1620,7 @@ a:focus, a:hover {
 }
 .carousel-control-prev {
 	left: auto;
-	right: 40px;
+	right: var(--border-radius-sm);
 }
 .carousel-control-next {
 	left: auto;
@@ -1632,7 +1641,7 @@ a:focus, a:hover {
 }
 .carousel-indicators li.active {
 	color: #fff;
-    background: #631084;
+    background: var(--primary-purple);
     border: 5px double;    
 }
 .star-rating li {
@@ -1701,8 +1710,8 @@ a:focus, a:hover {
 }
 
 .post-content blockquote {
-  border-left: 2px solid #ec409e;
-  padding: 40px 35px;
+  border-left: 2px solid var(--accent-pink);
+  padding: var(--border-radius-sm) 35px;
   margin-bottom: 30px;
   background: #eeeeee;
 }
@@ -1728,8 +1737,8 @@ a:focus, a:hover {
 }
 
 .post-content-share li:hover {
-  background: #ec409e;
-  border-color: #ec409e;
+  background: var(--accent-pink);
+  border-color: var(--accent-pink);
 }
 
 .post-content-share li:hover i {
@@ -1790,13 +1799,13 @@ a:focus, a:hover {
 }
 
 .comment-list-item .comment-btn:hover {
-  background: #ec409e;
+  background: var(--accent-pink);
   color: #fff;
 }
 
 /* 8.2.4 Comment Form */
 .comment-form {
-  margin-top: 40px;
+  margin-top: var(--border-radius-sm);
 }
 
 .comment-form .form-control {
@@ -1816,7 +1825,7 @@ a:focus, a:hover {
 }
 
 .comment-form .btn-primary {
-  background: #ec409e;
+  background: var(--accent-pink);
   border-radius: 0;
   padding: 10px 20px;
   border: 0;
@@ -1848,7 +1857,7 @@ a:focus, a:hover {
   right: 0;
   height: 100%;
   width: 50px;
-  background: #ec409e;
+  background: var(--accent-pink);
   border: 0;
 }
 
@@ -1882,7 +1891,7 @@ a:focus, a:hover {
 }
 
 .widget-categories-list li a:hover {
-  background: #ec409e;
+  background: var(--accent-pink);
   color: #fff;
   padding-left: 20px;
 }
@@ -1916,7 +1925,7 @@ a:focus, a:hover {
 }
 
 .widget-post-content h5:hover {
-  color: #ec409e;
+  color: var(--accent-pink);
 }
 
 /*=================================================================
@@ -1928,7 +1937,7 @@ a:focus, a:hover {
 }
 
 #blog-page {
-  margin: 0 0 40px;
+  margin: 0 0 var(--border-radius-sm);
 }
 
 .post-meta {
@@ -1938,7 +1947,7 @@ a:focus, a:hover {
 }
 
 .post-meta a {
-  color: #ec409e;
+  color: var(--accent-pink);
 }
 
 .post-meta > span {
@@ -1999,7 +2008,7 @@ a:focus, a:hover {
 }
 
 .next-prev a:hover {
-  color: #ec409e;
+  color: var(--accent-pink);
 }
 
 .next-prev .prev-post i {
@@ -2022,7 +2031,7 @@ a:focus, a:hover {
 }
 
 .social-profile ul li a i:hover {
-  color: #ec409e;
+  color: var(--accent-pink);
 }
 
 .comments-section {
@@ -2030,7 +2039,7 @@ a:focus, a:hover {
 }
 
 .author-about {
-  margin-top: 40px;
+  margin-top: var(--border-radius-sm);
 }
 
 .post-author {
@@ -2070,7 +2079,7 @@ a:focus, a:hover {
 }
 
 .comment-wrap .media .media-heading a {
-  color: #ec409e;
+  color: var(--accent-pink);
   font-size: 13px;
 }
 
@@ -2095,7 +2104,7 @@ a:focus, a:hover {
 
 .comment-reply-form input:focus, .comment-reply-form textarea:focus {
   box-shadow: none;
-  border: 1px solid #ec409e;
+  border: 1px solid var(--accent-pink);
 }
 
 .comment-reply-form textarea, .comment-reply-form .btn-main {
@@ -2143,7 +2152,7 @@ a:focus, a:hover {
 }
 
 .top-footer li a:hover {
-  color: #ec409e;
+  color: var(--accent-pink);
 }
 
 .footer-bottom {
@@ -2175,7 +2184,7 @@ a:focus, a:hover {
 }
 
 .footer-bottom a {
-  color: #ec409e;
+  color: var(--accent-pink);
 }
 
 .page-404 {
@@ -2280,11 +2289,11 @@ a:focus, a:hover {
   }
   /* our skills */
   .skill-chart {
-    margin: 0 auto 40px;
+    margin: 0 auto var(--border-radius-sm);
     width: 300px;
   }
   .skill-chart {
-    margin: 0 auto 40px;
+    margin: 0 auto var(--border-radius-sm);
     width: 90%;
   }
   .skill-chart > h3 {
@@ -2363,7 +2372,7 @@ a:focus, a:hover {
   }
   /* our skills */
   .skill-chart {
-    margin: 0 auto 40px;
+    margin: 0 auto var(--border-radius-sm);
     width: 280px;
   }
   /* our team */
@@ -2435,7 +2444,7 @@ a:focus, a:hover {
     margin: 0;
   }
   #blog-posts {
-    margin: 0 0 40px;
+    margin: 0 0 var(--border-radius-sm);
   }
   .post-excerpt h3 {
     font-size: 20px;
@@ -2484,7 +2493,7 @@ a:focus, a:hover {
   }
   /* skills */
   .skill-chart {
-    margin: 0 auto 40px;
+    margin: 0 auto var(--border-radius-sm);
     width: 300px;
   }
   /* pricing table */
@@ -2515,3 +2524,79 @@ a:focus, a:hover {
 }
 
 /*# sourceMappingURL=maps/style.css.map */
+
+/* =================================================================
+  HAPPY FAMILY RWANDA - 2026 BRAND OVERWRITE
+================================================================== */
+
+/* 1. Typography & Global */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-purple) !important; /* Forces the professional purple on all headings */
+}
+
+a:hover, .nav-link:hover, .nav-item.active .nav-link {
+    color: var(--accent-pink) !important; /* Consistent accent pink for interactions */
+}
+
+/* 2. Buttons - Modernizing the "Pill" shape to "Professional" shape */
+.btn-main, .btn-primary, #contact-submit {
+    background-color: var(--primary-purple) !important;
+    border-color: var(--primary-purple) !important;
+    border-radius: 4px !important; /* Makes the site look more modern/stable */
+    transition: all 0.3s ease-in-out !important;
+}
+
+.btn-main:hover, .btn-primary:hover, #contact-submit:hover {
+    background-color: var(--accent-pink) !important;
+    border-color: var(--accent-pink) !important;
+    box-shadow: 0 4px 12px rgba(236, 64, 158, 0.2) !important;
+}
+
+/* 3. Non-Profit Specific UI Elements */
+.section-title .border, .border {
+    background: var(--accent-pink) !important; /* The pink accent line under titles */
+    height: 3px !important;
+}
+
+.service-icon i, .counters-item i, .about .feature-list li i {
+    color: var(--accent-pink) !important;
+}
+
+/* 4. Footer Professionalism */
+.top-footer {
+    background-color: #1a1121 !important; /* Deepest purple for the footer */
+}
+
+.footer-bottom {
+    border-top: 1px solid var(--primary-purple) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--primary-purple);
+}
+
+.navigation .navbar-light .navbar-nav .nav-item.active .nav-link {
+  color: var(--accent-pink);
+}
+
+.btn-main {
+  background: var(--primary-purple);
+  border: 1px solid var(--primary-purple);
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-speed) ease;
+}
+
+.btn-main:hover {
+  background: var(--accent-pink);
+  border-color: var(--accent-pink);
+}
+
+.counters-item i {
+  color: var(--accent-pink);
+}
+
+.counters-item span {
+  color: var(--primary-purple);
+  font-weight: 700;
+}

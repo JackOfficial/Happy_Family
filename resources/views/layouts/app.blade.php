@@ -21,146 +21,135 @@
 
     <style>
         :root {
-            --primary-color: #2E7D32; /* Example: Earthy Green for "Family/Growth" */
-            --accent-color: #FF9800;
+            /* Your Official Brand Colors */
+            --primary-color: #631084; /* Deep Purple (Trust & Authority) */
+            --accent-color: #ec409e;  /* Vibrant Pink (Action & Heart) */
+            --light-bg: #fcfaff;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        h1, h2, h3, .nav-link { font-family: 'Jost', sans-serif; font-weight: 700; }
 
-        /* Custom UI Enhancements */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden; 
+            color: #333;
+            background-color: var(--light-bg);
+        }
+
+        h1, h2, h3, .nav-link { 
+            font-family: 'Jost', sans-serif; 
+            font-weight: 700; 
+            color: var(--primary-color);
+        }
+
+        /* --- Glassmorphism Navigation --- */
         .glass-nav {
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
+            transition: var(--transition-smooth);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(99, 16, 132, 0.1);
         }
+
         .scrolled-nav {
-            padding: 10px 0 !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 5px 0 !important;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 10px 30px rgba(99, 16, 132, 0.1);
         }
+
+        /* --- Professional Button UI --- */
         .btn-modern {
-            border-radius: 50px;
+            border-radius: 8px; /* 2026 trend: Move away from pills to soft squares */
             padding: 12px 30px;
-            transition: transform 0.2s;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+            background: var(--primary-color);
+            color: white;
+            border: none;
         }
-        .btn-modern:hover { transform: translateY(-2px); }
+
+        .btn-modern:hover {
+            background: var(--accent-color);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(236, 64, 158, 0.3);
+            color: white;
+        }
+
+        /* --- Nav Link Interaction --- */
+        .nav-link {
+            font-weight: 600;
+            color: var(--primary-color) !important;
+            position: relative;
+            padding: 10px 15px;
+        }
+
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: 0;
+            left: 50%;
+            background: var(--accent-color);
+            transition: var(--transition-smooth);
+            border-radius: 10px;
+        }
+
+        .nav-link:hover:after, .nav-link.active:after {
+            width: 60%;
+            left: 20%;
+        }
+
+        /* --- Back to Top --- */
+        .back-to-top {
+            background: var(--accent-color) !important;
+            border: none;
+            transition: var(--transition-smooth);
+        }
         
-        /* Smooth Spinner */
-        [x-cloak] { display: none !important; }
-    /* Clean Transitions */
-    .transition-all { transition: all 0.3s ease-in-out; }
-    
-    .nav-link {
-        font-weight: 500;
-        color: #333 !important;
-        position: relative;
-    }
-    
-    .nav-link:after {
-        content: '';
-        position: absolute;
-        width: 0;
-        height: 2px;
-        bottom: 5px;
-        left: 50%;
-        background: var(--primary);
-        transition: all 0.3s ease;
-    }
-
-    .nav-link:hover:after, .nav-link.active:after {
-        width: 70%;
-        left: 15%;
-    }
-
-    .dropdown-menu {
-        border-radius: 12px;
-        top: 90%;
-    }
-    
-    /* Mobile styles */
-    @media (max-width: 1199px) {
-        .navbar-collapse {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        .back-to-top:hover {
+            background: var(--primary-color) !important;
+            transform: scale(1.1);
         }
-    }
 
-        .footer-title::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 40px;
-        height: 2px;
-        background: var(--primary);
-    }
-
-    .bg-secondary-dark {
-        background: rgba(255, 255, 255, 0.1);
-    }
-
-    .footer-links a {
-        transition: all 0.3s ease;
-    }
-
-    .footer-links a:hover {
-        color: var(--primary) !important;
-        padding-left: 8px;
-    }
-
-    .gallery-thumb img:hover {
-        transform: scale(1.15);
-        filter: brightness(0.7);
-    }
-
-    .social-circle {
-        width: 35px;
-        height: 35px;
-        background: rgba(255,255,255,0.05);
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        font-size: 14px;
-        transition: 0.3s;
-    }
-
-    .social-circle:hover {
-        background: var(--primary);
-        color: white;
-        transform: translateY(-3px);
-    }
-
-    .lh-lg { line-height: 1.8; }
-    .transition-all { transition: all 0.4s ease; }
+        /* --- Global Refinements --- */
+        [x-cloak] { display: none !important; }
+        .lh-lg { line-height: 1.8; }
+        
+        .section-title-border {
+            width: 60px;
+            height: 4px;
+            background: var(--accent-color);
+            margin: 10px 0;
+            border-radius: 2px;
+        }
     </style>
-@yield('styles')
+    
+    @yield('styles')
     @livewireStyles
 </head>
 
 <body class="bg-light">
 
-  {{-- <div 
-    x-data="{ loading: true }" 
-    x-init="window.onload = () => { loading = false }; setTimeout(() => loading = false, 3000)" 
-    x-show="loading" 
-    x-transition:leave="transition ease-in duration-500"
-    x-transition:leave-start="opacity-100"
-    x-transition:leave-end="opacity-0"
-    class="fixed-top w-100 vh-100 bg-white d-flex align-items-center justify-content-center" 
-    style="z-index: 99999;"
->
-    <div class="text-center">
-        <div class="spinner-grow text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
-        <p class="mt-3 text-uppercase tracking-widest small text-muted font-weight-bold">Happy Family Rwanda</p>
+    <div 
+        x-data="{ loading: true }" 
+        x-init="window.onload = () => { loading = false }; setTimeout(() => loading = false, 2500)" 
+        x-show="loading" 
+        x-transition:leave="transition ease-in duration-500"
+        class="fixed-top w-100 vh-100 bg-white d-flex align-items-center justify-content-center" 
+        style="z-index: 99999;"
+    >
+        <div class="text-center">
+            <div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);" role="status"></div>
+            <p class="mt-3 text-uppercase tracking-widest small font-weight-bold" style="color: var(--primary-color); letter-spacing: 2px;">
+                Happy Family Rwanda
+            </p>
+        </div>
     </div>
-</div> --}}
 
     <header :class="{ 'scrolled-nav': scrolled }" class="glass-nav sticky-top">
-        <livewire:navbar-component />
+        <div class="container">
+            <livewire:navbar-component />
+        </div>
     </header>
 
     <main>
@@ -173,14 +162,13 @@
         x-show="scrolled" 
         x-transition 
         @click="window.scrollTo({top: 0, behavior: 'smooth'})"
-        class="btn btn-primary position-fixed shadow-lg" 
-        style="bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%; z-index: 1000;">
+        class="btn back-to-top position-fixed shadow-lg text-white" 
+        style="bottom: 30px; right: 30px; width: 55px; height: 55px; border-radius: 12px; z-index: 1000;">
         <i class="fa fa-arrow-up"></i>
     </button>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script src="{{ asset('frontend/lib/owlcarousel/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('frontend/lib/lightbox/js/lightbox.min.js') }}"></script>
     
