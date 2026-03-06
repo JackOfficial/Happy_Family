@@ -403,6 +403,16 @@
     }
     .opacity-70 { opacity: 0.7; }
 
+        /* Ensure colors connect to your defined variables */
+    .text-purple { color: var(--primary-purple); }
+    .text-pink { color: var(--accent-pink) !important; }
+    
+    /* Smooth transition for the donate button */
+    .btn-modern-accent:hover {
+        background: var(--primary-purple);
+        box-shadow: 0 5px 15px rgba(99, 16, 132, 0.3);
+    }
+
     @media (max-width: 768px) {
         .display-3 { font-size: 2.5rem; }
     }
@@ -724,68 +734,84 @@
     </div>
 </div>
 
-        <!-- Causes Start -->
-        <div class="container-fluid causes py-5 {{ $projects->count() > 0 ? '' : 'd-none' }}">
-            <div class="container py-5">
-                <div class="text-center mx-auto pb-5" style="max-width: 800px;">
-                    <h5 class="text-uppercase text-primary">Recent Projects</h5>
-                    <h1 class="mb-4">Our Transformative Efforts</h1>
-                    <p class="mb-0">
-                        At Happy Family Rwanda Organization (HFRO), we are passionate about addressing the challenges faced by underprivileged communities around the world. Through our various programs and initiatives, we strive to make a positive impact in the lives of individuals and promote sustainable change.
-                    </p>
-                </div>
-                <div class="row g-4">
-                    @foreach($projects as $project)
-                    <div class="col-lg-6 col-md-6 col-xl-4 mb-4">
-    <div class="card shadow-sm border-0 h-100 overflow-hidden project-card">
-        <!-- Project Image with Overlay -->
-        <div class="position-relative">
-            <img src="{{ $project->project_photo?->file_path ? asset('storage/' . $project->project_photo->file_path) : asset('images/default.png') }}" 
-                class="card-img-top img-fluid" alt="{{ $project->title }}">
-            
-            <div class="overlay d-flex flex-column justify-content-between p-3">
-                <div>
-                    <small class="text-white d-block">
-                        <i class="fas fa-chart-bar text-primary me-2"></i> Goal: {{ $project->budget ? number_format($project->budget, 2) : '-' }}
-                    </small>
-                    <small class="text-white d-block">
-                        <i class="fa fa-thumbs-up text-primary me-2"></i> Raised: 0
-                    </small>
-                </div>
-                <div class="text-end">
-                    <a href="#" class="btn btn-sm btn-primary text-white py-1 px-3 btn-hover-bg">Donate Now</a>
-                </div>
-            </div>
+      <div class="container-fluid impact-section py-5 {{ $projects->count() > 0 ? '' : 'd-none' }}">
+    <div class="container py-5">
+        <div class="text-center mx-auto pb-5" style="max-width: 800px;">
+            <h5 class="brand-subtitle-centered mb-2">Recent Projects</h5>
+            <h2 class="brand-title-dark display-5 mb-3">Our Transformative Efforts</h2>
+            <div class="title-line-center mx-auto mb-4"></div>
+            <p class="mb-0 tab-description">
+                At Happy Family Rwanda Organization (HFRO), we are passionate about addressing the challenges faced by underprivileged communities. We strive to promote sustainable change.
+            </p>
         </div>
 
-        <!-- Progress Bar -->
-        <div class="progress" style="height:6px;">
-            <div class="progress-bar {{ $project->progress == 100 ? 'bg-success' : 'bg-info' }}" 
-                 role="progressbar" style="width: {{ $project->progress }}%;" 
-                 aria-valuenow="{{ $project->progress }}" aria-valuemin="0" aria-valuemax="100">
-            </div>
-        </div>
+        <div class="row g-4">
+            @foreach($projects as $project)
+            <div class="col-lg-6 col-md-6 col-xl-4 mb-4">
+                <div class="impact-card shadow-sm h-100">
+                    <div class="impact-img-container">
+                        <img src="{{ $project->project_photo?->file_path ? asset('storage/' . $project->project_photo->file_path) : asset('images/default.png') }}" 
+                             alt="{{ $project->title }}">
+                        
+                        <div class="impact-overlay p-3">
+                            <div class="text-center w-100 px-3">
+                                <div class="mb-3">
+                                    <small class="text-white d-block mb-1">
+                                        <i class="fas fa-bullseye text-pink me-2"></i> Goal: <strong>${{ number_format($project->budget, 0) }}</strong>
+                                    </small>
+                                    <small class="text-white d-block">
+                                        <i class="fa fa-heart text-pink me-2"></i> Status: {{ ucfirst($project->status) }}
+                                    </small>
+                                </div>
+                                <a href="{{ url('project/'.$project->id) }}" class="btn-impact-view py-2">View Details</a>
+                            </div>
+                        </div>
 
-        <!-- Project Content -->
-        <div class="card-body p-4 d-flex flex-column">
-            <h5 class="card-title mb-2">{{ $project->title }}</h5>
-            <p class="card-text text-muted mb-4">{{ Str::limit(strip_tags($project->summary), 120) }}</p>
-            <div class="mt-auto d-flex justify-content-between align-items-center">
-                <span class="badge {{ $project->progress == 100 ? 'bg-success' : 'bg-warning' }}">
-                    {{ $project->progress == 100 ? 'Completed' : ucfirst($project->status) }}
-                </span>
-                <a href="{{ url('project/'.$project->id) }}" class="btn btn-sm btn-outline-primary btn-hover-bg">
-                    Read More
-                </a>
-            </div>
+                        <div class="impact-tag">
+                            {{ $project->cause->name ?? 'Impact' }}
+                        </div>
+                    </div>
+
+                    <div class="impact-progress-bar w-100" style="height: 8px; border-radius: 0;">
+                        <div class="progress-bar" 
+                             role="progressbar" 
+                             style="width: {{ $project->progress }}%; background-color: var(--accent-pink);" 
+                             aria-valuenow="{{ $project->progress }}" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <small class="text-purple font-weight-bold">{{ $project->progress }}% Achieved</small>
+                            <span class="badge {{ $project->progress == 100 ? 'bg-success' : '' }}" 
+                                  style="background-color: {{ $project->progress == 100 ? '#28a745' : 'var(--primary-purple)' }}; color: white; border-radius: 50px; font-size: 0.7rem;">
+                                {{ $project->progress == 100 ? 'COMPLETED' : 'ACTIVE' }}
+                            </span>
+                        </div>
+                        
+                        <a href="{{ url('project/'.$project->id) }}" class="impact-card-title h5 mb-3">
+                            {{ $project->title }}
+                        </a>
+                        
+                        <p class="impact-text mb-4">
+                            {{ Str::limit(strip_tags($project->summary), 110) }}
+                        </p>
+                        
+                        <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
+                            <a href="{{ url('project/'.$project->id) }}" class="link-learn-more">
+                                LEARN MORE <i class="fas fa-arrow-right ml-1 small"></i>
+                            </a>
+                            <a href="#" class="btn-modern-accent py-2 px-3" style="font-size: 0.8rem;">
+                                DONATE
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            @endforeach
         </div>
     </div>
-</div> 
-                    @endforeach
-                </div>
-            </div>
-        </div>
-        <!-- Causes End -->
+</div>
 
         <!-- Events Start -->
         <div class="container-fluid event py-5 {{ $events->count() > 0 ? '' : 'd-none' }}">
