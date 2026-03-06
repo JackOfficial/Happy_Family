@@ -371,6 +371,13 @@
         transform: scale(1.05);
     }
 
+        .transition-up { transition: transform 0.3s ease, shadow 0.3s ease; }
+    .transition-up:hover { transform: translateY(-10px); box-shadow: 0 1rem 3rem rgba(0,0,0,.1) !important; }
+    .btn-outline-primary:hover { color: #fff !important; }
+    /* Ensure the text color matches your primary branding */
+    .text-primary { color: #007bff !important; } 
+    .bg-primary { background-color: #007bff !important; }
+
     @media (max-width: 768px) {
         .display-3 { font-size: 2.5rem; }
     }
@@ -552,41 +559,55 @@
     </div>
 </div>
 
-        <!-- Donation Start -->
-        <div class="container-fluid donation py-5 {{ $stories->count() > 0 ? '' : 'd-none' }}">
-            <div class="container py-5">
-                <div class="text-center mx-auto pb-5" style="max-width: 800px;">
-                    <h5 class="text-uppercase text-primary">Discover our impactful stories</h5>
-                    
-                    <p class="mb-0">Find out how Happy Family is fostering resilience and making impact in the local communities. Join us in building brighter fututre together</p>
-                </div>
-                <div class="row g-4">
-                    @foreach ($stories as $story)
-                    <div class="col-lg-4">
-                        <div class="donation-item">
-                            <img src="{{ asset('storage/' . $story->photo->file_path) }}" class="img-fluid w-100" alt="{{ $story->title  }}">
-                            <div class="donation-content d-flex flex-column">
-                                <h5 class="text-uppercase text-primary mb-4">{{  $story->cause->name ?? '' }}</h5>
-                                <h4 class="text-white mb-4">{{ Str::limit($story->title, 50) }}</h4>
-                                <p class="text-white mb-4">
-                                    {!! Str::limit(strip_tags($story->summary), 100) !!}
-                                </p>
-                                <div class="donation-btn d-flex align-items-center justify-content-start">
-                                    <a class="btn-hover-bg btn btn-sm rounded-pill btn-primary text-white py-2 px-4" href="/story/{{ $story->id }}">More</a>
-                                </div>
+        <!-- Stories -->
+       <div class="container-fluid donation py-5 {{ $stories->count() > 0 ? '' : 'd-none' }}" style="background: #f8f9fa;">
+    <div class="container py-5">
+        <div class="text-center mx-auto pb-5" style="max-width: 800px;">
+            <h5 class="text-uppercase text-primary font-weight-bold" style="letter-spacing: 1px;">Success Stories</h5>
+            <h2 class="display-5 mb-4">Discover our impactful stories</h2>
+            <p class="mb-0 text-muted">Find out how Happy Family is fostering resilience and making impact in local communities. Join us in building a brighter future together.</p>
+        </div>
+        
+        <div class="row g-4">
+            @foreach ($stories as $story)
+            <div class="col-lg-4 col-md-6">
+                <div class="donation-item rounded overflow-hidden shadow-sm bg-white h-100 transition-up">
+                    <div class="position-relative">
+                        @if($story->photo)
+                            <img src="{{ asset('storage/' . $story->photo->file_path) }}" class="img-fluid w-100" alt="{{ $story->title }}" style="height: 250px; object-fit: cover;">
+                        @else
+                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                                <i class="fas fa-image fa-3x text-muted"></i>
                             </div>
+                        @endif
+                        <div class="badge-cause bg-primary text-white px-3 py-1 position-absolute" style="top: 20px; left: 0; border-radius: 0 20px 20px 0; font-size: 0.8rem;">
+                            {{ $story->cause->name ?? 'Community' }}
                         </div>
                     </div>
-                    @endforeach
-                    <div class="col-12">
-                        <div class="d-flex align-items-center justify-content-center">
-                            <a class="btn-hover-bg btn btn-primary text-white py-2 px-4" href="#">More Stories</a>
+                    
+                    <div class="donation-content d-flex flex-column p-4">
+                        <h4 class="mb-3" style="min-height: 56px;">{{ Str::limit($story->title, 50) }}</h4>
+                        <p class="text-muted mb-4" style="font-size: 0.95rem;">
+                            {!! Str::limit(strip_tags($story->summary ?? $story->content), 100) !!}
+                        </p>
+                        <div class="mt-auto">
+                            <a class="btn btn-outline-primary rounded-pill px-4 py-2 transition" href="{{ url('story/' . $story->slug) }}">
+                                Read Full Story <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
+            @endforeach
+
+            <div class="col-12 text-center mt-5">
+                <a class="btn btn-primary btn-hover-bg text-white py-3 px-5 rounded-pill shadow" href="/stories">
+                    View All Stories <i class="fas fa-th-list ml-2"></i>
+                </a>
+            </div>
         </div>
-        <!-- Donation End -->
+    </div>
+</div>
 
         <!-- Counter Start -->
         <div class="container-fluid counter py-5" style="background: linear-gradient(rgba(0, 0, 0, .4), rgba(0, 0, 0, 0.4)), url(frontend/img/volunteers-bg.jpg) center center; background-size: cover;">
