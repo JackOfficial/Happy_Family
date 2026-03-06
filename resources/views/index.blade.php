@@ -510,6 +510,51 @@
         border-radius: 20px 0 0 0;
     }
 
+       .partners-section {
+        border-top: 1px solid rgba(99, 16, 132, 0.05);
+    }
+    
+    .partner-logo-wrap {
+        background: #fff;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        border-radius: 15px;
+        transition: all 0.4s ease;
+        border: 1px solid #eee;
+    }
+
+    /* Grayscale effect for professional look */
+    .partner-logo {
+        max-height: 80px;
+        width: auto !important;
+        filter: grayscale(100%);
+        opacity: 0.7;
+        transition: 0.4s;
+    }
+
+    .partner-item:hover .partner-logo-wrap {
+        border-color: var(--accent-pink);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(99, 16, 132, 0.1) !important;
+    }
+
+    .partner-item:hover .partner-logo {
+        filter: grayscale(0%);
+        opacity: 1;
+    }
+
+    .text-purple {
+        color: var(--primary-purple);
+    }
+
+    /* Customize Owl dots to match your brand */
+    .partner-carousel .owl-dots .owl-dot.active span {
+        background: var(--accent-pink) !important;
+    }
+
     /* Subtle animation for the badge */
     @keyframes bounce {
         0%, 100% { transform: translateY(0); }
@@ -1182,30 +1227,35 @@
         <!-- Volunteers End -->
 
          <!-- Our Team Start -->
-         <div class="container-fluid event py-5 {{ $partners->count() > 0 ? '' : 'd-none' }}">
-            <div class="container py-5">
-                <div class="text-center mx-auto mb-5" style="max-width: 800px;">
-                    <h4 class="text-uppercase text-primary">Our Partners</h4>
-                    <h5 class="mb-0">We understand the importance of networking, partnership and affiliations, We are currently partnering with</h5>
-                </div>
-                <div class="event-carousel owl-carousel">
-                    @foreach ($partners as $partner)
-                    <div class="event-item border border-rounded shadow pt-4">
-                        <img src="{{ asset('storage/'.$partner->logo) }}" class="img-fluid w-50 mx-auto" alt="{{ $partner->partner }}">
-                        <div class="event-content bg-white text-center p-4">
-                            <div class="d-flex justify-content-between mb-4 d-none">
-                                <span class="text-body"><i class="fas fa-map-marker-alt me-2"></i>{{ Str::limit($partner->location, 20) }}</span>
-                                <span class="text-body"><i class="fas fa-calendar-alt me-2"></i>{{ \Carbon\Carbon::parse($partner->date)->format('d M, Y') }}</span>
-                            </div>
-                            <h4 class="mb-4">{{ Str::limit($partner->partner, 50) }}</h4>
-                            <p class="mb-4">{{ Str::limit($partner->title, 200) }}</p>
-                            <a href="{{ $partner->link }}" target="__blank" class="btn btn-primary rounded-pill">Visit</a>
-                          </div>
-                    </div>  
-                    @endforeach
-                   
-                </div>
-            </div>
+    <div class="container-fluid partners-section py-5 {{ $partners->count() > 0 ? '' : 'd-none' }}" style="background: #fdfafd;">
+    <div class="container py-5">
+        <div class="text-center mx-auto mb-5" style="max-width: 800px;">
+            <h5 class="brand-subtitle-centered mb-2">Our Partners</h5>
+            <h2 class="brand-title-dark display-6 mb-3">Building Impact Together</h2>
+            <div class="title-line-center mx-auto mb-4"></div>
+            <p class="tab-description">
+                We believe in the power of collaboration. Our mission is made possible through the support and strategic partnership of these incredible organizations.
+            </p>
         </div>
+
+        <div class="partner-carousel owl-carousel">
+            @foreach ($partners as $partner)
+            <div class="partner-item p-4">
+                <a href="{{ $partner->link }}" target="_blank" title="{{ $partner->partner }}" class="d-block text-center">
+                    <div class="partner-logo-wrap mb-3 shadow-sm">
+                        <img src="{{ asset('storage/'.$partner->logo) }}" 
+                             class="partner-logo img-fluid mx-auto" 
+                             alt="{{ $partner->partner }}">
+                    </div>
+                    <div class="partner-info">
+                        <h6 class="mb-1 text-purple fw-bold">{{ Str::limit($partner->partner, 30) }}</h6>
+                        <p class="text-muted small mb-0">{{ Str::limit($partner->title, 50) }}</p>
+                    </div>
+                </a>
+            </div>  
+            @endforeach
+        </div>
+    </div>
+</div>
         
 @endsection
