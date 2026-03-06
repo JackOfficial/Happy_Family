@@ -30,28 +30,36 @@ class CauseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-       $validated = $request->validate([
-    'cause'       => 'required|string|max:255',
-    'description' => 'nullable|string',
-     'photo' => 'nullable|image|mimes:jpg,jpeg,png,svg|max:2048'
-      ]);
-    
-          $cause = Cause::create([
-    'name' => $validated['cause'],
-    'description' => $validated['description'] ?? null,
-        ]);
-
-        if ($request->hasFile('photo')) {
-    $cause->photos()->create([
-        'file_path' => $request->file('photo')->store('causes', 'public'),
-        'caption' => $request->input('cause')
+public function store(Request $request)
+{
+    $validated = $request->validate([
+        'cause'       => 'required|string|max:255|unique:causes,name', // Prevent duplicate names
+        'description' => 'nullable|string',
+        'photo'       => 'nullable|image|mimes:jpg,jpeg,png,svg|max:5120', // Limit to 5MB for performance
     ]);
-         }
 
-return redirect()->route('admin.causes.index')->with('success', 'Cause added successfully!');
+    // 1. Create the Cause with a status (based on your model)
+    $cause = Cause::create([
+        'name'        => $validated['cause'],
+        'description' => $validated['description'],
+        'status'      => 'active', // Default status for your UI badges
+    ]);
+
+    // 2. Handle the Polymorphic Photo
+    if ($request->hasFile('photo')) {
+        $path = $request->file('photo')->store('causes', 'public');
+        
+        $cause->photos()->create([
+            'file_path' => $path,
+            'caption'   => $validated['cause'],
+            // If you add an 'is_main' column later, set it to true here
+        ]);
     }
+
+    return redirect()
+        ->route('admin.causes.index')
+        ->with('success', 'Impact Area "' . $cause->name . '" has been created successfully!');
+}
 
     /**
      * Display the specified resource.
