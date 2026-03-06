@@ -205,6 +205,172 @@
         transform: translateY(-3px);
     }
 
+        /* Section Styling */
+    .impact-section {
+        background-color: #fcfaff; /* Subtle purple-tinted background */
+    }
+
+    .brand-subtitle-centered {
+        color: var(--accent-pink);
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+
+    .brand-title-dark {
+        color: var(--primary-purple);
+        font-weight: 800;
+    }
+
+    .title-line-center {
+        width: 60px;
+        height: 4px;
+        background: var(--accent-pink);
+        border-radius: 10px;
+    }
+
+    /* Impact Card Design */
+    .impact-card {
+        background: #fff;
+        border-radius: 15px;
+        overflow: hidden;
+        height: 100%;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        border: 1px solid rgba(0,0,0,0.05);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .impact-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(99, 16, 132, 0.12);
+    }
+
+    /* Image & Overlay */
+    .impact-img-container {
+        position: relative;
+        overflow: hidden;
+        height: 220px;
+    }
+
+    .impact-img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .impact-card:hover .impact-img-container img {
+        transform: scale(1.1);
+    }
+
+    .impact-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(99, 16, 132, 0.7); /* Brand Purple with opacity */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: 0.4s;
+    }
+
+    .impact-card:hover .impact-overlay {
+        opacity: 1;
+    }
+
+    .btn-impact-view {
+        color: white;
+        border: 2px solid white;
+        padding: 8px 20px;
+        border-radius: 50px;
+        text-decoration: none !important;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .btn-impact-view:hover {
+        background: white;
+        color: var(--primary-purple);
+    }
+
+    .impact-tag {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: var(--accent-pink);
+        color: white;
+        font-size: 0.7rem;
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    /* Content Styling */
+    .impact-card-title {
+        color: var(--primary-purple);
+        font-weight: 700;
+        text-decoration: none !important;
+        transition: 0.3s;
+    }
+
+    .impact-card-title:hover {
+        color: var(--accent-pink);
+    }
+
+    .impact-text {
+        color: #6c757d;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    /* Progress Bar */
+    .impact-progress-bar {
+        height: 6px;
+        border-radius: 10px;
+        background-color: #eee;
+    }
+
+    .impact-progress-bar .progress-bar {
+        background-color: var(--accent-pink);
+        border-radius: 10px;
+    }
+
+    .link-learn-more {
+        color: var(--primary-purple);
+        font-weight: 700;
+        font-size: 0.9rem;
+        text-decoration: none !important;
+        transition: 0.3s;
+    }
+
+    .link-learn-more:hover {
+        color: var(--accent-pink);
+        padding-left: 5px;
+    }
+
+    /* Footer Button */
+    .btn-modern-purple {
+        background: var(--primary-purple);
+        color: white;
+        border-radius: 8px;
+        font-weight: 700;
+        text-decoration: none !important;
+        display: inline-block;
+        transition: 0.3s;
+    }
+
+    .btn-modern-purple:hover {
+        background: var(--accent-pink);
+        color: white;
+        transform: scale(1.05);
+    }
+
     @media (max-width: 768px) {
         .display-3 { font-size: 2.5rem; }
     }
@@ -329,36 +495,62 @@
     </div>
 </div>
 
-        <!-- Services Start -->
-        <div class="container-fluid service py-5 bg-light {{ $causes->count() > 0 ? '' : 'd-none' }}">
-            <div class="container py-5">
-                <div class="text-center mx-auto pb-5" style="max-width: 800px;">
-                    <h5 class="text-uppercase text-primary">Our Impacts</h5>
-                    <h1 class="mb-0">Empowering Change, Transforming Lives</h1>
-                </div>
-                <div class="row g-4">
-                    @foreach ($causes as $cause)
-                    <div class="col-md-6 col-lg-6 col-xl-3">
-                        <div class="service-item">
-                            <img src="{{ asset('storage/'.$cause->mainPhoto->file_path) }}" class="img-fluid w-100" alt="{{ $cause->cause }}">
-                            <div class="service-link">
-                                <a href="/cause/{{ $cause->id }}" class="h4 mb-0">{{ $cause->name }}</a>
+  <div class="container-fluid impact-section py-5 {{ $causes->count() > 0 ? '' : 'd-none' }}">
+    <div class="container py-5">
+        <div class="text-center mx-auto pb-5 header-animate" style="max-width: 800px;">
+            <h5 class="brand-subtitle-centered">Our Impacts</h5>
+            <h1 class="display-5 brand-title-dark mb-0">Empowering Change, Transforming Lives</h1>
+            <div class="title-line-center mx-auto mt-3"></div>
+        </div>
+
+        <div class="row g-4">
+            @foreach ($causes as $cause)
+            <div class="col-md-6 col-lg-4 col-xl-3">
+                <div class="impact-card">
+                    <div class="impact-img-container">
+                        <img src="{{ asset('storage/'.$cause->mainPhoto->file_path) }}" class="img-fluid" alt="{{ $cause->cause }}">
+                        <div class="impact-overlay">
+                            <a href="/cause/{{ $cause->id }}" class="btn-impact-view">View Details</a>
+                        </div>
+                        <span class="impact-tag">Active Cause</span>
+                    </div>
+
+                    <div class="impact-content p-4">
+                        <a href="/cause/{{ $cause->id }}" class="impact-card-title h5 d-block mb-3">
+                            {{ $cause->name }}
+                        </a>
+                        <p class="impact-text mb-4">
+                            {!! Str::limit(strip_tags($cause->description), 85) !!}
+                        </p>
+                        
+                        <div class="impact-progress-wrapper mb-3">
+                            <div class="d-flex justify-content-between small mb-1">
+                                <span class="text-muted">Impact Progress</span>
+                                <span class="text-purple font-weight-bold">75%</span>
+                            </div>
+                            <div class="progress impact-progress-bar">
+                                <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
-                        <p class="my-4">
-                            {!! Str::limit(strip_tags($cause->description), 100) !!}
-                        </p>
-                    </div>   
-                    @endforeach
-                    <div class="col-12">
-                        <div class="d-flex align-items-center justify-content-center">
-                            <a class="btn-hover-bg btn btn-primary text-white py-2 px-4" href="/causes">Read More</a>
-                        </div>
+
+                        <a href="/cause/{{ $cause->id }}" class="link-learn-more">
+                            Learn More <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
                     </div>
+                </div>
+            </div>   
+            @endforeach
+
+            <div class="col-12 mt-5">
+                <div class="text-center">
+                    <a class="btn-modern-purple py-3 px-5 shadow-sm" href="/causes">
+                        Explore All Causes
+                    </a>
                 </div>
             </div>
         </div>
-        <!-- Services End -->
+    </div>
+</div>
 
         <!-- Donation Start -->
         <div class="container-fluid donation py-5 {{ $stories->count() > 0 ? '' : 'd-none' }}">
