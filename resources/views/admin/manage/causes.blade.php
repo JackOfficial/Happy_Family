@@ -71,6 +71,9 @@
                             </td>
                             <td>
                                 <span class="d-block font-weight-bold text-dark">{{ $cause->name }}</span>
+                                <small class="text-muted d-block">
+                                    <i class="fas fa-link mr-1"></i> {{ $cause->slug }}
+                                </small>
                                 <small class="text-muted">
                                     <i class="far fa-calendar-alt mr-1"></i> {{ $cause->created_at->format('M d, Y') }}
                                 </small>
@@ -89,10 +92,11 @@
                             </td>
                             <td class="text-right pr-4">
                                 <div class="btn-group">
-                                    <a class="btn btn-outline-info btn-sm shadow-sm mr-2" href="{{ route('admin.causes.edit', $cause->id) }}" title="Edit">
+                                    <a class="btn btn-outline-info btn-sm shadow-sm mr-2" href="{{ route('admin.causes.edit', $cause->slug) }}" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <form action="{{ route('admin.causes.destroy', $cause->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Careful! This will remove the cause and all associated photos. Continue?');">
+                                    
+                                    <form action="{{ route('admin.causes.destroy', $cause->slug) }}" method="POST" class="d-inline" onsubmit="return confirm('Careful! This will remove the cause and all associated photos. Continue?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger btn-sm shadow-sm" title="Delete">
@@ -106,7 +110,7 @@
                         <tr>
                             <td colspan="6" class="text-center py-5 text-muted">
                                 <i class="fas fa-folder-open fa-3x mb-3 d-block"></i>
-                                No impact areas found. Start by creating your first cause.
+                                No impact areas found.
                             </td>
                         </tr>
                         @endforelse
