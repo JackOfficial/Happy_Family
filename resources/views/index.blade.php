@@ -374,6 +374,35 @@
     color: white;
 }
 
+    /* Glassmorphism for Counter Cards */
+    .counter-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+    .counter-card:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-5px);
+        border-color: var(--accent-pink);
+    }
+    .counter-icon-wrap {
+        width: 70px;
+        height: 70px;
+        line-height: 70px;
+        background: rgba(234, 62, 160, 0.2); /* Accent Pink tint */
+        border-radius: 50%;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .text-pink {
+        color: var(--accent-pink) !important;
+    }
+    .opacity-70 { opacity: 0.7; }
+
     @media (max-width: 768px) {
         .display-3 { font-size: 2.5rem; }
     }
@@ -617,64 +646,83 @@
     </div>
 </div>
 
-        <!-- Counter Start -->
-        <div class="container-fluid counter py-5" style="background: linear-gradient(rgba(0, 0, 0, .4), rgba(0, 0, 0, 0.4)), url(frontend/img/volunteers-bg.jpg) center center; background-size: cover;">
-            <div class="container py-5">
-                <div class="text-center mx-auto pb-5" style="max-width: 800px;">
-                    <h5 class="text-uppercase text-primary">Achievements</h5>
-                    <p class="text-white mb-0">
-                        We take pride in the milestones we've reached through our dedicated efforts. From expanding our programs to impacting countless lives, our achievements highlight the positive change we're creating. Each success reflects our commitment and the invaluable support of our partners and volunteers. We are excited to build on these accomplishments as we continue our mission to make a difference.</p>
-                </div>
-                <div class="row g-4">
-                    <div class="col-md-6 col-lg-6 col-xl-3">
-                        <div class="counter-item text-center border shadow p-5">
-                            <i class="fas fa-thumbs-up fa-4x text-white"></i>
-                            <h3 class="text-white my-4">Successful Projects</h3>
-                            <div class="counter-counting">
-                                <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">3600</span>
-                                <span class="h1 fw-bold text-primary">+</span>
-                            </div>
-                        </div>
+       <div class="container-fluid counter py-5" style="background: linear-gradient(rgba(99, 16, 132, 0.8), rgba(99, 16, 132, 0.8)), url('frontend/img/volunteers-bg.jpg') center center no-repeat; background-size: cover; background-attachment: fixed;">
+    <div class="container py-5">
+        <div class="text-center mx-auto pb-5" style="max-width: 800px;">
+            <h5 class="brand-subtitle-centered text-white opacity-90 mb-2" style="letter-spacing: 3px;">Achievements</h5>
+            <h2 class="display-5 text-white font-weight-bold mb-3">Our Impact in Numbers</h2>
+            <div class="title-line-center mx-auto mb-4" style="background: var(--accent-pink);"></div>
+            <p class="text-white opacity-90">
+                We take pride in the milestones we've reached through our dedicated efforts. Each success reflects our commitment and the invaluable support of our partners and volunteers.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            {{-- Item 1 --}}
+            <div class="col-md-6 col-lg-3">
+                <div class="counter-card text-center p-4">
+                    <div class="counter-icon-wrap mb-3">
+                        <i class="fas fa-thumbs-up fa-2x text-white"></i>
                     </div>
-                    <div class="col-md-6 col-lg-6 col-xl-3">
-                        <div class="counter-item text-center border p-5">
-                            <i class="fas fa-file-invoice-dollar fa-4x text-white"></i>
-                            <h3 class="text-white my-4">Funds Collected</h3>
-                            <div class="counter-counting text-center border-white w-100" style="border-style: dotted; font-size: 30px;">
-                                <span class="h1 fw-bold text-primary">$</span>
-                                <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">100,000</span>
-                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-xl-3">
-                        <div class="counter-item text-center border p-5">
-                            <i class="fas fa-user fa-4x text-white"></i>
-                            <h3 class="text-white my-4">Volunteers</h3>
-                            <div class="counter-counting text-center border-white w-100" style="border-style: dotted; font-size: 30px;">
-                                <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">50</span>
-                                <span class="h1 fw-bold text-primary">+</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-xl-3">
-                        <div class="counter-item text-center border p-5">
-                            <i class="fas fa-heart fa-4x text-white"></i>
-                            <h3 class="text-white my-4">Events</h3>
-                            <div class="counter-counting text-center border-white w-100" style="border-style: dotted; font-size: 30px;">
-                                <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">17</span>
-                                <span class="h1 fw-bold text-primary">+</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="d-flex align-items-center justify-content-center">
-                            <a class="btn-hover-bg btn btn-primary text-white py-2 px-4" href="#">Join With Us</a>
-                        </div>
+                    <h5 class="text-white opacity-70 small text-uppercase tracking-widest mb-3">Projects</h5>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <span class="display-4 fw-bold text-white" data-toggle="counter-up">3600</span>
+                        <span class="display-4 fw-bold text-pink ml-1">+</span>
                     </div>
                 </div>
             </div>
+
+            {{-- Item 2 --}}
+            <div class="col-md-6 col-lg-3">
+                <div class="counter-card text-center p-4">
+                    <div class="counter-icon-wrap mb-3">
+                        <i class="fas fa-hand-holding-heart fa-2x text-white"></i>
+                    </div>
+                    <h5 class="text-white opacity-70 small text-uppercase tracking-widest mb-3">Funds Raised</h5>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <span class="h2 fw-bold text-pink mr-1">$</span>
+                        <span class="display-4 fw-bold text-white" data-toggle="counter-up">100</span>
+                        <span class="display-4 fw-bold text-white">K</span>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Item 3 --}}
+            <div class="col-md-6 col-lg-3">
+                <div class="counter-card text-center p-4">
+                    <div class="counter-icon-wrap mb-3">
+                        <i class="fas fa-users fa-2x text-white"></i>
+                    </div>
+                    <h5 class="text-white opacity-70 small text-uppercase tracking-widest mb-3">Volunteers</h5>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <span class="display-4 fw-bold text-white" data-toggle="counter-up">50</span>
+                        <span class="display-4 fw-bold text-pink ml-1">+</span>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Item 4 --}}
+            <div class="col-md-6 col-lg-3">
+                <div class="counter-card text-center p-4">
+                    <div class="counter-icon-wrap mb-3">
+                        <i class="fas fa-calendar-check fa-2x text-white"></i>
+                    </div>
+                    <h5 class="text-white opacity-70 small text-uppercase tracking-widest mb-3">Events</h5>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <span class="display-4 fw-bold text-white" data-toggle="counter-up">17</span>
+                        <span class="display-4 fw-bold text-pink ml-1">+</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 text-center mt-5">
+                <a class="btn-modern-accent px-5 py-3 shadow-lg" href="#">
+                    JOIN OUR MISSION <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
         </div>
-        <!-- Counter End -->
+    </div>
+</div>
 
         <!-- Causes Start -->
         <div class="container-fluid causes py-5 {{ $projects->count() > 0 ? '' : 'd-none' }}">
