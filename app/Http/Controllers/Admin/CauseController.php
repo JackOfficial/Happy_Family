@@ -32,7 +32,7 @@ class CauseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+   public function store(Request $request)
     {
         $validated = $request->validate([
             'cause'       => 'required|string|max:255|unique:causes,name',
@@ -40,26 +40,22 @@ class CauseController extends Controller
             'photo'       => 'nullable|image|mimes:jpg,jpeg,png,svg|max:5120',
         ]);
 
-        // 1. Create the Cause
         $cause = Cause::create([
             'name'        => $validated['cause'],
+            'slug'        => Str::slug($validated['cause']), // CRITICAL: Generate slug
             'description' => $validated['description'],
-            'status'      => 1, // 1 for Active/Visible
+            'status'      => 1,
         ]);
 
-        // 2. Handle the Polymorphic Photo
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('causes', 'public');
-            
             $cause->photos()->create([
                 'file_path' => $path,
                 'caption'   => $validated['cause'],
             ]);
         }
 
-        return redirect()
-            ->route('admin.causes.index')
-            ->with('success', 'Impact Area "' . $cause->name . '" has been created successfully!');
+        return redirect()->route('admin.causes.index')->with('success', 'Impact Area created successfully!');
     }
 
     /**
@@ -75,7 +71,7 @@ class CauseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Cause $cause)
+  public function update(Request $request, Cause $cause)
     {
         $validated = $request->validate([
             'name'        => 'required|string|max:255|unique:causes,name,' . $cause->id,
@@ -84,22 +80,19 @@ class CauseController extends Controller
             'photo'       => 'nullable|image|mimes:jpg,jpeg,png,svg|max:5120'
         ]);
         
-        // 1. Update text data
         $cause->update([
             'name'        => $validated['name'],
+            'slug'        => Str::slug($validated['name']), // CRITICAL: Update slug if name changes
             'description' => $validated['description'],
             'status'      => $validated['status'],
         ]);
         
-        // 2. Handle Photo Swap
         if ($request->hasFile('photo')) {
-            // Delete old physical file and database record
             if ($cause->mainPhoto) {
                 Storage::disk('public')->delete($cause->mainPhoto->file_path);
                 $cause->mainPhoto()->delete();
             }
 
-            // Store new file and create record
             $path = $request->file('photo')->store('causes', 'public');
             $cause->photos()->create([
                 'file_path' => $path,
@@ -107,9 +100,7 @@ class CauseController extends Controller
             ]);
         }
         
-        return redirect()
-            ->route('admin.causes.index')
-            ->with('success', 'Cause "' . $cause->name . '" updated successfully!');
+        return redirect()->route('admin.causes.index')->with('success', 'Cause updated successfully!');
     }
 
     /**
