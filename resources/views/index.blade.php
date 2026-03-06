@@ -109,6 +109,102 @@
         color: white;
     }
 
+    .about-section {
+        background-color: #ffffff;
+    }
+
+    .rounded-custom {
+        border-radius: 12px;
+    }
+
+    /* Image Wrapper Decor */
+    .image-wrapper::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 2px solid var(--accent-pink);
+        top: 20px;
+        left: -20px;
+        z-index: -1;
+        border-radius: 12px;
+    }
+
+    .experience-badge {
+        position: absolute;
+        bottom: -20px;
+        right: -10px;
+        background: var(--primary-purple);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(99, 16, 132, 0.3);
+    }
+
+    /* Titles */
+    .brand-subtitle {
+        color: var(--accent-pink);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .brand-title {
+        color: var(--primary-purple);
+        font-weight: 800;
+    }
+
+    .text-purple { color: var(--primary-purple); font-weight: 700; }
+
+    /* Modern Tabs UI */
+    .modern-pills .nav-link {
+        border: 1px solid #eee;
+        background: white;
+        color: #666;
+        margin-right: 10px;
+        font-weight: 600;
+        padding: 10px 25px;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+    }
+
+    .modern-pills .nav-link.active {
+        background: var(--primary-purple) !important;
+        color: white !important;
+        border-color: var(--primary-purple);
+    }
+
+    .impact-tab-content {
+        background: #fcfaff; /* Soft Purple Tint */
+        border-left: 5px solid var(--accent-pink);
+    }
+
+    .tab-description {
+        color: #555;
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+
+    /* Brand Button */
+    .btn-modern-accent {
+        display: inline-block;
+        background: var(--accent-pink);
+        color: white;
+        padding: 10px 25px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .btn-modern-accent:hover {
+        background: var(--primary-purple);
+        color: white;
+        transform: translateY(-3px);
+    }
+
     @media (max-width: 768px) {
         .display-3 { font-size: 2.5rem; }
     }
