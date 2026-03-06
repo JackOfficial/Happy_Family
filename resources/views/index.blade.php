@@ -413,6 +413,48 @@
         box-shadow: 0 5px 15px rgba(99, 16, 132, 0.3);
     }
 
+     /* Event Date Badge Styling */
+    .event-date-badge {
+        position: absolute;
+        top: 0;
+        left: 20px;
+        background: var(--accent-pink);
+        color: white;
+        padding: 10px 15px;
+        text-align: center;
+        border-radius: 0 0 10px 10px;
+        z-index: 3;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .event-date-badge .day {
+        display: block;
+        font-size: 1.4rem;
+        font-weight: 800;
+        line-height: 1;
+    }
+    .event-date-badge .month {
+        display: block;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    /* Override Owl Carousel Nav for Branding */
+    .event-carousel .owl-nav button {
+        background: var(--primary-purple) !important;
+        color: white !important;
+        width: 40px;
+        height: 40px;
+        border-radius: 50% !important;
+        transition: 0.3s;
+    }
+    .event-carousel .owl-nav button:hover {
+        background: var(--accent-pink) !important;
+    }
+
+    .text-pink { color: var(--accent-pink); }
+
     @media (max-width: 768px) {
         .display-3 { font-size: 2.5rem; }
     }
@@ -814,31 +856,58 @@
 </div>
 
         <!-- Events Start -->
-        <div class="container-fluid event py-5 {{ $events->count() > 0 ? '' : 'd-none' }}">
-            <div class="container py-5">
-                <div class="text-center mx-auto mb-5" style="max-width: 800px;">
-                    <h4 class="text-uppercase text-primary">Upcoming Events</h4>
-                    <h5 class="mb-0">At Happy Family Rwanda Organization (HFRO), We are excited to share with you the upcoming events and activities that aim to make a positive impact in our community. Join us in creating meaningful change and be part of these inspiring initiatives</h5>
-                </div>
-                <div class="event-carousel owl-carousel">
-                    @foreach ($events as $event)
-                    <div class="event-item">
-                        <img src="{{ asset('storage/'.$event->photo) }}" class="img-fluid w-100" alt="Image">
-                        <div class="event-content p-4">
-                            <div class="d-flex justify-content-between mb-4">
-                                <span class="text-body"><i class="fas fa-map-marker-alt me-2"></i>{{ Str::limit($event->location, 20) }}</span>
-                                <span class="text-body"><i class="fas fa-calendar-alt me-2"></i>{{ \Carbon\Carbon::parse($event->date)->format('d M, Y') }}</span>
-                            </div>
-                            <h4 class="mb-4">{{ Str::limit($event->event, 50) }}</h4>
-                            <p class="mb-4">{!! Str::limit(strip_tags($event->description), 200) !!}</p>
-                            <a class="btn-hover-bg btn btn-primary text-white py-2 px-4" href="/events/{{ $event->event }}">Read More</a>
-                        </div>
-                    </div>  
-                    @endforeach
-                   
-                </div>
-            </div>
+    <div class="container-fluid event py-5 impact-section {{ $events->count() > 0 ? '' : 'd-none' }}">
+    <div class="container py-5">
+        <div class="text-center mx-auto mb-5" style="max-width: 800px;">
+            <h5 class="brand-subtitle-centered mb-2">Upcoming Events</h5>
+            <h2 class="brand-title-dark display-5 mb-3">Join Our Community</h2>
+            <div class="title-line-center mx-auto mb-4"></div>
+            <p class="tab-description">
+                At Happy Family Rwanda Organization (HFRO), we are excited to share upcoming initiatives. Join us in creating meaningful change.
+            </p>
         </div>
+
+        <div class="event-carousel owl-carousel">
+            @foreach ($events as $event)
+            <div class="event-item impact-card mx-2">
+                <div class="impact-img-container">
+                    <img src="{{ asset('storage/'.$event->photo) }}" alt="{{ $event->event }}">
+                    
+                    <div class="event-date-badge">
+                        <span class="day">{{ \Carbon\Carbon::parse($event->date)->format('d') }}</span>
+                        <span class="month">{{ \Carbon\Carbon::parse($event->date)->format('M') }}</span>
+                    </div>
+
+                    <div class="impact-overlay">
+                        <a href="/events/{{ $event->slug ?? $event->id }}" class="btn-impact-view">Interested</a>
+                    </div>
+                </div>
+
+                <div class="event-content p-4 d-flex flex-column h-100">
+                    <div class="d-flex align-items-center mb-3 text-muted small font-weight-bold">
+                        <span class="mr-3"><i class="fas fa-map-marker-alt text-pink mr-1"></i> {{ Str::limit($event->location, 20) }}</span>
+                        <span><i class="fas fa-clock text-pink mr-1"></i> {{ \Carbon\Carbon::parse($event->date)->format('h:i A') }}</span>
+                    </div>
+
+                    <a href="/events/{{ $event->slug ?? $event->id }}" class="impact-card-title h4 mb-3">
+                        {{ Str::limit($event->event, 50) }}
+                    </a>
+
+                    <p class="impact-text mb-4">
+                        {!! Str::limit(strip_tags($event->description), 120) !!}
+                    </p>
+
+                    <div class="mt-auto">
+                        <a class="btn-modern-purple py-2 px-4 w-100 text-center" href="/events/{{ $event->slug ?? $event->id }}">
+                            View Details <i class="fas fa-chevron-right ml-2 small"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>  
+            @endforeach
+        </div>
+    </div>
+</div>
         <!-- Events End -->
 
         <!-- Blog Start -->
