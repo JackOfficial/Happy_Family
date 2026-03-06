@@ -478,6 +478,45 @@
 
     .text-pink { color: var(--accent-pink); }
 
+        .brand-subtitle {
+        color: var(--primary-purple);
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+    .text-pink { color: var(--accent-pink) !important; }
+    
+    .benefit-icon {
+        width: 25px;
+        height: 25px;
+        background: rgba(234, 62, 160, 0.1); /* Light Pink tint */
+        color: var(--accent-pink);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+    }
+
+    .volunteer-img-wrapper::before {
+        content: "";
+        position: absolute;
+        top: -15px;
+        left: -15px;
+        width: 100px;
+        height: 100px;
+        border-top: 5px solid var(--primary-purple);
+        border-left: 5px solid var(--primary-purple);
+        border-radius: 20px 0 0 0;
+    }
+
+    /* Subtle animation for the badge */
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    .animate-bounce { animation: bounce 3s infinite ease-in-out; }
+
     @media (max-width: 768px) {
         .display-3 { font-size: 2.5rem; }
     }
@@ -1061,29 +1100,85 @@
 </div>
 
         <!-- Volunteers Start -->
-        <div class="container-fluid volunteer py-5 mt-5">
-            <div class="container py-5">
-                <div class="row g-5">
-                    <div class="col-lg-5">
-                        <img src="{{ asset('frontend/img/Volunteers.jpg') }}" class="w-100" />
+      <div class="container-fluid volunteer py-5 mt-5 impact-section overflow-hidden">
+    <div class="container py-5">
+        <div class="row g-5 align-items-center">
+            {{-- Image Side with Modern Decoration --}}
+            <div class="col-lg-5 position-relative">
+                <div class="volunteer-img-wrapper">
+                    <img src="{{ asset('frontend/img/Volunteers.jpg') }}" 
+                         class="img-fluid rounded-lg shadow-lg" 
+                         alt="Volunteers at Happy Family Rwanda"
+                         style="border-radius: 20px; transform: rotate(-2deg); transition: 0.3s;"
+                         onmouseover="this.style.transform='rotate(0deg)'"
+                         onmouseout="this.style.transform='rotate(-2deg)'">
+                    
+                    {{-- Floating Badge --}}
+                    <div class="floating-badge bg-white p-3 shadow text-center rounded animate-bounce" 
+                         style="position: absolute; bottom: -20px; right: -10px; z-index: 5;">
+                        <h4 class="text-pink mb-0 fw-bold">100%</h4>
+                        <small class="text-muted text-uppercase fw-bold" style="font-size: 10px;">Free to Join</small>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Text Side --}}
+            <div class="col-lg-7">
+                <h5 class="brand-subtitle mb-2">Become a Volunteer</h5>
+                <h2 class="display-5 brand-title-dark mb-4">Together, we can make a <span class="text-pink">lasting difference</span>.</h2>
+                
+                <p class="mb-4 text-muted leading-relaxed">
+                    We believe that true change happens when hearts and hands come together. At <strong>Happy Family Rwanda Organization</strong>, we rely on the energy and passion of volunteers to transform communities. Your time and talents are the greatest gifts you can offer.
+                </p>
+
+                <div class="volunteer-benefits row mb-5">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="d-flex align-items-center mb-3">
+                                <div class="benefit-icon mr-2"><i class="fa fa-check"></i></div>
+                                <span>Warm, friendly community</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-3">
+                                <div class="benefit-icon mr-2"><i class="fa fa-check"></i></div>
+                                <span>Professional free training</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-3">
+                                <div class="benefit-icon mr-2"><i class="fa fa-check"></i></div>
+                                <span>Impactful environments</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="d-flex align-items-center mb-3">
+                                <div class="benefit-icon mr-2"><i class="fa fa-check"></i></div>
+                                <span>No strict requirements</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-3">
+                                <div class="benefit-icon mr-2"><i class="fa fa-check"></i></div>
+                                <span>Zero joining fees</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap align-items-center">
+                    <a class="btn-modern-purple py-3 px-5 shadow-lg mr-4 mb-3" href="#">
+                        JOIN OUR FAMILY <i class="fas fa-heart ml-2"></i>
+                    </a>
+                    <div class="volunteer-stats d-flex align-items-center mb-3">
+                        <div class="avatar-group d-flex mr-2">
+                            <div class="rounded-circle border border-white bg-light" style="width:30px; height:30px; margin-right: -10px;"></div>
+                            <div class="rounded-circle border border-white bg-light" style="width:30px; height:30px; margin-right: -10px;"></div>
+                            <div class="rounded-circle border border-white bg-light" style="width:30px; height:30px;"></div>
                         </div>
-                    <div class="col-lg-7">
-                        <h5 class="text-uppercase text-primary">Become a Volunteer</h5>
-                        <h1 class="mb-4">Together, we can make a difference.</h1>
-                        <p class="mb-4">
-                            Together, let's build a better future, empower those in need, and create a world where everyone can thrive.
-                            We cannot achieve our goals alone. We rely on the support and generosity of individuals, corporations, and foundations to continue our life-changing work. Your contributions, whether through financial donations, in-kind support, or volunteering, make a real difference in the lives of those we serve. Together, we can bring hope and transform communities, one step at a time.
-                        </p>
-                        <p class="text-dark"><i class=" fa fa-check text-primary me-2"></i> We are friendly to each other.</p>
-                        <p class="text-dark"><i class=" fa fa-check text-primary me-2"></i> If you join with us,We will give you free training.</p>
-                        <p class="text-dark"><i class=" fa fa-check text-primary me-2"></i> Its an opportunity to help poor Environments.</p>
-                        <p class="text-dark"><i class=" fa fa-check text-primary me-2"></i> No goal requirements.</p>
-                        <p class="text-dark mb-5"><i class=" fa fa-check text-primary me-2"></i> Joining is tottaly free. We dont need any money from you.</p>
-                        <a class="btn-hover-bg btn btn-primary text-white py-2 px-4" href="#">Join With Us</a>
+                        <small class="text-muted">+50 Active Volunteers</small>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
         <!-- Volunteers End -->
 
          <!-- Our Team Start -->
