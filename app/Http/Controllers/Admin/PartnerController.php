@@ -3,92 +3,105 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Partner;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class PartnerController extends Controller
 {
-    // Show list of partners
-    public function index()
+    /**
+     * Display a listing of the partners.
+     */
+    public function index(): View
     {
-        $partners = Partner::latest()->get();
+        // Using paginate instead of get() for better admin performance as the list grows
+        $partners = Partner::with('organization')->latest()->paginate(15);
+        
         return view('admin.manage.partners', compact('partners'));
     }
 
-    // Show create form
-    public function create()
+    /**
+     * Show the form for creating a new partner.
+     */
+    public function create(): View
     {
         return view('admin.create.partner');
     }
 
-    // Store new partner
-    public function store(Request $request)
+    /**
+     * Store a newly created partner in storage.
+     */
+    public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'website' => 'nullable|url|max:255',
-            'logo' => 'nullable|image|max:2048',
+        $validated = $request->validate([
+            'name'        => 'required|string|max:255',
+            'website'     => 'nullable|url|max:255',
+            'logo'        => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'nullable|string',
         ]);
 
-        $logoPath = null;
         if ($request->hasFile('logo')) {
-            $logoPath = $request->file('logo')->store('partners', 'public');
+            $validated['logo'] = $request->file('logo')->store('partners', 'public');
         }
 
-        Partner::create([
-            'organization_id' => 1, // hardcoded since only one organization
-            'name' => $request->name,
-            'website' => $request->website,
-            'logo' => $logoPath,
-            'description' => $request->description,
-        ]);
+        // Ensuring we have an organization link, defaults to 1
+        $validated['organization_id'] = $request->organization_id ?? 1;
 
-        return redirect()->route('admin.partners.index')->with('success', 'Partner added successfully.');
+        Partner::create($validated);
+
+        return redirect()->route('admin.partners.index')
+            ->with('success', 'Partner successfully onboarded.');
     }
 
-    // Show edit form
-    public function edit(Partner $partner)
+    /**
+     * Show the form for editing the specified partner.
+     */
+    public function edit(Partner $partner): View
     {
         return view('admin.edit.partner', compact('partner'));
     }
 
-    // Update partner
-    public function update(Request $request, Partner $partner)
+    /**
+     * Update the specified partner in storage.
+     */
+    public function update(Request $request, Partner $partner): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'website' => 'nullable|url|max:255',
-            'logo' => 'nullable|image|max:2048',
+        $validated = $request->validate([
+            'name'        => 'required|string|max:255',
+            'website'     => 'nullable|url|max:255',
+            'logo'        => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'nullable|string',
         ]);
 
         if ($request->hasFile('logo')) {
-            // Delete old logo
+            // Delete old file if a new one is uploaded
             if ($partner->logo) {
                 Storage::disk('public')->delete($partner->logo);
             }
-            $partner->logo = $request->file('logo')->store('partners', 'public');
+            $validated['logo'] = $request->file('logo')->store('partners', 'public');
         }
 
-        $partner->update([
-            'name' => $request->name,
-            'website' => $request->website,
-            'description' => $request->description,
-        ]);
+        $partner->update($validated);
 
-        return redirect()->route('admin.partners.index')->with('success', 'Partner updated successfully.');
+        return redirect()->route('admin.partners.index')
+            ->with('success', 'Partner details updated successfully.');
     }
 
-    // Delete partner
-    public function destroy(Partner $partner)
+    /**
+     * Remove the specified partner from storage.
+     */
+    public function destroy(Partner $partner): RedirectResponse
     {
+        // Cleanup storage
         if ($partner->logo) {
             Storage::disk('public')->delete($partner->logo);
         }
+
         $partner->delete();
 
-        return redirect()->route('admin.partners.index')->with('success', 'Partner deleted successfully.');
+        return redirect()->route('admin.partners.index')
+            ->with('success', 'Partner has been removed.');
     }
 }
