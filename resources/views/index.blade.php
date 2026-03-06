@@ -453,6 +453,29 @@
         background: var(--accent-pink) !important;
     }
 
+        /* Gallery Specific Enhancements */
+    .gallery-card {
+        border: none;
+        background: transparent;
+        transition: 0.3s;
+    }
+    
+    .gallery-card .impact-img-container {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .gallery-caption-simple {
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    /* Lightbox Customization to match Brand */
+    .lb-outerContainer { border-radius: 10px; }
+    .lb-data .lb-caption { color: var(--primary-purple); font-weight: 700; }
+    .lb-number { background: var(--accent-pink); padding: 2px 8px; border-radius: 20px; color: white; }
+
     .text-pink { color: var(--accent-pink); }
 
     @media (max-width: 768px) {
@@ -954,156 +977,88 @@
         </div>
         <!-- Blog End -->
 
-        <!-- Gallery Start -->
-        <div class="container-fluid gallery py-5 my-5 {{ $gallery->count() > 0 ? '' : 'd-none' }}">
-            <div class="mx-auto text-center mb-5" style="max-width: 900px;">
-                <h5 class="text-uppercase text-primary">Our Gallery</h5>
-                <h1 class="mb-4">Capture the Magic with us</h1>
-                <p class="mb-0">
-                    Welcome to the Happy Family Gallery, where moments of inspiration, talent, and adventure come to life. Explore our curated collection of photos and videos showcasing the vibrant experiences we create.
-                </p>
-            </div>
-            <div class="tab-class text-center">
-                <ul class="nav nav-pills d-inline-flex justify-content-center mb-5">
-                    <li class="nav-item">
-                        <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill active" data-bs-toggle="pill" href="#GalleryTab-1">
-                            <span class="text-dark" style="width: 150px;">All</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="d-flex py-2 mx-3 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#VolunteeringTab">
-                            <span class="text-dark" style="width: 150px;">Volunteering</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#EntertainmentTab">
-                            <span class="text-dark" style="width: 150px;">Entertainment</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#WorkshopTab">
-                            <span class="text-dark" style="width: 150px;">Workshop</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#SportTab">
-                            <span class="text-dark" style="width: 150px;">Sport</span>
-                        </a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div id="GalleryTab-1" class="tab-pane fade show p-0 active">
-                        <div class="row g-2">
-                            @foreach ($gallery as $photo)
-                            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                                <div class="gallery-item h-100">
-                                    <img src="{{ asset('storage/' . $photo->file_path) }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                                    <div class="gallery-content">
-                                        <div class="gallery-info">
-                                            <h5 class="text-white text-uppercase mb-2">{{ Str::limit($photo->caption, 50) }}</h5>
-                                            <a href="#" class="btn-hover text-white">View more <i class="fa fa-arrow-right ms-2"></i></a>
+      <div class="container-fluid gallery py-5 my-5 {{ $gallery->count() > 0 ? '' : 'd-none' }}">
+    <div class="container">
+        <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+            <h5 class="brand-subtitle-centered mb-2">Our Gallery</h5>
+            <h2 class="brand-title-dark display-5 mb-3">Capture the Magic With Us</h2>
+            <div class="title-line-center mx-auto mb-4"></div>
+            <p class="tab-description">
+                Welcome to the Happy Family Gallery. Explore our curated collection of photos showcasing the vibrant experiences, talent, and community impact we create together.
+            </p>
+        </div>
+
+        <div class="tab-class text-center">
+            <ul class="nav nav-pills modern-pills d-inline-flex justify-content-center mb-5">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="pill" href="#GalleryTab-all">All</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="pill" href="#VolunteeringTab">Volunteering</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="pill" href="#EntertainmentTab">Entertainment</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="pill" href="#WorkshopTab">Workshop</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="pill" href="#SportTab">Sport</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                {{-- Tab Pane Template --}}
+                @php
+                    $categories = [
+                        'all' => null, 
+                        'Volunteering' => 'Volunteering', 
+                        'Entertainment' => 'Entertainment', 
+                        'Workshop' => 'Workshop', 
+                        'Sport' => 'Sport'
+                    ];
+                @endphp
+
+                @foreach($categories as $id => $category)
+                <div id="{{ $id == 'all' ? 'GalleryTab-all' : $id.'Tab' }}" class="tab-pane fade show {{ $loop->first ? 'active' : '' }} p-0">
+                    <div class="row g-3">
+                        @foreach ($gallery as $photo)
+                            @if (!$category || $photo->category == $category)
+                            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                                <div class="gallery-card impact-card">
+                                    <div class="impact-img-container" style="height: 250px;">
+                                        <img src="{{ asset('storage/' . ($photo->file_path ?? $photo->photo)) }}" class="img-fluid w-100 h-100" alt="Gallery Image">
+                                        
+                                        <div class="impact-overlay">
+                                            <div class="text-center p-2">
+                                                <a href="{{ asset('storage/' . ($photo->file_path ?? $photo->photo)) }}" 
+                                                   data-lightbox="gallery-{{ $id }}" 
+                                                   data-title="{{ $photo->caption ?? $photo->description }}"
+                                                   class="btn-impact-view mb-2">
+                                                    <i class="fas fa-search-plus"></i>
+                                                </a>
+                                                <small class="text-white d-block text-uppercase" style="font-size: 0.6rem; letter-spacing: 1px;">
+                                                    {{ $photo->category }}
+                                                </small>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="gallery-plus-icon">
-                                        <a href="{{ asset('storage/' . $photo->file_path) }}" data-lightbox="gallery-1" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                    @if($photo->caption || $photo->description)
+                                    <div class="gallery-caption-simple p-2 text-center">
+                                        <small class="text-muted">{{ Str::limit($photo->caption ?? $photo->description, 20) }}</small>
                                     </div>
+                                    @endif
                                 </div>
-                            </div> 
-                            @endforeach
-                        </div>
-                    </div>
-                    <div id="VolunteeringTab" class="tab-pane fade show p-0">
-                        <div class="row g-2">
-                            @foreach ($gallery as $photo)
-                            @if ($photo->category == 'Volunteering')
-                            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                                <div class="gallery-item h-100">
-                                    <img src="{{ asset('storage/' . $photo->photo) }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                                    <div class="gallery-content">
-                                        <div class="gallery-info">
-                                            <h5 class="text-white text-uppercase mb-2">{{ Str::limit($photo->description, 50) }}</h5>
-                                            <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="gallery-plus-icon">
-                                        <a href="{{ asset('storage/' . $photo->photo) }}" data-lightbox="gallery-1" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                                    </div>
-                                </div>
-                            </div>   
+                            </div>
                             @endif
-                            @endforeach
-                        </div>
-                    </div>
-                    <div id="EntertainmentTab" class="tab-pane fade show p-0">
-                        <div class="row g-2">
-                            @foreach ($gallery as $photo)
-                            @if ($photo->category == 'Entertainment')
-                            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                                <div class="gallery-item h-100">
-                                    <img src="{{ asset('storage/' . $photo->photo) }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                                    <div class="gallery-content">
-                                        <div class="gallery-info">
-                                            <h5 class="text-white text-uppercase mb-2">{{ Str::limit($photo->description, 50) }}</h5>
-                                            <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="gallery-plus-icon">
-                                        <a href="{{ asset('storage/' . $photo->photo) }}" data-lightbox="gallery-1" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                                    </div>
-                                </div>
-                            </div>   
-                            @endif
-                            @endforeach
-                        </div>
-                    </div>
-                    <div id="WorkshopTab" class="tab-pane fade show p-0">
-                        <div class="row g-2">
-                            @foreach ($gallery as $photo)
-                            @if ($photo->category == 'Workshop')
-                            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                                <div class="gallery-item h-100">
-                                    <img src="{{ asset('storage/' . $photo->photo) }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                                    <div class="gallery-content">
-                                        <div class="gallery-info">
-                                            <h5 class="text-white text-uppercase mb-2">{{ Str::limit($photo->description, 50) }}</h5>
-                                            <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="gallery-plus-icon">
-                                        <a href="{{ asset('storage/' . $photo->photo) }}" data-lightbox="gallery-1" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                                    </div>
-                                </div>
-                            </div>   
-                            @endif
-                            @endforeach
-                        </div>
-                    </div>
-                    <div id="SportTab" class="tab-pane fade show p-0">
-                        <div class="row g-2">
-                            @foreach ($gallery as $photo)
-                            @if ($photo->category == 'Sport')
-                            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                                <div class="gallery-item h-100">
-                                    <img src="{{ asset('storage/' . $photo->photo) }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                                    <div class="gallery-content">
-                                        <div class="gallery-info">
-                                            <h5 class="text-white text-uppercase mb-2">{{ Str::limit($photo->description, 50) }}</h5>
-                                            <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="gallery-plus-icon">
-                                        <a href="{{ asset('storage/' . $photo->photo) }}" data-lightbox="gallery-1" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                                    </div>
-                                </div>
-                            </div>   
-                            @endif
-                            @endforeach
-                        </div>
+                        @endforeach
                     </div>
                 </div>
+                @endforeach
             </div>
         </div>
-        <!-- Gallery End -->
+    </div>
+</div>
 
         <!-- Volunteers Start -->
         <div class="container-fluid volunteer py-5 mt-5">
