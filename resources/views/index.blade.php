@@ -277,9 +277,11 @@
         justify-content: center;
         opacity: 0;
         transition: 0.4s;
+        z-index: 2;
     }
 
     .impact-card:hover .impact-overlay {
+        background: rgba(99, 16, 132, 0.7);
         opacity: 1;
     }
 
@@ -355,21 +357,22 @@
     }
 
     /* Footer Button */
-    .btn-modern-purple {
-        background: var(--primary-purple);
-        color: white;
-        border-radius: 8px;
-        font-weight: 700;
-        text-decoration: none !important;
-        display: inline-block;
-        transition: 0.3s;
-    }
+  .btn-modern-purple {
+    background: var(--primary-purple);
+    color: #ffffff !important; /* Force white text */
+    border-radius: 8px;
+    padding: 12px 25px; /* Added padding for button shape */
+    font-weight: 700;
+    border: 2px solid var(--primary-purple); /* Border prevents it blending into white */
+    box-shadow: 0 4px 15px rgba(99, 16, 132, 0.2); /* Subtle purple glow */
+    transition: 0.3s;
+}
 
-    .btn-modern-purple:hover {
-        background: var(--accent-pink);
-        color: white;
-        transform: scale(1.05);
-    }
+.btn-modern-purple:hover {
+    background: var(--accent-pink);
+    border-color: var(--accent-pink);
+    color: white;
+}
 
     @media (max-width: 768px) {
         .display-3 { font-size: 2.5rem; }
