@@ -168,101 +168,70 @@
     </div>
 </div>
 
-        <!-- About Start -->
-        <div class="container-fluid about  py-5">
-            <div class="container py-5">
-                <div class="row g-5">
-                    <div class="col-xl-5">
-                        <div class="h-100">
-                            <img src="{{ asset('images/welcome photo.png') }}" class="img-fluid w-100" alt="Image">
-                        </div>
+      <div class="container-fluid about-section py-5">
+    <div class="container py-5">
+        <div class="row g-5 align-items-center">
+            <div class="col-xl-5">
+                <div class="image-wrapper position-relative">
+                    <img src="{{ asset('images/welcome photo.png') }}" class="img-fluid rounded-custom shadow-lg" alt="Happy Family Rwanda Welcome">
+                    <div class="experience-badge d-none d-sm-block">
+                        <span class="h2 d-block mb-0">100%</span>
+                        <small>Compassion</small>
                     </div>
-                    <div class="col-xl-7">
-                        <h5 class="text-uppercase text-primary">About Us</h5>
-                        <h1 class="mb-4">Welcome to Happy Family Rwanda Organization (HFRO)</h1>
-                        <p class="fs-5 mb-4">
-                            a compassionate NGO dedicated to creating positive change and 
-                            making a lasting impact in communities worldwide. We believe in the 
-                            power of collective action and the ability of individuals to transform lives 
-                            through compassion, generosity, and empowerment.
-                        </p>
-                        <div class="tab-class bg-secondary p-4">
-                            <ul class="nav d-flex mb-2">
-                                <li class="nav-item mb-3">
-                                    <a class="d-flex py-2 text-center bg-white active" data-bs-toggle="pill" href="#tab-1">
-                                        <span class="text-dark" style="width: 150px;">About</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item mb-3">
-                                    <a class="d-flex py-2 mx-3 text-center bg-white" data-bs-toggle="pill" href="#tab-2">
-                                        <span class="text-dark" style="width: 150px;">Mission</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item mb-3">
-                                    <a class="d-flex py-2 text-center bg-white" data-bs-toggle="pill" href="#tab-3">
-                                        <span class="text-dark" style="width: 150px;">Vision</span>
-                                    </a>
-                                </li>
-                            </ul>
-                            <div class="tab-content">
-                                <div id="tab-1" class="tab-pane fade show p-0 active">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="d-flex">
-                                                <div class="text-start my-auto">
-                                                    <h5 class="text-uppercase mb-3">About Us</h5>
-                                                    <p>
-                                                     {!! $organization->about !!}
-                                                     </p>
-                                                    <div class="d-flex align-items-center justify-content-start">
-                                                        <a class="btn-hover-bg btn btn-primary text-white py-2 px-4" href="#">Read More</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-7">
+                <div class="content-box ps-xl-4">
+                    <h5 class="brand-subtitle">About Our Organization</h5>
+                    <h1 class="display-5 mb-4 brand-title">Empowering Communities in Rwanda</h1>
+                    <p class="lead mb-4 text-muted">
+                        Happy Family Rwanda Organization (HFRO) is a compassionate NGO dedicated to creating positive change and 
+                        making a lasting impact through collective action and empowerment.
+                    </p>
+
+                    <div class="custom-tabs-container">
+                        <ul class="nav nav-pills modern-pills mb-4" id="pills-tab" role="tablist">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-1" type="button">Our Story</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-2" type="button">Mission</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-target="#tab-3" type="button">Vision</button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content impact-tab-content p-4 rounded-custom" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="tab-1">
+                                <h5 class="mb-3 text-purple">Who We Are</h5>
+                                <div class="tab-description">
+                                    {!! $organization->about !!}
                                 </div>
-                                <div id="tab-2" class="tab-pane fade show p-0">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="d-flex">
-                                                <div class="text-start my-auto">
-                                                    <h5 class="text-uppercase mb-3">Our Mission</h5>
-                                                    <p>
-                                                       {!! $organization->mission !!}
-                                                    </p>
-                                                    <div class="d-flex align-items-center justify-content-start">
-                                                        <a class="btn-hover-bg btn btn-primary text-white py-2 px-4" href="#">Read More</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <a href="#" class="btn-modern-accent mt-3">Read Full Story <i class="fas fa-arrow-right ml-2"></i></a>
+                            </div>
+                            <div class="tab-pane fade" id="tab-2">
+                                <h5 class="mb-3 text-purple">Our Purpose</h5>
+                                <div class="tab-description">
+                                    {!! $organization->mission !!}
                                 </div>
-                                <div id="tab-3" class="tab-pane fade show p-0">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="d-flex">
-                                                <div class="text-start my-auto">
-                                                    <h5 class="text-uppercase mb-3">Our Vision</h5>
-                                                    <p>
-                                                    {!! $organization->vision !!}
-                                                    </p>
-                                                    <div class="d-flex align-items-center justify-content-start">
-                                                        <a class="btn-hover-bg btn btn-primary text-white py-2 px-4" href="#">Read More</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <a href="#" class="btn-modern-accent mt-3">Learn More</a>
+                            </div>
+                            <div class="tab-pane fade" id="tab-3">
+                                <h5 class="mb-3 text-purple">Our Dream</h5>
+                                <div class="tab-description">
+                                    {!! $organization->vision !!}
                                 </div>
+                                <a href="#" class="btn-modern-accent mt-3">Get Involved</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- About End -->
+    </div>
+</div>
 
         <!-- Services Start -->
         <div class="container-fluid service py-5 bg-light {{ $causes->count() > 0 ? '' : 'd-none' }}">
