@@ -371,13 +371,6 @@
         transform: scale(1.05);
     }
 
-        .transition-up { transition: transform 0.3s ease, shadow 0.3s ease; }
-    .transition-up:hover { transform: translateY(-10px); box-shadow: 0 1rem 3rem rgba(0,0,0,.1) !important; }
-    .btn-outline-primary:hover { color: #fff !important; }
-    /* Ensure the text color matches your primary branding */
-    .text-primary { color: #007bff !important; } 
-    .bg-primary { background-color: #007bff !important; }
-
     @media (max-width: 768px) {
         .display-3 { font-size: 2.5rem; }
     }
@@ -560,39 +553,51 @@
 </div>
 
         <!-- Stories -->
-       <div class="container-fluid donation py-5 {{ $stories->count() > 0 ? '' : 'd-none' }}" style="background: #f8f9fa;">
+       <div class="container-fluid impact-section py-5 {{ $stories->count() > 0 ? '' : 'd-none' }}">
     <div class="container py-5">
         <div class="text-center mx-auto pb-5" style="max-width: 800px;">
-            <h5 class="text-uppercase text-primary font-weight-bold" style="letter-spacing: 1px;">Success Stories</h5>
-            <h2 class="display-5 mb-4">Discover our impactful stories</h2>
-            <p class="mb-0 text-muted">Find out how Happy Family is fostering resilience and making impact in local communities. Join us in building a brighter future together.</p>
+            <h5 class="brand-subtitle-centered mb-2">Our Impact</h5>
+            <h2 class="brand-title-dark display-5 mb-3">Stories of Change</h2>
+            <div class="title-line-center mx-auto mb-4"></div>
+            <p class="mb-0 tab-description">Discover how Happy Family is fostering resilience and making a real impact in local communities. Join us in building a brighter future together.</p>
         </div>
         
         <div class="row g-4">
             @foreach ($stories as $story)
             <div class="col-lg-4 col-md-6">
-                <div class="donation-item rounded overflow-hidden shadow-sm bg-white h-100 transition-up">
-                    <div class="position-relative">
+                <div class="impact-card">
+                    <div class="impact-img-container">
                         @if($story->photo)
-                            <img src="{{ asset('storage/' . $story->photo->file_path) }}" class="img-fluid w-100" alt="{{ $story->title }}" style="height: 250px; object-fit: cover;">
+                            <img src="{{ asset('storage/' . $story->photo->file_path) }}" alt="{{ $story->title }}">
                         @else
-                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
-                                <i class="fas fa-image fa-3x text-muted"></i>
+                            <div class="bg-light d-flex align-items-center justify-content-center h-100">
+                                <i class="fas fa-image fa-3x text-muted opacity-50"></i>
                             </div>
                         @endif
-                        <div class="badge-cause bg-primary text-white px-3 py-1 position-absolute" style="top: 20px; left: 0; border-radius: 0 20px 20px 0; font-size: 0.8rem;">
+                        
+                        <div class="impact-tag">
                             {{ $story->cause->name ?? 'Community' }}
+                        </div>
+
+                        <div class="impact-overlay">
+                            <a href="{{ url('story/' . $story->slug) }}" class="btn-impact-view">
+                                View Story
+                            </a>
                         </div>
                     </div>
                     
-                    <div class="donation-content d-flex flex-column p-4">
-                        <h4 class="mb-3" style="min-height: 56px;">{{ Str::limit($story->title, 50) }}</h4>
-                        <p class="text-muted mb-4" style="font-size: 0.95rem;">
-                            {!! Str::limit(strip_tags($story->summary ?? $story->content), 100) !!}
+                    <div class="p-4 d-flex flex-column flex-grow-1">
+                        <a href="{{ url('story/' . $story->slug) }}" class="impact-card-title h4 mb-3">
+                            {{ Str::limit($story->title, 50) }}
+                        </a>
+                        
+                        <p class="impact-text mb-4">
+                            {!! Str::limit(strip_tags($story->summary ?? $story->content), 95) !!}
                         </p>
-                        <div class="mt-auto">
-                            <a class="btn btn-outline-primary rounded-pill px-4 py-2 transition" href="{{ url('story/' . $story->slug) }}">
-                                Read Full Story <i class="fas fa-arrow-right ml-2"></i>
+                        
+                        <div class="mt-auto pt-3 border-top">
+                            <a href="{{ url('story/' . $story->slug) }}" class="link-learn-more">
+                                READ FULL STORY <i class="fas fa-chevron-right ml-1 small"></i>
                             </a>
                         </div>
                     </div>
@@ -601,8 +606,8 @@
             @endforeach
 
             <div class="col-12 text-center mt-5">
-                <a class="btn btn-primary btn-hover-bg text-white py-3 px-5 rounded-pill shadow" href="/stories">
-                    View All Stories <i class="fas fa-th-list ml-2"></i>
+                <a href="/stories" class="btn-modern-purple py-3 px-5">
+                    Explore More Stories <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
         </div>
