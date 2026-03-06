@@ -21,7 +21,7 @@
 </section>
 
 <section class="content" x-data="{ logoPreview: null }">
-    <form action="{{ route('admin.causes.update', $cause->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.causes.update', $cause->slug) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
