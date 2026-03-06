@@ -15,11 +15,13 @@ class StoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+   public function index()
     {
-        $stories= Story::with(['organization', 'user', 'photo'])->latest()->get();
+        // Added pagination - better for performance as stories grow
+        $stories = Story::with(['organization', 'user', 'photo'])
+                        ->latest()
+                        ->paginate(15); 
         return view('admin.manage.stories', compact('stories'));
-       //dd("Hello world");
     }
 
     /**
@@ -34,41 +36,39 @@ class StoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+   public function store(Request $request)
     {
-        $request->validate([
-        'title' => 'required|string|max:255',
-        'summary' => 'nullable|string',
-        'content' => 'required|string',
-        'status' => 'in:draft,published,archived',
-        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        $validated = $request->validate([
+            'title'   => 'required|string|max:255',
+            'summary' => 'nullable|string',
+            'content' => 'required|string',
+            'status'  => 'required|in:draft,published,archived',
+            'photo'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120', // Increased to 5MB
         ]);
 
         $slug = Str::slug($request->title);
-        // Ensure unique slug
         if (Story::where('slug', $slug)->exists()) {
-            $slug .= '-' . time();
+            $slug .= '-' . Str::lower(Str::random(4)); // More elegant than time()
         }
         
-        $organization = Organization::first();
+        // Using a fallback for organization if none exists to prevent crashes
+        $organization = Organization::first() ?? new Organization(['id' => 1]);
 
         $story = Story::create([
-            'title' => $request->title,
-            'slug' => $slug,
+            'title'           => $validated['title'],
+            'slug'            => $slug,
             'organization_id' => $organization->id,
-            'user_id' => auth()->id(),
-            'summary' => $request->summary ?? null,
-            'content' => $request->content,
-            'status' => $request->status ?? 'published',
+            'user_id'         => auth()->id(),
+            'summary'         => $validated['summary'],
+            'content'         => $validated['content'],
+            'status'          => $validated['status'],
         ]);
         
-        // Handle photo upload
         if ($request->hasFile('photo')) {
             $filePath = $request->file('photo')->store('stories', 'public');
-
             $story->photo()->create([
                 'file_path' => $filePath,
-                'caption' => $request->title,
+                'caption'   => $validated['title'],
             ]);
         }
 
@@ -94,63 +94,61 @@ class StoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Story $story)
-{
-    $request->validate([
-        'title' => 'required|string|max:255',
-        'summary' => 'nullable|string',
-        'content' => 'required|string',
-        'status' => 'in:draft,published,archived',
-        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
+public function update(Request $request, Story $story)
+    {
+        $validated = $request->validate([
+            'title'   => 'required|string|max:255',
+            'summary' => 'nullable|string',
+            'content' => 'required|string',
+            'status'  => 'required|in:draft,published,archived',
+            'photo'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+        ]);
 
-    // Generate slug if title changed
-    $slug = Str::slug($request->title);
-    if ($slug !== $story->slug && Story::where('slug', $slug)->where('id', '!=', $story->id)->exists()) {
-        $slug .= '-' . time();
-    }
-
-    // Update story details
-    $story->update([
-        'title' => $request->title,
-        'slug' => $slug,
-        'summary' => $request->summary ?? null,
-        'content' => $request->content,
-        'status' => $request->status ?? $story->status,
-    ]);
-
-    // Handle photo replacement
-    if ($request->hasFile('photo')) {
-        // Delete old photo from storage
-        if ($story->photo) {
-            Storage::disk('public')->delete($story->photo->file_path);
-            $story->photo()->delete();
+        // Logic fix: Only update slug if the title actually changed
+        $slug = $story->slug;
+        if ($validated['title'] !== $story->title) {
+            $slug = Str::slug($validated['title']);
+            if (Story::where('slug', $slug)->where('id', '!=', $story->id)->exists()) {
+                $slug .= '-' . Str::lower(Str::random(4));
+            }
         }
 
-        // Store new photo
-        $filePath = $request->file('photo')->store('stories', 'public');
-        $story->photo()->create([
-            'file_path' => $filePath,
-            'caption' => $request->title,
+        $story->update([
+            'title'   => $validated['title'],
+            'slug'    => $slug,
+            'summary' => $validated['summary'],
+            'content' => $validated['content'],
+            'status'  => $validated['status'],
         ]);
-    }
 
-    return redirect()->route('admin.stories.index')->with('success', 'Story updated successfully.');
-}
+        if ($request->hasFile('photo')) {
+            if ($story->photo) {
+                Storage::disk('public')->delete($story->photo->file_path);
+                $story->photo()->delete();
+            }
+
+            $filePath = $request->file('photo')->store('stories', 'public');
+            $story->photo()->create([
+                'file_path' => $filePath,
+                'caption'   => $validated['title'],
+            ]);
+        }
+
+        return redirect()->route('admin.stories.index')->with('success', 'Story updated successfully.');
+    }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Story $story)
+   public function destroy(Story $story)
     {
-        // Delete photo from storage before deleting story
+        // polymorphic cleanup is good!
         if ($story->photo) {
             Storage::disk('public')->delete($story->photo->file_path);
             $story->photo->delete();
         }
         
         $story->delete();
-
         return redirect()->route('admin.stories.index')->with('success', 'Story deleted successfully.');
     }
 }
