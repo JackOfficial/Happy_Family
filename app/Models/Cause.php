@@ -13,6 +13,7 @@ class Cause extends Model
 
     protected $fillable = [
         'name',
+        'slug',
         'description',
         'status' // Active, Completed, Pending, etc.
     ];
