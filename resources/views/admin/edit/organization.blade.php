@@ -172,4 +172,30 @@
         $(this).next('.custom-file-label').addClass("selected").html(fileName);
     });
 </script>
+
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+<script>
+    // 1. Initialize TinyMCE for all target IDs
+    tinymce.init({
+        selector: '#missionEditor, #visionEditor, #aboutEditor',
+        height: 300,
+        menubar: false,
+        plugins: 'advlist autolink lists link charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table code help wordcount',
+        toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+    });
+
+    // 2. Fix for Bootstrap Tabs (TinyMCE sometimes glitches when initialized in a hidden tab)
+    $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+        // This ensures the editor renders correctly when the user clicks the "Mission & Vision" tab
+        tinymce.triggerSave();
+    });
+
+    // 3. File Input filename helper (Keep this as is)
+    $('.custom-file-input').on('change', function() {
+        let fileName = $(this).val().split('\\').pop();
+        $(this).next('.custom-file-label').addClass("selected").html(fileName);
+    });
+</script>
 @endpush
