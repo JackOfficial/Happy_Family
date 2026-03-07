@@ -107,9 +107,6 @@
                 </div>
             </div>
 
-            <div class="d-flex justify-content-center mt-4 mb-5">
-                {{ $files->links('pagination::bootstrap-4') }}
-            </div>
 
             <div x-show="showModal" class="modal-backdrop-custom" 
                  style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1050; display: flex; align-items: center; justify-content: center;"
