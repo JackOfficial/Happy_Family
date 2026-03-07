@@ -4,12 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Project;
-use App\Models\Cause;
-use App\Models\Organization;
-use App\Models\Document;
+use App\Models\{Project, Cause, Organization, Document};
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\{Storage, DB};
 
 class ProjectController extends Controller
 {
@@ -18,11 +15,11 @@ class ProjectController extends Controller
      */
     public function index()
     {
-       $projects = Project::with(['project_photo', 'documents', 'cause'])
-        ->latest()
-        ->paginate(15);
+        $projects = Project::with(['project_photo', 'documents', 'cause'])
+            ->latest()
+            ->paginate(15);
 
-       return view('admin.manage.projects', compact('projects'));
+        return view('admin.manage.projects', compact('projects'));
     }
 
     /**
@@ -39,74 +36,28 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'cause_id' => 'nullable|exists:causes,id',
-            'summary' => 'nullable|string',
-            'description' => 'nullable|string',
-            'goal' => 'nullable|string',
-            'beneficiaries' => 'nullable|integer|min:0',
-            'budget' => 'nullable|numeric|min:0',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'progress' => 'nullable|integer|between:0,100',
-            'status' => 'in:active,completed,paused,cancelled',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'documents.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,jpg,jpeg,png|max:5120',
-        ]);
+        $validated = $this->validateProject($request);
 
-        $slug = Str::slug($request->title);
-        if (Project::where('slug', $slug)->exists()) $slug .= '-' . time();
-
-        $organization = Organization::first();
-
-        $project = Project::create([
-            'title' => $request->title,
-            'slug' => $slug,
-            'organization_id' => $organization->id,
-            'cause_id' => $request->cause_id,
-            'summary' => $request->summary,
-            'description' => $request->description,
-            'goal' => $request->goal,
-            'beneficiaries' => $request->beneficiaries,
-            'budget' => $request->budget,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'progress' => $request->progress ?? 0,
-            'status' => $request->status ?? 'active',
-        ]);
-
-        // Upload photo
-        if ($request->hasFile('photo')) {
-            $filePath = $request->file('photo')->store('projects', 'public');
-            $project->project_photo()->create([
-                'file_path' => $filePath,
-                'caption' => $request->title,
-            ]);
-        }
-
-        // Upload multiple documents
-        if ($request->hasFile('documents')) {
-            foreach ($request->file('documents') as $file) {
-                $filePath = $file->store('projects/documents', 'public');
-                $project->documents()->create([
-                    'title' => $request->title,
-                    'file_path' => $filePath,
-                    'file_extension' => $file->getClientOriginalExtension(),
-                ]);
+        return DB::transaction(function () use ($request, $validated) {
+            // Generate unique slug
+            $slug = Str::slug($validated['title']);
+            if (Project::where('slug', $slug)->exists()) {
+                $slug .= '-' . Str::lower(Str::random(5));
             }
-        }
 
-        return redirect()->route('admin.projects.index')->with('success', 'Project created successfully.');
-    }
+            $organization = Organization::first();
 
-    /**
-     * Display a specific project with documents
-     */
-    public function show(Project $project)
-    {
-        $project->load(['project_photo', 'documents', 'cause']);
-        return view('admin.show.project', compact('project'));
+            $project = Project::create(array_merge($validated, [
+                'slug' => $slug,
+                'organization_id' => $organization?->id,
+                'progress' => $request->progress ?? 0,
+                'status' => $request->status ?? 'active',
+            ]));
+
+            $this->handleFileUploads($request, $project);
+
+            return redirect()->route('admin.projects.index')->with('success', 'Project created successfully.');
+        });
     }
 
     /**
@@ -124,100 +75,90 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'cause_id' => 'nullable|exists:causes,id',
-            'summary' => 'nullable|string',
-            'description' => 'nullable|string',
-            'goal' => 'nullable|string',
+        $validated = $this->validateProject($request, $project->id);
+
+        return DB::transaction(function () use ($request, $project, $validated) {
+            $project->update($validated);
+
+            $this->handleFileUploads($request, $project);
+
+            return redirect()->route('admin.projects.index')->with('success', 'Project updated successfully.');
+        });
+    }
+
+    /**
+     * Delete a project and its associated files
+     */
+    public function destroy(Project $project)
+    {
+        return DB::transaction(function () use ($project) {
+            // Delete Featured Photo
+            if ($project->project_photo) {
+                Storage::disk('public')->delete($project->project_photo->file_path);
+                $project->project_photo->delete();
+            }
+
+            // Delete Multi-Documents
+            foreach ($project->documents as $doc) {
+                Storage::disk('public')->delete($doc->file_path);
+                $doc->delete();
+            }
+
+            $project->delete();
+            return redirect()->route('admin.projects.index')->with('success', 'Project and all files removed.');
+        });
+    }
+
+    /**
+     * Centralized Validation Rules
+     */
+    protected function validateProject(Request $request, $id = null)
+    {
+        return $request->validate([
+            'title'         => 'required|string|max:255',
+            'cause_id'      => 'nullable|exists:causes,id',
+            'summary'       => 'nullable|string|max:500',
+            'description'   => 'nullable|string',
             'beneficiaries' => 'nullable|integer|min:0',
-            'budget' => 'nullable|numeric|min:0',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'progress' => 'nullable|integer|between:0,100',
-            'status' => 'in:active,completed,paused,cancelled',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'documents.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,jpg,jpeg,png|max:5120',
+            'budget'        => 'nullable|numeric|min:0',
+            'start_date'    => 'nullable|date',
+            'end_date'      => 'nullable|date|after_or_equal:start_date',
+            'progress'      => 'nullable|integer|between:0,100',
+            'status'        => 'in:active,completed,paused,cancelled',
+            'photo'         => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'documents.*'   => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,txt,jpg,jpeg,png|max:10240',
         ]);
+    }
 
-        $slug = Str::slug($request->title);
-        if (Project::where('slug', $slug)->where('id', '!=', $project->id)->exists()) $slug .= '-' . time();
-
-        $project->update([
-            'title' => $request->title,
-            'slug' => $slug,
-            'cause_id' => $request->cause_id,
-            'summary' => $request->summary,
-            'description' => $request->description,
-            'goal' => $request->goal,
-            'beneficiaries' => $request->beneficiaries,
-            'budget' => $request->budget,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'progress' => $request->progress ?? $project->progress,
-            'status' => $request->status ?? $project->status,
-        ]);
-
-        // Update photo
+    /**
+     * File Upload Logic Handler
+     */
+    protected function handleFileUploads(Request $request, Project $project)
+    {
+        // 1. Handle Main Project Photo
         if ($request->hasFile('photo')) {
             if ($project->project_photo) {
                 Storage::disk('public')->delete($project->project_photo->file_path);
                 $project->project_photo->delete();
             }
-            $filePath = $request->file('photo')->store('projects', 'public');
+
+            $path = $request->file('photo')->store('projects/photos', 'public');
             $project->project_photo()->create([
-                'title' => $request->title,
-                'file_path' => $filePath,
-                'caption' => $request->title,
+                'file_path' => $path,
+                'caption'   => $project->title,
             ]);
         }
 
-        // Add new documents
+        // 2. Handle Multiple Documents
         if ($request->hasFile('documents')) {
             foreach ($request->file('documents') as $file) {
-                $filePath = $file->store('projects/documents', 'public');
+                $path = $file->store('projects/documents', 'public');
                 $project->documents()->create([
-                    'title' => $request->title,
-                    'file_path' => $filePath,
+                    'title'          => $file->getClientOriginalName(),
+                    'file_path'      => $path,
                     'file_extension' => $file->getClientOriginalExtension(),
                 ]);
             }
         }
-
-        return redirect()->route('admin.projects.index')->with('success', 'Project updated successfully.');
-    }
-
-    /**
-     * Delete a project along with photo and documents
-     */
-    public function destroy(Project $project)
-    {
-        // Delete photo
-        if ($project->project_photo) {
-            Storage::disk('public')->delete($project->project_photo->file_path);
-            $project->project_photo->delete();
-        }
-
-        // Delete documents
-        foreach ($project->documents as $doc) {
-            Storage::disk('public')->delete($doc->file_path);
-            $doc->delete();
-        }
-
-        $project->delete();
-
-        return redirect()->route('admin.projects.index')->with('success', 'Project deleted successfully.');
-    }
-
-    /**
-     * Optional: Delete a single document (if you add a button in edit page)
-     */
-    public function destroyDocument($id)
-    {
-        $document = Document::findOrFail($id);
-        Storage::disk('public')->delete($document->file_path);
-        $document->delete();
-
-        return back()->with('success', 'Document deleted successfully.');
     }
 }

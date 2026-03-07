@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany, MorphMany, MorphOne};
 
 class Project extends Model
 {
@@ -17,7 +18,6 @@ class Project extends Model
         'slug',
         'summary',
         'description',
-        'photo',
         'goal',
         'beneficiaries',
         'budget',
@@ -26,51 +26,89 @@ class Project extends Model
         'progress',
         'status',
     ];
-    
-    protected $casts = [
-    'start_date' => 'datetime',
-    'end_date' => 'datetime',
-];
-    
-       /**
+
+    /**
+     * Laravel 12 style Attribute Casting
+     */
+    protected function casts(): array
+    {
+        return [
+            'start_date' => 'datetime',
+            'end_date'   => 'datetime',
+            'budget'     => 'decimal:2',
+            'progress'   => 'integer',
+        ];
+    }
+
+    /**
      * Boot method to handle cascading soft deletes
      */
-     
-   protected static function boot()
-{
-    parent::boot();
+    protected static function boot()
+    {
+        parent::boot();
 
-    static::deleting(function ($project) {
-        $project->project_photos()->delete();
-        $project->project_photo()->delete();
-        $project->documents()->delete();
-        $project->donations()->delete(); // if you want donations soft-deleted too
-    });
-}
+        static::deleting(function ($project) {
+            // Check if it's a permanent delete or a soft delete
+            if ($project->isForceDeleting()) {
+                $project->project_photos()->forceDelete();
+                $project->documents()->forceDelete();
+            } else {
+                $project->project_photos()->delete();
+                $project->documents()->delete();
+                $project->donations()->delete();
+            }
+        });
+    }
 
-    public function organization() {
+    /* -------------------------------------------------------------------------- */
+    /* RELATIONSHIPS                               */
+    /* -------------------------------------------------------------------------- */
+
+    public function organization(): BelongsTo
+    {
         return $this->belongsTo(Organization::class);
     }
 
-    public function project_photos() {
+    public function cause(): BelongsTo
+    {
+        return $this->belongsTo(Cause::class);
+    }
+
+    /**
+     * Get all project gallery photos.
+     */
+    public function project_photos(): MorphMany
+    {
         return $this->morphMany(Photo::class, 'imageable');
     }
-    
-    public function project_photo()
-    {
-        return $this->morphOne(Photo::class, 'imageable');
-    }
-    
-    public function documents()
-{
-    return $this->morphMany(Document::class, 'documentable');
-}
 
-    public function donations() {
+    /**
+     * Get the main featured photo (useful for thumbnails).
+     */
+    public function project_photo(): MorphOne
+    {
+        return $this->morphOne(Photo::class, 'imageable')->latestOfMany();
+    }
+
+    /**
+     * Get all project related documents (PDFs, Reports, etc).
+     */
+    public function documents(): MorphMany
+    {
+        return $this->morphMany(Document::class, 'documentable');
+    }
+
+    public function donations(): HasMany
+    {
         return $this->hasMany(Donation::class);
     }
-    
-     public function cause() {
-        return $this->belongsTo(Cause::class);
+
+    /* -------------------------------------------------------------------------- */
+    /* SCOPES                                   */
+    /* -------------------------------------------------------------------------- */
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
     }
 }
