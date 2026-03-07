@@ -1,9 +1,9 @@
-<div>
+<div id="file-manager-root"> 
     <div class="file-manager-container mx-3" 
          x-data="{ 
             showModal: false, 
             isDragging: false,
-            selectedCount: @entangle('selectedFiles').live.count 
+            selectedCount: @entangle('selectedFiles') 
          }"
          @hide-file-modal.window="showModal = false"
          @show-file-modal.window="showModal = true"
@@ -26,9 +26,9 @@
             </div>
 
             <div class="actions d-flex gap-2">
-                <template x-if="selectedCount > 0">
+                <template x-if="selectedCount && selectedCount.length > 0">
                     <button wire:click="deleteSelected" wire:confirm="Delete items?" class="btn btn-sm btn-outline-danger px-3 rounded-pill transition-all">
-                        <i class="fas fa-trash mr-1"></i> Delete (<span x-text="selectedCount"></span>)
+                        <i class="fas fa-trash mr-1"></i> Delete (<span x-text="selectedCount.length"></span>)
                     </button>
                 </template>
                 
@@ -98,58 +98,42 @@
         @endif
 
         <div x-show="showModal" 
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 scale-95"
-             x-transition:enter-end="opacity-100 scale-100"
              class="modal d-block shadow-lg" 
              style="background: rgba(0,0,0,0.5)"
              @click.self="showModal = false"
              tabindex="-1">
-            
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content border-0 overflow-hidden" @click.stop>
                     <form wire:submit.prevent="save">
                         <div class="modal-header border-0 bg-primary text-white py-3">
                             <h6 class="modal-title font-weight-bold">{{ $editingFileId ? 'Edit File Details' : 'Upload New Media' }}</h6>
-                            <button type="button" class="close text-white outline-none" @click="showModal = false">&times;</button>
+                            <button type="button" class="close text-white" @click="showModal = false">&times;</button>
                         </div>
-                        
                         <div class="modal-body p-4">
                             @if(!$editingFileId)
-                                <div class="upload-zone border-dashed text-center p-5 rounded transition-all"
+                                <div class="upload-zone border-dashed text-center p-5 rounded"
                                      :class="isDragging ? 'bg-primary-subtle border-primary' : 'bg-light'"
                                      @dragover.prevent="isDragging = true"
                                      @dragleave.prevent="isDragging = false"
                                      @drop.prevent="isDragging = false"
                                      onclick="document.getElementById('fileInput').click()" 
                                      style="cursor: pointer;">
-                                    
                                     <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
-                                    <p class="mb-1 text-dark font-weight-bold">Drop your file here</p>
-                                    <p class="small text-muted mb-0">or click to browse from device</p>
-                                    
+                                    <p class="mb-1 text-dark font-weight-bold">Drop file here or click</p>
                                     <input type="file" wire:model="file" class="d-none" id="fileInput">
-                                    
                                     <div wire:loading wire:target="file" class="mt-3 text-primary small">
-                                        <div class="spinner-border spinner-border-sm mr-2" role="status"></div>
-                                        Uploading to server...
+                                        <div class="spinner-border spinner-border-sm mr-2"></div> Uploading...
                                     </div>
                                 </div>
-                                @error('file') <span class="text-danger x-small d-block mt-2">{{ $message }}</span> @enderror
                             @endif
-
                             <div class="form-group mt-3">
-                                <label class="x-small font-weight-bold text-uppercase text-muted">File Label / Caption</label>
-                                <input type="text" wire:model="caption" class="form-control border-0 bg-light rounded shadow-none" placeholder="Give this file a name...">
+                                <label class="x-small font-weight-bold text-uppercase text-muted">Caption</label>
+                                <input type="text" wire:model="caption" class="form-control border-0 bg-light">
                             </div>
                         </div>
-
                         <div class="modal-footer border-0 bg-light py-2">
                             <button type="button" class="btn btn-sm btn-link text-muted" @click="showModal = false">Cancel</button>
-                            <button type="submit" class="btn btn-sm btn-primary px-4 rounded-pill shadow-sm" wire:loading.attr="disabled">
-                                <span wire:loading.remove wire:target="save">{{ $editingFileId ? 'Save Changes' : 'Start Upload' }}</span>
-                                <span wire:loading wire:target="save">Saving...</span>
-                            </button>
+                            <button type="submit" class="btn btn-sm btn-primary px-4 rounded-pill shadow-sm">Save</button>
                         </div>
                     </form>
                 </div>
