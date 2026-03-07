@@ -95,7 +95,7 @@
                             </td>
                             <td class="text-right pr-4">
                                 <div class="btn-group shadow-sm" role="group">
-                                    <a href="{{ route('admin.partners.edit', $partner->slug) }}" class="btn btn-white btn-sm" title="Edit">
+                                    <a href="{{ route('admin.partners.edit', $partner->id) }}" class="btn btn-white btn-sm" title="Edit">
                                         <i class="fas fa-edit text-primary"></i>
                                     </a>
                                     <button type="button" class="btn btn-white btn-sm text-danger" 
