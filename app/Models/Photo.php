@@ -28,4 +28,13 @@ class Photo extends Model
     {
         return $this->file_path ? Storage::disk('public')->url($this->file_path) : asset('images/placeholder.jpg');
     }
+
+    public function getReadableSizeAttribute()
+{
+    $bytes = $this->file_size;
+    $units = ['B', 'KB', 'MB', 'GB'];
+    for ($i = 0; $bytes > 1024; $i++) $bytes /= 1024;
+    return round($bytes, 2) . ' ' . $units[$i];
+}
+
 }

@@ -32,33 +32,56 @@ class FileManager extends Component
     public function updatedSearch() { $this->resetPage(); }
     public function updatedModelFilter() { $this->resetPage(); }
 
-    public function save()
-    {
-        $this->validate();
+   public function save()
+{
+    $this->validate();
 
-        if ($this->editingFileId) {
-            $media = Photo::findOrFail($this->editingFileId);
-            if ($this->file) {
-                Storage::disk('public')->delete($media->file_path);
-                $media->file_path = $this->file->store('uploads', 'public');
-            }
-            $media->caption = $this->caption;
-            $media->save();
-            $this->dispatch('notify', ['type' => 'success', 'message' => 'Updated!']);
-        } else {
-            $path = $this->file->store('uploads', 'public');
-            Photo::create([
-                'file_path' => $path,
-                'caption' => $this->caption ?? $this->file->getClientOriginalName(),
-                'imageable_type' => $this->modelFilter === 'all' ? 'App\Models\General' : $this->modelFilter,
-                'imageable_id' => 0, 
-            ]);
-            $this->dispatch('notify', ['type' => 'success', 'message' => 'Uploaded!']);
+    if ($this->editingFileId) {
+        $media = Photo::findOrFail($this->editingFileId);
+        
+        if ($this->file) {
+            // Delete old physical file
+            Storage::disk('public')->delete($media->file_path);
+            
+            // Store new file and capture metadata
+            $media->file_path = $this->file->store('uploads', 'public');
+            $media->file_size = $this->file->getSize();
+            $media->file_type = $this->file->getMimeType();
         }
+        
+        $media->caption = $this->caption;
+        $media->save();
+        
+        $this->dispatch('notify', [
+            'type' => 'success', 
+            'message' => 'Asset updated successfully!'
+        ]);
+        
+    } else {
+        // New Upload
+        $path = $this->file->store('uploads', 'public');
+        
+        Photo::create([
+            'file_path' => $path,
+            'file_size' => $this->file->getSize(),
+            'file_type' => $this->file->getMimeType(),
+            'caption' => $this->caption ?: $this->file->getClientOriginalName(),
+            'imageable_type' => $this->modelFilter === 'all' ? 'App\Models\General' : $this->modelFilter,
+            'imageable_id' => 0, 
+        ]);
 
-        $this->reset(['file', 'caption', 'editingFileId']);
-        $this->dispatch('hide-file-modal');
+        $this->dispatch('notify', [
+            'type' => 'success', 
+            'message' => 'New asset uploaded successfully!'
+        ]);
     }
+
+    // Reset UI state
+    $this->reset(['file', 'caption', 'editingFileId']);
+    
+    // Close the Alpine.js modal
+    $this->dispatch('hide-file-modal');
+}
 
     public function edit($id)
     {
