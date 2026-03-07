@@ -1,16 +1,4 @@
-<div class="file-manager-wrapper" 
-     x-data="{ 
-        showModal: false, 
-        isDragging: false,
-        selectedCount: @entangle('selectedFiles').live,
-        copyToClipboard(url) {
-            navigator.clipboard.writeText(url);
-            $dispatch('notify', {type: 'info', message: 'URL copied to clipboard!'});
-        }
-     }" 
-     @show-file-modal.window="showModal = true"
-     @hide-file-modal.window="showModal = false"
-     x-cloak>
+<div class="file-manager-wrapper" x-data="{ showModal: false, isDragging: false, selectedCount: @entangle('selectedFiles').live, copyToClipboard(url) { navigator.clipboard.writeText(url); $dispatch('notify', {type: 'info', message: 'URL copied to clipboard!'}); } }" @show-file-modal.window="showModal = true" @hide-file-modal.window="showModal = false" x-cloak>
 
     <div class="container-fluid px-3">
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 bg-white p-3 rounded-lg shadow-sm border-0 gap-3">
@@ -44,11 +32,7 @@
         </div>
 
         <div wire:loading.flex wire:target="search, modelFilter, gotoPage" class="row">
-            @for($i=0; $i<6; $i++)
-                <div class="col-6 col-md-2 mb-4">
-                    <div class="skeleton-card"></div>
-                </div>
-            @endfor
+            @for($i=0; $i<6; $i++)<div class="col-6 col-md-2 mb-4"><div class="skeleton-card"></div></div>@endfor
         </div>
 
         <div wire:loading.remove wire:target="search, modelFilter, gotoPage">
@@ -187,4 +171,3 @@
             </div>
         </div>
     </div>
-</div>
