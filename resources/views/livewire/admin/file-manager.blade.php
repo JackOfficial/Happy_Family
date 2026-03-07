@@ -119,6 +119,10 @@
         </div>
     </div>
 
+    <div class="mt-4 d-flex justify-content-center">
+    {{ $files->links() }}
+</div>
+
     <style>
         .file-card { transition: all 0.2s; border-radius: 10px; overflow: hidden; }
         .file-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }

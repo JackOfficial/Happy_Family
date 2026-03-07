@@ -6,10 +6,11 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Photo; // You might want to rename this Model to 'Media' later
 use Illuminate\Support\Facades\Storage;
+use Livewire\WithPagination;
 
 class FileManager extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, WithPagination;
 
     public $file;
     public $caption;
@@ -20,6 +21,8 @@ class FileManager extends Component
     // Supported file types for the professional UI
     protected $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
     protected $documentExtensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'zip'];
+
+    protected $paginationTheme = 'bootstrap';
 
     /**
      * Rules updated to allow various document types
@@ -117,26 +120,29 @@ class FileManager extends Component
     public function render()
     {
         $query = Photo::query();
+        
         if ($this->modelFilter !== 'all') {
             $query->where('imageable_type', $this->modelFilter);
         }
 
-        $allFiles = $query->latest()->get();
+        // 3. Paginate instead of ->get()
+        $allFiles = $query->latest()->paginate(24); 
         
-        // Grouping and adding metadata for the UI
-        $grouped = $allFiles->groupBy('imageable_type')->map(function ($items, $type) {
+        // 4. Group the paginated items
+        $grouped = collect($allFiles->items())->groupBy('imageable_type')->map(function ($items) {
             return $items->map(function($item) {
                 $ext = strtolower(pathinfo($item->file_path, PATHINFO_EXTENSION));
-                $item->is_image = in_array($ext, $this->imageExtensions);
-                $item->icon_data = $item->is_image ? null : $this->getFileIcon($item->file_path);
+                $item->is_image = in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
                 $item->extension = $ext;
+                // Add your icon logic here...
                 return $item;
             });
         });
 
         return view('livewire.admin.file-manager', [
             'fileGroups' => $grouped,
-            'totalCount' => $allFiles->count(),
+            'files' => $allFiles, // Pass the paginated object for links
+            'totalCount' => $allFiles->total(),
         ]);
     }
 }
