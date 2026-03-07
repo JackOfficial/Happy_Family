@@ -117,32 +117,36 @@ class FileManager extends Component
         };
     }
 
-    public function render()
-    {
-        $query = Photo::query();
-        
-        if ($this->modelFilter !== 'all') {
-            $query->where('imageable_type', $this->modelFilter);
-        }
-
-        // 3. Paginate instead of ->get()
-        $allFiles = $query->latest()->paginate(24); 
-        
-        // 4. Group the paginated items
-        $grouped = collect($allFiles->items())->groupBy('imageable_type')->map(function ($items) {
-            return $items->map(function($item) {
-                $ext = strtolower(pathinfo($item->file_path, PATHINFO_EXTENSION));
-                $item->is_image = in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
-                $item->extension = $ext;
-                // Add your icon logic here...
-                return $item;
-            });
-        });
-
-        return view('livewire.admin.file-manager', [
-            'fileGroups' => $grouped,
-            'files' => $allFiles, // Pass the paginated object for links
-            'totalCount' => $allFiles->total(),
-        ]);
+   public function render()
+{
+    $query = Photo::query();
+    
+    if ($this->modelFilter !== 'all') {
+        $query->where('imageable_type', $this->modelFilter);
     }
+
+    $allFiles = $query->latest()->paginate(24); 
+    
+    // Group and inject metadata for the UI
+    $grouped = collect($allFiles->items())->groupBy('imageable_type')->map(function ($items) {
+        return $items->map(function($item) {
+            $ext = strtolower(pathinfo($item->file_path, PATHINFO_EXTENSION));
+            
+            // Check if it's an image
+            $item->is_image = in_array($ext, $this->imageExtensions);
+            $item->extension = $ext;
+            
+            // If it's NOT an image, get the professional icon data
+            $item->icon_data = $item->is_image ? null : $this->getFileIcon($item->file_path);
+            
+            return $item;
+        });
+    });
+
+    return view('livewire.admin.file-manager', [
+        'fileGroups' => $grouped,
+        'files' => $allFiles,
+        'totalCount' => $allFiles->total(),
+    ]);
+}
 }
