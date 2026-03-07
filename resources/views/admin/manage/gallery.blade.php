@@ -19,5 +19,5 @@
     </section>
 
     <!-- Livewire Component -->
-    <livewire:admin.gallery-manager />
+    <livewire:admin.file-manager />
 @endsection
