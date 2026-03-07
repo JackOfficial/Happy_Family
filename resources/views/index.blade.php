@@ -529,11 +529,18 @@
     /* Grayscale effect for professional look */
     .partner-logo {
         max-height: 80px;
+        min-width: 50px; 
+        min-height: 20px;
         width: auto !important;
         filter: grayscale(100%);
         opacity: 0.7;
         transition: 0.4s;
     }
+
+    .owl-carousel .owl-item {
+    opacity: 1 !important;
+    display: block !important;
+}
 
     .partner-item:hover .partner-logo-wrap {
         border-color: var(--accent-pink);
@@ -546,13 +553,13 @@
         opacity: 1;
     }
 
-    .text-purple {
-        color: var(--primary-purple);
-    }
-
-    /* Customize Owl dots to match your brand */
+        /* Customize Owl dots to match your brand */
     .partner-carousel .owl-dots .owl-dot.active span {
         background: var(--accent-pink) !important;
+    }
+
+    .text-purple {
+        color: var(--primary-purple);
     }
 
     /* Subtle animation for the badge */
