@@ -30,7 +30,7 @@ class PageController extends Controller
 
         $causes = Cause::with('mainPhoto')->latest()->take(4)->get(); 
 
-        $partners = Partner::latest()->get();
+        $partners = Partner::with('organization')->latest()->get();
 
         $stories= Story::with(['organization', 'user', 'cause', 'photo'])->latest()->take(3)->get();
 

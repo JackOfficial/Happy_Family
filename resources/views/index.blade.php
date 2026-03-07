@@ -1245,7 +1245,7 @@
         <a href="{{ $partner->website }}" target="_blank" title="{{ $partner->name }}" class="d-block text-center">
             <div class="partner-logo-wrap mb-3 shadow-sm">
                 {{-- Ensure the path is correct --}}
-                <img src="{{ asset('storage/'.$partner->logo) }}" 
+                <img src="{{ asset('storage/' . $partner->logo) }}" 
                      class="partner-logo img-fluid mx-auto" 
                      alt="{{ $partner->name }}">
             </div>
