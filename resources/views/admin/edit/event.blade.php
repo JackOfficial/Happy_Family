@@ -90,57 +90,69 @@
                     </div>
                 </div>
 
-                {{-- Photo Management Card --}}
-                <div class="card shadow-sm border-0" x-data="{ 
-                    photoPreviews: [], 
-                    existingPhotos: @json($event->event_photos),
-                    removedPhotoIds: []
-                }">
-                    <div class="card-header bg-white font-weight-bold"><i class="far fa-images mr-1 text-info"></i> Event Gallery</div>
-                    <div class="card-body">
-                        {{-- Existing Photos Grid --}}
-                        <label class="small text-muted uppercase">Current Photos</label>
-                        <div class="d-flex flex-wrap mb-3" style="gap: 8px;">
-                            <template x-for="photo in existingPhotos" :key="photo.id">
-                                <div class="position-relative border rounded p-1 shadow-sm">
-                                    <img :src="'{{ asset('storage') }}/' + photo.file_path" 
-                                         class="rounded" style="width: 70px; height: 70px; object-fit: cover;">
-                                    <button type="button" @click="removedPhotoIds.push(photo.id); existingPhotos = existingPhotos.filter(p => p.id !== photo.id)"
-                                            class="btn btn-danger btn-xs position-absolute shadow-sm"
-                                            style="top: -5px; right: -5px; border-radius: 50%; padding: 0 5px;">
-                                        &times;
-                                    </button>
-                                </div>
-                            </template>
-                            <template x-if="existingPhotos.length === 0">
-                                <p class="text-muted small italic">No photos currently attached.</p>
-                            </template>
-                        </div>
+              {{-- Photo Management Card --}}
+<div class="card shadow-sm border-0" x-data="{ 
+    photoPreviews: [], 
+    existingPhotos: @json($event->event_photos),
+    removedPhotoIds: [],
+    handleFileChange(event) {
+        this.photoPreviews = []; // Clear current previews
+        const files = Array.from(event.target.files);
+        files.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                this.photoPreviews.push(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+     }">
+    <div class="card-header bg-white font-weight-bold"><i class="far fa-images mr-1 text-info"></i> Event Gallery</div>
+    <div class="card-body">
+        {{-- Existing Photos Grid --}}
+        <label class="small text-muted uppercase">Current Photos</label>
+        <div class="d-flex flex-wrap mb-3" style="gap: 8px;">
+            <template x-for="photo in existingPhotos" :key="photo.id">
+                <div class="position-relative border rounded p-1 shadow-sm">
+                    <img :src="'{{ asset('storage') }}/' + photo.file_path" 
+                         class="rounded" style="width: 70px; height: 70px; object-fit: cover;">
+                    <button type="button" @click="removedPhotoIds.push(photo.id); existingPhotos = existingPhotos.filter(p => p.id !== photo.id)"
+                            class="btn btn-danger btn-xs position-absolute shadow-sm"
+                            style="top: -5px; right: -5px; border-radius: 50%; padding: 0 5px;">
+                        &times;
+                    </button>
+                </div>
+            </template>
+            <template x-if="existingPhotos.length === 0">
+                <p class="text-muted small italic">No photos currently attached.</p>
+            </template>
+        </div>
 
-                        {{-- New Uploads --}}
-                        <label class="small text-muted uppercase">Upload New</label>
-                        <div class="custom-file mb-2">
-                            <input type="file" name="photos[]" id="photos" class="custom-file-input" 
-                                   accept="image/*" multiple
-                                   @change="
-                                        photoPreviews = [];
-                                        Array.from($event.target.files).forEach(file => {
-                                            photoPreviews.push(URL.createObjectURL(file));
-                                        })
-                                   ">
-                            <label class="custom-file-label" for="photos">Add more...</label>
-                        </div>
+        {{-- New Uploads --}}
+        <label class="small text-muted uppercase">Upload New</label>
+        <div class="custom-file mb-2">
+            <input type="file" name="photos[]" id="photos" class="custom-file-input" 
+                   accept="image/*" multiple
+                   @change="handleFileChange($event)">
+            <label class="custom-file-label" for="photos">Add more...</label>
+        </div>
 
-                        <div class="mt-2 d-flex flex-wrap" style="gap: 8px;">
-                            <template x-for="src in photoPreviews" :key="src">
-                                <img :src="src" class="img-thumbnail border-primary" style="width: 70px; height: 70px; object-fit: cover; opacity: 0.7;">
-                            </template>
-                        </div>
-
-                        {{-- Hidden input for removal --}}
-                        <input type="hidden" name="removed_photos" :value="removedPhotoIds.join(',')">
+        {{-- NEW PREVIEWS --}}
+        <div class="mt-2 d-flex flex-wrap" style="gap: 8px;">
+            <template x-for="(src, index) in photoPreviews" :key="index">
+                <div class="position-relative border rounded p-1 border-primary shadow-sm" style="background-color: #f0f7ff">
+                    <img :src="src" class="rounded" style="width: 70px; height: 70px; object-fit: cover;">
+                    <div class="position-absolute bg-primary text-white" style="top: -5px; left: -5px; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-plus"></i>
                     </div>
                 </div>
+            </template>
+        </div>
+
+        {{-- Hidden input for removal - using x-model or :value --}}
+        <input type="hidden" name="removed_photos" :value="removedPhotoIds.join(',')">
+    </div>
+</div>
 
                 {{-- Submit Buttons --}}
                 <div class="mt-4">
