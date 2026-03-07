@@ -1245,7 +1245,7 @@
             </p>
         </div>
 
-       <div class="partner-carousel owl-carousel">
+       <div class="">
     @forelse ($partners as $partner)
     <h1>Partners are present</h1>
     <div class="partner-item p-4">
