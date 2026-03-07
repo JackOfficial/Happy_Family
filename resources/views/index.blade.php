@@ -1247,6 +1247,7 @@
 
        <div class="partner-carousel owl-carousel">
     @forelse ($partners as $partner)
+    <h1>Partners are present</h1>
     <div class="partner-item p-4">
         {{-- Changed $partner->link to $partner->website --}}
         <a href="{{ $partner->website }}" target="_blank" title="{{ $partner->name }}" class="d-block text-center">
