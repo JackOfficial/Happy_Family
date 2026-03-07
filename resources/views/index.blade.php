@@ -1227,7 +1227,7 @@
         <!-- Volunteers End -->
 
          <!-- Our Team Start -->
-    <div class="container-fluid partners-section py-5 {{ $partners->count() > 0 ? '' : 'd-none' }}" style="background: #fdfafd;">
+ <div class="container-fluid partners-section py-5 {{ $partners->count() > 0 ? '' : 'd-none' }}" style="background: #fdfafd;">
     <div class="container py-5">
         <div class="text-center mx-auto mb-5" style="max-width: 800px;">
             <h5 class="brand-subtitle-centered mb-2">Our Partners</h5>
@@ -1238,23 +1238,27 @@
             </p>
         </div>
 
-        <div class="partner-carousel owl-carousel">
-            @foreach ($partners as $partner)
-            <div class="partner-item p-4">
-                <a href="{{ $partner->link }}" target="_blank" title="{{ $partner->partner }}" class="d-block text-center">
-                    <div class="partner-logo-wrap mb-3 shadow-sm">
-                        <img src="{{ asset('storage/'.$partner->logo) }}" 
-                             class="partner-logo img-fluid mx-auto" 
-                             alt="{{ $partner->partner }}">
-                    </div>
-                    <div class="partner-info">
-                        <h6 class="mb-1 text-purple fw-bold">{{ Str::limit($partner->partner, 30) }}</h6>
-                        <p class="text-muted small mb-0">{{ Str::limit($partner->title, 50) }}</p>
-                    </div>
-                </a>
-            </div>  
-            @endforeach
-        </div>
+       <div class="partner-carousel owl-carousel">
+    @foreach ($partners as $partner)
+    <div class="partner-item p-4">
+        {{-- Changed $partner->link to $partner->website --}}
+        <a href="{{ $partner->website }}" target="_blank" title="{{ $partner->name }}" class="d-block text-center">
+            <div class="partner-logo-wrap mb-3 shadow-sm">
+                {{-- Ensure the path is correct --}}
+                <img src="{{ asset('storage/'.$partner->logo) }}" 
+                     class="partner-logo img-fluid mx-auto" 
+                     alt="{{ $partner->name }}">
+            </div>
+            <div class="partner-info">
+                {{-- Changed $partner->partner to $partner->name --}}
+                <h6 class="mb-1 text-purple fw-bold">{{ Str::limit($partner->name, 30) }}</h6>
+                {{-- If 'title' isn't in your model, you might want to use 'description' or remove this --}}
+                <p class="text-muted small mb-0">{{ Str::limit($partner->description, 50) }}</p>
+            </div>
+        </a>
+    </div>  
+    @endforeach
+</div>
     </div>
 </div>
         
