@@ -514,6 +514,11 @@
         border-top: 1px solid rgba(99, 16, 132, 0.05);
     }
     
+    .partner-item a {
+    text-decoration: none !important;
+    color: inherit; /* Tells the link to use the text color of the parent */
+}
+
     .partner-logo-wrap {
         background: #fff;
         height: 120px;
@@ -537,10 +542,10 @@
         transition: 0.4s;
     }
 
-    .owl-carousel .owl-item {
+     .owl-carousel .owl-item {
     opacity: 1 !important;
     display: block !important;
-}
+     }
 
     .partner-item:hover .partner-logo-wrap {
         border-color: var(--accent-pink);
@@ -557,6 +562,16 @@
     .partner-carousel .owl-dots .owl-dot.active span {
         background: var(--accent-pink) !important;
     }
+
+    .partner-info p {
+    color: #6c757d; /* Bootstrap's text-muted */
+    text-decoration: none;
+}
+
+    .partner-item:hover .text-purple {
+    color: var(--accent-pink) !important;
+    transition: color 0.4s ease;
+}
 
     .text-purple {
         color: var(--primary-purple);
