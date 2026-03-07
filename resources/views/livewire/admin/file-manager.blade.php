@@ -1,4 +1,12 @@
-<div>
+<div class="file-manager-container mx-3" 
+     x-data="{ 
+        showModal: false, 
+        isDragging: false,
+        selectedCount: @entangle('selectedFiles').live.count 
+     }"
+     @hide-file-modal.window="showModal = false"
+     @show-file-modal.window="showModal = true"
+     x-cloak>
 
     <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border">
         <div class="d-flex align-items-center gap-3">
