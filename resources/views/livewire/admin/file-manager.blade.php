@@ -1,4 +1,5 @@
-<div class="file-manager-container mx-3" 
+<div>
+    <div class="file-manager-container mx-3" 
      x-data="{ 
         showModal: false, 
         isDragging: false,
@@ -154,4 +155,5 @@
             </div>
         </div>
     </div>
+</div>
 </div>
