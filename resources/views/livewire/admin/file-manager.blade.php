@@ -123,7 +123,7 @@
         </div>
 
         <div class="d-flex justify-content-center mt-4 mb-5">
-            {{ $paginator->links() }}
+           {{ $files->links('pagination::bootstrap-4') }}
         </div>
 
         <div x-show="showModal" class="modal-backdrop-custom" @click.self="showModal = false" x-transition.opacity>
