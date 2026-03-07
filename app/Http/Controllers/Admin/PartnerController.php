@@ -58,7 +58,7 @@ class PartnerController extends Controller
     /**
      * Show the form for editing the specified partner.
      */
-    public function edit(Partner $partner): View
+    public function edit(Partner $partner)
     {
         return view('admin.edit.partner', compact('partner'));
     }
