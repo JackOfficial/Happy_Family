@@ -30,6 +30,7 @@
  <link rel="stylesheet" href="{{ asset('back/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
  <link rel="stylesheet" href="{{ asset('back/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
  <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+ @stack('styles')
 @livewireStyles
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -367,23 +368,7 @@
 <script src="{{ asset('back/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
  <x-head.tinymce-config/>
 <!-- Page specific script -->
-<script>
-    $(function () {
-      $("#example1").DataTable({
-        "responsive": true, "lengthChange": false, "autoWidth": false,
-        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-      $('#example2').DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-      });
-    });
-  </script>
+   @stack('scripts')
   @livewireScripts
 </body>
 </html>
