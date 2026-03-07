@@ -366,6 +366,33 @@
 <script src="{{ asset('back/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('back/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('back/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener('livewire:init', () => {
+        Livewire.on('notify', (event) => {
+            const data = event[0]; // Access the first array element
+            
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            Toast.fire({
+                icon: data.type, // 'success', 'error', 'warning', 'info'
+                title: data.message
+            });
+        });
+    });
+</script>
+
  <x-head.tinymce-config/>
 <!-- Page specific script -->
    @stack('scripts')
