@@ -18,30 +18,49 @@ use App\Models\Organization;
 
 class PageController extends Controller
 {
-    function index(){
-        
-        $blogs = Blog::with(['blogPhoto', 'cause', 'user', 'likes', 'comments'])->latest()->get();
+    public function index()
+{
+    // 1. Load basic organization/header info
+    $organization = Organization::first();
+    $header = Page::where('page_name', 'Home')->first();
 
-        $projects = Project::with('project_photo', 'cause')->latest()->get();
+    // 2. Fetch Projects (Reuse the first one to avoid a second DB hit)
+    $projects = Project::with(['project_photo', 'cause'])
+        ->latest()
+        ->take(3)
+        ->get();
 
-        $current_project = Project::with('project_photo', 'cause')->latest()->first();
+    // Instead of querying Project::latest()->first(), just pull it from the collection
+    $current_project = $projects->first();
 
-        $events = Event::latest()->take(3)->get();
+    // 3. Optimized Blogs (Added take(3) so you don't load 100+ blogs into memory)
+    $blogs = Blog::with(['blogPhoto', 'cause', 'user', 'likes', 'comments'])
+        ->latest()
+        ->take(3) 
+        ->get();
 
-        $causes = Cause::with('mainPhoto')->latest()->take(4)->get(); 
+    // 4. Other Sections
+    $events = Event::latest()->take(3)->get();
+    $causes = Cause::with('mainPhoto')->latest()->take(4)->get(); 
+    $partners = Partner::with('organization')->latest()->get();
+    $stories = Story::with(['organization', 'user', 'cause', 'photo'])->latest()->take(3)->get();
+    
+    // 5. Gallery (Filtering for specific imageable types if needed)
+    $gallery = Photo::latest()->take(6)->get();
 
-        $partners = Partner::with('organization')->latest()->get();
-
-        $stories= Story::with(['organization', 'user', 'cause', 'photo'])->latest()->take(3)->get();
-
-        $header = Page::where('page_name', 'Home')->first();
-        
-        $gallery = Photo::with('imageable')->latest()->take(6)->get();
-        
-        $organization = Organization::first();
-
-        return view('index', compact('header', 'blogs', 'projects', 'current_project', 'events', 'causes', 'partners', 'stories', 'gallery', 'organization')); 
-    }
+    return view('index', compact(
+        'header', 
+        'blogs', 
+        'projects', 
+        'current_project', 
+        'events', 
+        'causes', 
+        'partners', 
+        'stories', 
+        'gallery', 
+        'organization'
+    )); 
+}
 
     function about(){
         $causes = Cause::with('mainPhoto')->latest()->take(4)->get(); 
