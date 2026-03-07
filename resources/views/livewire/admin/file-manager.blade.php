@@ -1,16 +1,7 @@
-<div class="file-manager-wrapper" 
-     x-data="{ 
-        showModal: false, 
-        isDragging: false,
-        selectedCount: @entangle('selectedFiles').live 
-     }" 
-     @hide-file-modal.window="showModal = false"
-     @show-file-modal.window="showModal = true"
-     x-cloak>
-    
+<div class="file-manager-wrapper" x-data="{ showModal: false, selectedCount: @entangle('selectedFiles').live }" x-cloak>
     <div class="container-fluid px-3">
         <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-0">
-            <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center">
                 <div class="input-group input-group-sm mr-2" style="width: 200px;">
                     <div class="input-group-prepend">
                         <span class="input-group-text bg-light border-0"><i class="fas fa-filter text-muted"></i></span>
@@ -21,7 +12,7 @@
                         <option value="App\Models\Team">Team Assets</option>
                     </select>
                 </div>
-                <span class="badge badge-pill badge-light border px-3 py-2">{{ $totalCount }} Items</span>
+                <span class="badge badge-pill badge-light border px-3 py-2 text-muted small">{{ $totalCount }} Items</span>
             </div>
 
             <div class="actions">
@@ -30,10 +21,7 @@
                         <i class="fas fa-trash-alt mr-1"></i> Delete (<span x-text="selectedCount.length"></span>)
                     </button>
                 </template>
-                
-                <button class="btn btn-sm shadow-sm px-4 text-white" 
-                        @click="showModal = true; $wire.set('editingFileId', null)"
-                        style="background-color: #e83e8c; border-radius: 20px;">
+                <button class="btn btn-sm shadow-sm px-4 text-white" @click="showModal = true; $wire.set('editingFileId', null)" style="background-color: #e83e8c; border-radius: 20px;">
                     <i class="fas fa-cloud-upload-alt mr-1"></i> Upload Asset
                 </button>
             </div>
@@ -52,46 +40,42 @@
 
                 @foreach($files as $file)
                     <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4" wire:key="file-{{ $file->id }}">
-                        <div class="card h-100 file-card border-0 shadow-sm {{ in_array($file->id, $selectedFiles) ? 'selected-card' : '' }}" style="border-radius: 12px; overflow: hidden;">
+                        <div class="card h-100 file-card border-0 shadow-sm {{ in_array($file->id, $selectedFiles) ? 'border-primary' : '' }}" style="border-radius: 12px; overflow: hidden; position: relative;">
                             
-                            <div class="file-preview bg-light">
+                            <div class="position-absolute" style="top: 8px; left: 8px; z-index: 10;">
+                                <input type="checkbox" wire:model.live="selectedFiles" value="{{ $file->id }}">
+                            </div>
+
+                            <div class="file-preview bg-light d-flex align-items-center justify-content-center" style="height: 140px; position: relative;">
                                 @if($file->is_image)
                                     <img src="{{ asset('storage/' . $file->file_path) }}" class="w-100 h-100" style="object-fit: cover;">
                                 @else
-                                    <div class="d-flex align-items-center justify-content-center h-100">
-                                        <i class="fas {{ $file->icon_data['icon'] }} fa-3x {{ $file->icon_data['color'] }}"></i>
-                                    </div>
+                                    <i class="fas {{ $file->icon_data['icon'] }} fa-3x {{ $file->icon_data['color'] }}"></i>
                                 @endif
 
                                 <div class="file-overlay">
                                     <div class="btn-group btn-group-sm shadow">
-                                        <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank" class="btn btn-white"><i class="fas fa-eye text-primary"></i></a>
-                                        <button wire:click="edit({{ $file->id }})" class="btn btn-white"><i class="fas fa-pen text-success"></i></button>
+                                        <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank" class="btn btn-white btn-sm"><i class="fas fa-eye text-primary"></i></a>
+                                        <button wire:click="edit({{ $file->id }})" class="btn btn-white btn-sm"><i class="fas fa-pen text-success"></i></button>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="card-body p-2 border-top">
-                                <div class="d-flex align-items-start">
-                                    <input type="checkbox" wire:model.live="selectedFiles" value="{{ $file->id }}" class="mr-2 mt-1">
-                                    <p class="mb-0 text-truncate font-weight-bold small text-dark" style="flex: 1;">{{ $file->caption }}</p>
-                                </div>
+                            <div class="card-body p-2 border-top bg-white">
+                                <p class="mb-0 text-truncate font-weight-bold small text-dark" title="{{ $file->caption }}">{{ $file->caption }}</p>
                             </div>
                         </div>
                     </div>
                 @endforeach
             @empty
                 <div class="col-12 text-center py-5">
+                    <i class="fas fa-images fa-3x text-light mb-3"></i>
                     <p class="text-muted">No files found.</p>
                 </div>
             @endforelse
         </div>
 
-        <div x-show="showModal" 
-             class="modal" 
-             :class="{ 'd-block': showModal }" 
-             style="background: rgba(0,0,0,0.5); z-index: 1050;"
-             @click.self="showModal = false">
+        <div x-show="showModal" class="modal" :class="{ 'd-block': showModal }" style="background: rgba(0,0,0,0.5); z-index: 1050;" @click.self="showModal = false">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
                     <form wire:submit.prevent="save">
@@ -102,15 +86,18 @@
                         <div class="modal-body p-4">
                             @if(!$editingFileId)
                                 <div class="upload-zone border-dashed rounded p-4 text-center mb-3 bg-light" 
-                                     style="cursor: pointer;" onclick="document.getElementById('fileInput').click()">
+                                     style="border: 2px dashed #dee2e6; cursor: pointer;" 
+                                     onclick="document.getElementById('fileInput').click()">
                                     <i class="fas fa-cloud-upload-alt fa-2x text-primary mb-2"></i>
-                                    <p class="small font-weight-bold mb-0">Click or Drop File</p>
+                                    <p class="small font-weight-bold mb-0">Click to Select File</p>
                                     <input type="file" wire:model="file" id="fileInput" class="d-none">
-                                    <div wire:loading wire:target="file" class="mt-2 text-primary small">Uploading...</div>
+                                    <div wire:loading wire:target="file" class="mt-2 text-primary small">
+                                        <div class="spinner-border spinner-border-sm mr-1"></div> Uploading...
+                                    </div>
                                 </div>
                             @endif
                             <div class="form-group">
-                                <label class="x-small text-uppercase font-weight-bold text-muted">Asset Caption</label>
+                                <label class="small text-uppercase font-weight-bold text-muted">Caption</label>
                                 <input type="text" wire:model="caption" class="form-control border-0 bg-light shadow-sm">
                             </div>
                         </div>
