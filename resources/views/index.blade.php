@@ -1246,7 +1246,7 @@
         </div>
 
        <div class="partner-carousel owl-carousel">
-    @foreach ($partners as $partner)
+    @forelse ($partners as $partner)
     <div class="partner-item p-4">
         {{-- Changed $partner->link to $partner->website --}}
         <a href="{{ $partner->website }}" target="_blank" title="{{ $partner->name }}" class="d-block text-center">
@@ -1263,8 +1263,10 @@
                 <p class="text-muted small mb-0">{{ Str::limit($partner->description, 50) }}</p>
             </div>
         </a>
-    </div>  
-    @endforeach
+    </div> 
+    @empty
+     <h4 class="text-center">No Partner</h4>
+    @endforelse
 </div>
     </div>
 </div>
