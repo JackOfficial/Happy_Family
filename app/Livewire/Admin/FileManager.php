@@ -115,46 +115,37 @@ class FileManager extends Component
         };
     }
 
-   public function render()
+  public function render()
 {
     $query = Photo::query()
-        ->when($this->modelFilter !== 'all', 
-            fn($q) => $q->where('imageable_type', $this->modelFilter)
-        )
-        ->when($this->search, 
-            fn($q) => $q->where('caption', 'like', '%' . $this->search . '%')
-        );
+        ->when($this->modelFilter !== 'all', fn($q) => $q->where('imageable_type', $this->modelFilter))
+        ->when($this->search, fn($q) => $q->where('caption', 'like', '%'.$this->search.'%'));
 
-    // 1. Execute pagination (This object has the ->links() method)
+    // 1. Get the Paginator (This object has the .links method)
     $allFiles = $query->latest()->paginate(18); 
 
-    // 2. Transform the items into groups for the UI
-    // We use ->getCollection() to manipulate the items without breaking the paginator
+    // 2. Create the Grouped Collection for the UI
     $grouped = collect($allFiles->items())->groupBy('imageable_type')->map(function ($items) {
         return $items->map(function($item) {
             $ext = strtolower(pathinfo($item->file_path, PATHINFO_EXTENSION));
-            
-            // UI Helpers
             $item->is_image = in_array($ext, $this->imageExtensions);
             $item->icon_data = $item->is_image ? null : $this->getFileIcon($item->file_path);
             
-            // Human-readable file size (converts bytes to KB/MB)
-            if ($item->file_size) {
-                $item->readable_size = $item->file_size >= 1048576 
+            // Metadata for the UI
+            $item->readable_size = $item->file_size 
+                ? ($item->file_size >= 1048576 
                     ? number_format($item->file_size / 1048576, 2) . ' MB' 
-                    : number_format($item->file_size / 1024, 1) . ' KB';
-            } else {
-                $item->readable_size = '0 KB';
-            }
-            
+                    : number_format($item->file_size / 1024, 1) . ' KB')
+                : '0 KB';
+                
             return $item;
         });
     });
 
     return view('livewire.admin.file-manager', [
-        'fileGroups' => $grouped,    // Used for the @foreach grouping in Blade
-        'files' => $allFiles,         // Used for {{ $files->links() }}
-        'totalCount' => $allFiles->total(),
+        'fileGroups' => $grouped,    // Loop through this for the grid
+        'files'      => $allFiles,   // Use this ONLY for ->links()
+        'totalCount'  => $allFiles->total(),
     ]);
 }
 }
