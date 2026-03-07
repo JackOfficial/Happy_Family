@@ -1244,29 +1244,43 @@
                 We believe in the power of collaboration. Our mission is made possible through the support and strategic partnership of these incredible organizations.
             </p>
         </div>
-
-       <div class="">
+<div class="partner-carousel owl-carousel" 
+     x-data="{}" 
+     x-init="
+        $( $el ).owlCarousel({
+            loop: true,
+            margin: 20,
+            autoplay: true,
+            autoplayTimeout: 3000,
+            dots: true,
+            nav: false,
+            responsive: {
+                0: { items: 2 },
+                600: { items: 3 },
+                1000: { items: 5 }
+            }
+        });
+     ">
     @forelse ($partners as $partner)
-    <h1>Partners are present</h1>
-    <div class="partner-item p-4">
-        {{-- Changed $partner->link to $partner->website --}}
-        <a href="{{ $partner->website }}" target="_blank" title="{{ $partner->name }}" class="d-block text-center">
-            <div class="partner-logo-wrap mb-3 shadow-sm">
-                {{-- Ensure the path is correct --}}
-                <img src="{{ asset('storage/' . $partner->logo) }}" 
-                     class="partner-logo img-fluid mx-auto" 
-                     alt="{{ $partner->name }}">
-            </div>
-            <div class="partner-info">
-                {{-- Changed $partner->partner to $partner->name --}}
-                <h6 class="mb-1 text-purple fw-bold">{{ Str::limit($partner->name, 30) }}</h6>
-                {{-- If 'title' isn't in your model, you might want to use 'description' or remove this --}}
-                <p class="text-muted small mb-0">{{ Str::limit($partner->description, 50) }}</p>
-            </div>
-        </a>
-    </div> 
+        <div class="partner-item p-4">
+            <a href="{{ $partner->website }}" target="_blank" title="{{ $partner->name }}" class="d-block text-center">
+                <div class="partner-logo-wrap mb-3 shadow-sm">
+                    <img src="{{ asset('storage/' . $partner->logo) }}" 
+                         class="partner-logo img-fluid mx-auto" 
+                         alt="{{ $partner->name }}">
+                </div>
+                <div class="partner-info">
+                    <h6 class="mb-1 text-purple fw-bold">{{ Str::limit($partner->name, 30) }}</h6>
+                    <p class="text-muted small mb-0">{{ Str::limit($partner->description, 50) }}</p>
+                </div>
+            </a>
+        </div> 
     @empty
-     <h4 class="text-center">No Partner</h4>
+        {{-- Note: If there are no partners, Owl Carousel won't initialize. 
+             This h4 will display normally. --}}
+        <div class="w-100 text-center py-5">
+            <h4 class="text-muted">No Partners found</h4>
+        </div>
     @endforelse
 </div>
     </div>
