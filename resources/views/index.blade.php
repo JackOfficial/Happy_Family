@@ -757,7 +757,7 @@
             <div class="col-12 mt-5">
                 <div class="text-center">
                     <a class="btn-modern-purple py-3 px-5 shadow-sm" href="/causes">
-                        Explore All Causes
+                        Explore All Impacts
                     </a>
                 </div>
             </div>

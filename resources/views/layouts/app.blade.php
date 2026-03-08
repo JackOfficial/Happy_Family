@@ -17,12 +17,15 @@
     <link href="{{ asset('frontend/lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+     <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
 
     <style>
         :root {
             /* Your Official Brand Colors */
             --primary-color: #631084; /* Deep Purple (Trust & Authority) */
+            --btn-modern-purple: #631084;
             --accent-color: #ec409e;  /* Vibrant Pink (Action & Heart) */
             --light-bg: #fcfaff;
             --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
