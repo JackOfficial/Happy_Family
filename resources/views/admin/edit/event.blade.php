@@ -6,6 +6,7 @@
     .uppercase { text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; font-weight: bold; display: block; }
     .btn-xs { padding: 1px 5px; font-size: 12px; line-height: 1.5; }
     .custom-file-label::after { content: "Browse"; }
+    [x-cloak] { display: none !important; }
 </style>
 @endpush
 @section('content')
@@ -97,24 +98,27 @@
                     </div>
                 </div>
 
-              {{-- Photo Management Card --}}
-<div class="card shadow-sm border-0" x-data="{ 
-    photoPreviews: [], 
-    existingPhotos: @json($event->event_photos),
-    removedPhotoIds: [],
-    handleFileChange(event) {
-        this.photoPreviews = []; // Clear current previews
-        const files = Array.from(event.target.files);
-        files.forEach(file => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                this.photoPreviews.push(e.target.result);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-     }">
-    <div class="card-header bg-white font-weight-bold"><i class="far fa-images mr-1 text-info"></i> Event Gallery</div>
+{{-- Photo Management Card --}}
+<div class="card shadow-sm border-0" 
+     x-data="{ 
+        photoPreviews: [], 
+        existingPhotos: {{ Js::from($event->event_photos) }},
+        removedPhotoIds: [],
+        handleFileChange(event) {
+            this.photoPreviews = [];
+            const files = Array.from(event.target.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.photoPreviews.push(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+     }" x-cloak>
+    <div class="card-header bg-white font-weight-bold">
+        <i class="far fa-images mr-1 text-info"></i> Event Gallery
+    </div>
     <div class="card-body">
         {{-- Existing Photos Grid --}}
         <label class="small text-muted uppercase">Current Photos</label>
@@ -156,8 +160,8 @@
             </template>
         </div>
 
-        {{-- Hidden input for removal - using x-model or :value --}}
-        <input type="hidden" name="removed_photos" x-model="removedPhotoIds.join(',')">
+        {{-- Hidden input for removal --}}
+        <input type="hidden" name="removed_photos" :value="removedPhotoIds.join(',')">
     </div>
 </div>
 
