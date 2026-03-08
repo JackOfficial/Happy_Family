@@ -1,6 +1,13 @@
 @extends('admin.layouts.app')
 @section('title', 'HFRO | Edit Event')
-
+@push('styles')
+    <style>
+    .card { border-radius: 12px; }
+    .uppercase { text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; font-weight: bold; display: block; }
+    .btn-xs { padding: 1px 5px; font-size: 12px; line-height: 1.5; }
+    .custom-file-label::after { content: "Browse"; }
+</style>
+@endpush
 @section('content')
 <section class="content-header">
     <div class="container-fluid">
@@ -165,13 +172,6 @@
         </div>
     </form>
 </section>
-
-<style>
-    .card { border-radius: 12px; }
-    .uppercase { text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; font-weight: bold; display: block; }
-    .btn-xs { padding: 1px 5px; font-size: 12px; line-height: 1.5; }
-    .custom-file-label::after { content: "Browse"; }
-</style>
 @endsection
 
 @push('scripts')
