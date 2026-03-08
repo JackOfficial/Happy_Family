@@ -31,7 +31,7 @@
 </section>
 
 <section class="content">
-    <form method="POST" action="{{ route('admin.events.update', $event->id) }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.events.update', $event->slug) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         
