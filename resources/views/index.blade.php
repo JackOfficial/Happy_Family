@@ -407,7 +407,7 @@
                                 <div class="tab-description mb-4">
                                     {!! $organization->about !!}
                                 </div>
-                                <a href="{{ route('about') }}" class="btn-modern-accent">
+                                <a href="/about" class="btn-modern-accent">
                                     Read Full Story <i class="fas fa-arrow-right ms-2"></i>
                                 </a>
                             </div>
@@ -417,7 +417,7 @@
                                 <div class="tab-description mb-4">
                                     {!! $organization->mission !!}
                                 </div>
-                                <a href="{{ route('contact') }}" class="btn-modern-accent">Learn More</a>
+                                <a href="/contact" class="btn-modern-accent">Learn More</a>
                             </div>
 
                             <div class="tab-pane fade" id="tab-3" role="tabpanel">
@@ -425,7 +425,7 @@
                                 <div class="tab-description mb-4">
                                     {!! $organization->vision !!}
                                 </div>
-                                <a href="{{ route('donate') }}" class="btn-modern-accent">Get Involved Today</a>
+                                <a href="donate" class="btn-modern-accent">Get Involved Today</a>
                             </div>
 
                         </div>
