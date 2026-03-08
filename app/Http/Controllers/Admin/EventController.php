@@ -91,10 +91,19 @@ class EventController extends Controller
      * Show form to edit existing event.
      */
     public function edit(Event $event)
-    {
-        $event->load(['event_photos', 'documents']);
-        return view('admin.edit.event', compact('event'));
-    }
+{
+    // Eager load the relationships to prevent N+1 queries in the view
+    $event->load(['event_photos', 'documents']);
+
+    // Ensure the view path matches your actual file location
+    return view('admin.edit.event', compact('event'));
+}
+
+public function show(Event $event)
+{
+    $event->load(['event_photos', 'documents']);
+    return view('admin.show.event-detail', compact('event'));
+}
 
     /**
      * Update the existing event.
