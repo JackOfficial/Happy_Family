@@ -618,7 +618,7 @@
             </div>
 
             <div class="carousel-item vh-100">
-                <img src="{{ asset('storage/carousel/Happy Family Rwanda Survey.jpeg') }}" class="w-100 h-100 banner-img" alt="Education">
+                <img src="{{ asset('images/banner1.png') }}" class="w-100 h-100 banner-img" alt="Education">
                 <div class="carousel-caption d-flex align-items-center justify-content-center">
                     <div class="p-3 text-center hero-content">
                         <h4 class="text-primary text-uppercase font-weight-bold mb-3 tracking-widest">Transforming Education</h4>
@@ -648,7 +648,7 @@
         <div class="row g-5 align-items-center">
             <div class="col-xl-5">
                 <div class="image-wrapper position-relative">
-                    <img src="{{ asset('images/welcome photo.png') }}" class="img-fluid rounded-custom shadow-lg" alt="Happy Family Rwanda Welcome">
+                    <img src="{{ asset('images/banner1.png') }}" class="img-fluid rounded-custom shadow-lg" alt="Happy Family Rwanda Welcome">
                     <div class="experience-badge d-none d-sm-block">
                         <span class="h2 d-block mb-0">100%</span>
                         <small>Compassion</small>
