@@ -363,23 +363,25 @@
     </div>
 </div>
 
-      <div class="container-fluid about-section py-5">
+  <div class="container-fluid about-section py-5">
     <div class="container py-5">
         <div class="row g-5 align-items-center">
             <div class="col-xl-5">
                 <div class="image-wrapper position-relative">
                     <img src="{{ asset('images/banner1.png') }}" class="img-fluid rounded-custom shadow-lg" alt="Happy Family Rwanda Welcome">
-                    <div class="experience-badge d-none d-sm-block">
+                    
+                    <div class="experience-badge d-none d-sm-block animate-bounce">
                         <span class="h2 d-block mb-0">100%</span>
-                        <small>Compassion</small>
+                        <small class="text-uppercase fw-bold" style="font-size: 0.7rem; letter-spacing: 1px;">Compassion</small>
                     </div>
                 </div>
             </div>
 
             <div class="col-xl-7">
                 <div class="content-box ps-xl-4">
-                    <h5 class="brand-subtitle">About Our Organization</h5>
-                    <h1 class="display-5 mb-4 brand-title">Empowering Communities in Rwanda</h1>
+                    <h5 class="brand-subtitle mb-2">About Our Organization</h5>
+                    <h2 class="display-5 mb-4 brand-title">Empowering Communities in Rwanda</h2>
+                    
                     <p class="lead mb-4 text-muted">
                         Happy Family Rwanda Organization (HFRO) is a compassionate NGO dedicated to creating positive change and 
                         making a lasting impact through collective action and empowerment.
@@ -387,39 +389,45 @@
 
                     <div class="custom-tabs-container">
                         <ul class="nav nav-pills modern-pills mb-4" id="pills-tab" role="tablist">
-                            <li class="nav-item">
-                                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-1" type="button">Our Story</button>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="pills-story-tab" data-bs-toggle="pill" data-bs-target="#tab-1" type="button" role="tab">Our Story</button>
                             </li>
-                            <li class="nav-item">
-                                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-2" type="button">Mission</button>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="pills-mission-tab" data-bs-toggle="pill" data-bs-target="#tab-2" type="button" role="tab">Mission</button>
                             </li>
-                            <li class="nav-item">
-                                <button class="nav-link" data-bs-target="#tab-3" type="button">Vision</button>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="pills-vision-tab" data-bs-toggle="pill" data-bs-target="#tab-3" type="button" role="tab">Vision</button>
                             </li>
                         </ul>
 
-                        <div class="tab-content impact-tab-content p-4 rounded-custom" id="pills-tabContent">
-                            <div class="tab-pane fade show active" id="tab-1">
-                                <h5 class="mb-3 text-purple">Who We Are</h5>
-                                <div class="tab-description">
+                        <div class="tab-content impact-tab-content p-4 rounded-custom shadow-sm" id="pills-tabContent">
+                            
+                            <div class="tab-pane fade show active" id="tab-1" role="tabpanel">
+                                <h5 class="mb-3 text-purple"><i class="fas fa-history me-2 text-pink"></i>Who We Are</h5>
+                                <div class="tab-description mb-4">
                                     {!! $organization->about !!}
                                 </div>
-                                <a href="#" class="btn-modern-accent mt-3">Read Full Story <i class="fas fa-arrow-right ml-2"></i></a>
+                                <a href="{{ route('about') }}" class="btn-modern-accent">
+                                    Read Full Story <i class="fas fa-arrow-right ms-2"></i>
+                                </a>
                             </div>
-                            <div class="tab-pane fade" id="tab-2">
-                                <h5 class="mb-3 text-purple">Our Purpose</h5>
-                                <div class="tab-description">
+
+                            <div class="tab-pane fade" id="tab-2" role="tabpanel">
+                                <h5 class="mb-3 text-purple"><i class="fas fa-bullseye me-2 text-pink"></i>Our Purpose</h5>
+                                <div class="tab-description mb-4">
                                     {!! $organization->mission !!}
                                 </div>
-                                <a href="#" class="btn-modern-accent mt-3">Learn More</a>
+                                <a href="{{ route('contact') }}" class="btn-modern-accent">Learn More</a>
                             </div>
-                            <div class="tab-pane fade" id="tab-3">
-                                <h5 class="mb-3 text-purple">Our Dream</h5>
-                                <div class="tab-description">
+
+                            <div class="tab-pane fade" id="tab-3" role="tabpanel">
+                                <h5 class="mb-3 text-purple"><i class="fas fa-eye me-2 text-pink"></i>Our Dream</h5>
+                                <div class="tab-description mb-4">
                                     {!! $organization->vision !!}
                                 </div>
-                                <a href="#" class="btn-modern-accent mt-3">Get Involved</a>
+                                <a href="{{ route('donate') }}" class="btn-modern-accent">Get Involved Today</a>
                             </div>
+
                         </div>
                     </div>
                 </div>
