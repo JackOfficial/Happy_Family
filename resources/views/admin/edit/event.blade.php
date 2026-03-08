@@ -150,7 +150,7 @@
         </div>
 
         {{-- Hidden input for removal - using x-model or :value --}}
-        <input type="hidden" name="removed_photos" :value="removedPhotoIds.join(',')">
+        <input type="hidden" name="removed_photos" x-model="removedPhotoIds.join(',')">
     </div>
 </div>
 
@@ -177,9 +177,10 @@
 @push('scripts')
 <script>
     // File input label update
-    $('.custom-file-input').on('change', function() {
-        let fileName = $(this).val().split('\\').pop();
-        $(this).next('.custom-file-label').addClass("selected").html(fileName || 'Add more...');
-    });
+   $('.custom-file-input').on('change', function() {
+    let files = $(this)[0].files;
+    let label = files.length > 1 ? files.length + ' files selected' : files[0].name;
+    $(this).next('.custom-file-label').addClass("selected").html(label);
+});
 </script>
 @endpush
