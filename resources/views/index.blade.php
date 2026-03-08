@@ -588,6 +588,7 @@
         .display-3 { font-size: 2.5rem; }
     }
 
+    <style>
     /* Hero Specific Styling */
     .carousel-item {
         background: #000; /* Prevent white flash */
@@ -684,6 +685,7 @@
         background: var(--primary-color);
         color: white;
     }
+</style>
 </style>
 @endsection
 @section('content')
