@@ -54,22 +54,6 @@
 
 <body class="bg-light">
 
-    {{-- <div 
-        x-data="{ loading: true }" 
-        x-init="window.onload = () => { loading = false }; setTimeout(() => loading = false, 2500)" 
-        x-show="loading" 
-        x-transition:leave="transition ease-in duration-500"
-        class="fixed-top w-100 vh-100 bg-white d-flex align-items-center justify-content-center" 
-        style="z-index: 99999;"
-    >
-        <div class="text-center">
-            <div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);" role="status"></div>
-            <p class="mt-3 text-uppercase tracking-widest small font-weight-bold" style="color: var(--primary-color); letter-spacing: 2px;">
-                Happy Family Rwanda
-            </p>
-        </div>
-    </div> --}}
-
     <header :class="{ 'scrolled-nav': scrolled }" class="glass-nav sticky-top">
         <div class="container">
             <livewire:navbar-component />
