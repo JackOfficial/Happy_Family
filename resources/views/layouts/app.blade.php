@@ -16,7 +16,7 @@
     <meta property="og:description" content="Join us in our mission to support families and children across Rwanda.">
     <meta property="og:image" content="{{ asset('images/logo.png') }}">
 
-    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
