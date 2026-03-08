@@ -51,7 +51,7 @@ Route::get('/cause/{id}', [PageController::class, 'cause']);
 Route::get('/donate', [PageController::class, 'donate']);
 Route::get('/volunteer', [PageController::class, 'volunteer']);
 Route::get('/events', [PageController::class, 'events']);
-Route::get('/events/{event}', [PageController::class, 'event']);
+Route::get('/events/{slug}', [PageController::class, 'event'])->name('events.show');
 Route::get('/application-sent', [PageController::class, 'application_sent']);
 Route::get('blogs/search/{keyword}', [PageController::class, 'search']);
 Route::resource('contact', ContactController::class);

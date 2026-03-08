@@ -221,7 +221,7 @@ class PageController extends Controller
         return view('events', compact('upcomingEvents', 'passedEvents'));  
     }
 
-    function event($event){
+    function show($event){
         $event = Events::where('event', $event)->first();
         return view('event', compact('event'));  
     }
