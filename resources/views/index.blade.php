@@ -587,59 +587,164 @@
     @media (max-width: 768px) {
         .display-3 { font-size: 2.5rem; }
     }
+
+    /* Hero Specific Styling */
+    .carousel-item {
+        background: #000; /* Prevent white flash */
+    }
+
+    .banner-img {
+        object-fit: cover;
+        filter: brightness(0.6); /* Modern dark overlay for text readability */
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(99, 16, 132, 0.4), rgba(0,0,0,0.7));
+        z-index: 1;
+    }
+
+    .carousel-caption {
+        z-index: 2;
+        bottom: 0;
+        top: 0;
+    }
+
+    /* Glassmorphism Card */
+    .hero-glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        max-width: 900px;
+    }
+
+    .text-accent-pink {
+        color: #ec409e;
+    }
+
+    .tracking-widest {
+        letter-spacing: 0.2rem;
+    }
+
+    /* Hero Buttons */
+    .btn-hero {
+        padding: 15px 35px;
+        border-radius: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: 0.3s;
+    }
+
+    .btn-primary.btn-hero {
+        background: var(--primary-color);
+        border: none;
+    }
+
+    .btn-hero:hover {
+        transform: translateY(-5px);
+    }
+
+    .hero-subtitle {
+        max-width: 700px;
+    }
+
+    /* Custom Indicators */
+    .custom-indicators [data-bs-target] {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin: 0 8px;
+        background-color: rgba(255,255,255,0.5);
+        border: none;
+    }
+
+    .custom-indicators .active {
+        background-color: var(--accent-pink);
+        width: 30px;
+        border-radius: 10px;
+    }
+
+    /* Navigation Icons */
+    .control-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+    }
+
+    .control-icon:hover {
+        background: var(--primary-color);
+        color: white;
+    }
 </style>
 @endsection
 @section('content')
 
 <div class="container-fluid carousel-header vh-100 px-0">
-    <div id="carouselId" class="carousel slide carousel-fade" data-ride="carousel">
-        <ol class="carousel-indicators custom-indicators">
-            <li data-target="#carouselId" data-slide-to="0" class="active"></li>
-            <li data-target="#carouselId" data-slide-to="1"></li>
-            <li data-target="#carouselId" data-slide-to="2"></li>
-        </ol>
+    <div id="heroCarousel" class="carousel slide carousel-fade vh-100" data-bs-ride="carousel" data-bs-interval="6000">
         
-        <div class="carousel-inner" role="listbox">
+        <div class="carousel-indicators custom-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+        </div>
+        
+        <div class="carousel-inner h-100" role="listbox">
             <div class="carousel-item active vh-100">
+                <div class="overlay"></div>
                 <img src="{{ asset('images/banner1.png') }}" class="w-100 h-100 banner-img" alt="Building Awareness">
                 <div class="carousel-caption d-flex align-items-center justify-content-center">
-                    <div class="p-3 text-center hero-content" x-data="{ show: false }" x-init="setTimeout(() => show = true, 300)" x-show="show" x-transition:enter="transition ease-out duration-1000" x-transition:enter-start="opacity-0 translateY-50">
-                        <h4 class="text-primary text-uppercase font-weight-bold mb-3 tracking-widest">Building Awareness</h4>
-                        <h1 class="display-3 text-white font-weight-bold mb-4">Empowering Youth,<br>Preventing Pregnancies</h1>
-                        <p class="mb-5 mx-auto text-light opacity-90 lead" style="max-width: 700px;">
+                    <div class="p-4 p-md-5 text-center hero-glass-card" 
+                         x-data="{ show: false }" 
+                         x-init="setTimeout(() => show = true, 300)" 
+                         x-show="show" 
+                         x-transition:enter="transition ease-out duration-1000" 
+                         x-transition:enter-start="opacity-0 translate-y-5">
+                        
+                        <h4 class="text-accent-pink text-uppercase fw-bold mb-3 tracking-widest">Building Awareness</h4>
+                        <h1 class="display-3 text-white fw-bold mb-4">Empowering Youth,<br>Preventing Pregnancies</h1>
+                        <p class="mb-5 mx-auto text-light lead opacity-90 hero-subtitle">
                             Join us in spreading awareness and preventing teenage pregnancy through knowledge and empowerment. Every step counts toward a brighter future.
                         </p>
-                        <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center">
-                            <a class="btn btn-primary btn-modern shadow-lg mx-2 mb-3 mb-sm-0" href="#">Get Involved</a>
-                            <a class="btn btn-outline-light btn-modern mx-2 mb-3 mb-sm-0" href="/causes">Learn More</a>
+                        <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-3">
+                            <a class="btn btn-primary btn-hero shadow-lg" href="#">Get Involved</a>
+                            <a class="btn btn-outline-light btn-hero" href="/causes">Learn More</a>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="carousel-item vh-100">
+                <div class="overlay"></div>
                 <img src="{{ asset('images/banner1.png') }}" class="w-100 h-100 banner-img" alt="Education">
                 <div class="carousel-caption d-flex align-items-center justify-content-center">
-                    <div class="p-3 text-center hero-content">
-                        <h4 class="text-primary text-uppercase font-weight-bold mb-3 tracking-widest">Transforming Education</h4>
-                        <h1 class="display-3 text-white font-weight-bold mb-4">Education is the Key</h1>
-                        <p class="mb-5 mx-auto text-light opacity-90 lead" style="max-width: 700px;">
+                    <div class="p-4 p-md-5 text-center hero-glass-card">
+                        <h4 class="text-accent-pink text-uppercase fw-bold mb-3 tracking-widest">Transforming Education</h4>
+                        <h1 class="display-4 text-white fw-bold mb-4">Education is the Key</h1>
+                        <p class="mb-5 mx-auto text-light lead opacity-90 hero-subtitle">
                             Our programs educate teens on reproductive health, making informed choices, and reclaiming their potential.
                         </p>
                         <div class="d-flex justify-content-center">
-                            <a class="btn btn-primary btn-modern shadow-lg" href="#">Support Our Mission</a>
+                            <a class="btn btn-primary btn-hero shadow-lg px-5" href="#">Support Our Mission</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <a class="carousel-control-prev" href="#carouselId" role="button" data-slide="prev">
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
             <span class="control-icon"><i class="fas fa-chevron-left"></i></span>
-        </a>
-        <a class="carousel-control-next" href="#carouselId" role="button" data-slide="next">
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
             <span class="control-icon"><i class="fas fa-chevron-right"></i></span>
-        </a>
+        </button>
     </div>
 </div>
 
