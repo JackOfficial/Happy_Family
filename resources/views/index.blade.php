@@ -289,6 +289,23 @@
         display: flex; align-items: center; justify-content: center; font-size: 0.7rem;
     }
     .owl-carousel .owl-item { opacity: 1 !important; display: block !important; }
+
+    /* Fix: Remove Bootstrap's negative margins when Owl is active on mobile */
+@media (max-width: 991px) {
+    .impact-carousel.owl-carousel {
+        margin-left: 0;
+        margin-right: 0;
+        display: block;
+    }
+    /* Ensure cards take full height in carousel */
+    .impact-carousel .owl-stage {
+        display: flex;
+    }
+    .impact-carousel .owl-item {
+        display: flex;
+        flex: 1 0 auto;
+    }
+}
     
     @keyframes bounce {
         0%, 100% { transform: translateY(0); }
@@ -1043,5 +1060,33 @@
 </div>
     </div>
 </div>
-        
+      
+<script>
+    document.addEventListener('alpine:init', () => {
+    Alpine.data('impactSlider', () => ({
+        init() {
+            this.handleCarousel();
+            window.addEventListener('resize', () => this.handleCarousel());
+        },
+        handleCarousel() {
+            const $el = $('.impact-carousel');
+            if (window.innerWidth < 992) {
+                if (!$el.hasClass('owl-loaded')) {
+                    $el.owlCarousel({
+                        items: 1,
+                        margin: 20,
+                        loop: true,
+                        dots: true,
+                        responsive: { 0: { items: 1 }, 768: { items: 2 } }
+                    });
+                }
+            } else {
+                if ($el.hasClass('owl-loaded')) {
+                    $el.trigger('destroy.owl.carousel').removeClass('owl-loaded owl-drag');
+                }
+            }
+        }
+    }));
+});
+</script>
 @endsection
