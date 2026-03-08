@@ -141,17 +141,17 @@
                                        <td class="pr-4 text-center">
     <div class="btn-group border rounded shadow-sm overflow-hidden bg-white">
         {{-- View/Show Button --}}
-        <a href="{{ route('admin.events.show', $event->id) }}" class="btn btn-white btn-sm px-3 border-0" title="View Details">
+        <a href="{{ route('admin.events.show', $event->slug) }}" class="btn btn-white btn-sm px-3 border-0" title="View Details">
             <i class="fas fa-eye text-primary"></i>
         </a>
         
         {{-- Edit Button --}}
-        <a href="{{ route('admin.events.edit', $event->id) }}" class="btn btn-white btn-sm px-3 border-0 border-left" title="Edit Event">
+        <a href="{{ route('admin.events.edit', $event->slug) }}" class="btn btn-white btn-sm px-3 border-0 border-left" title="Edit Event">
             <i class="fas fa-pencil-alt text-info"></i>
         </a>
         
         {{-- Delete Button --}}
-        <form action="{{ route('admin.events.destroy', $event->id) }}" method="POST" class="d-inline m-0">
+        <form action="{{ route('admin.events.destroy', $event->slug) }}" method="POST" class="d-inline m-0">
             @csrf @method('DELETE')
             <button type="button" class="btn btn-white btn-sm delete-btn px-3 border-0 border-left" title="Delete Event">
                 <i class="fas fa-trash text-danger"></i>
