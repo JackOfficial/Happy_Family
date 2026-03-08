@@ -77,7 +77,7 @@
                 <div class="tab-description text-muted">
                     {!! $organization->vision !!}
                 </div>
-                <a href="{{ route('donate') }}" class="btn-modern-accent mt-4">Support Our Vision</a>
+                <a href="/donate" class="btn-modern-accent mt-4">Support Our Vision</a>
             </div>
         </div>
     </div>
@@ -87,7 +87,7 @@
     <div class="container text-center py-4">
         <h3 class="text-white mb-4 fw-bold">Together, we can make Rwanda a nation of healthy, empowered, and happy families.</h3>
         <div class="title-line-center mx-auto mb-4" style="background: var(--accent-pink);"></div>
-        <a href="{{ route('contact') }}" class="btn-modern bg-white text-purple">Join Our Mission <i class="fas fa-heart ms-2 text-pink"></i></a>
+        <a href="/contact" class="btn-modern bg-white text-purple">Join Our Mission <i class="fas fa-heart ms-2 text-pink"></i></a>
     </div>
 </div>
 @endsection
