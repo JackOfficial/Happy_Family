@@ -1,14 +1,17 @@
 @extends('admin.layouts.app')
 @section('title', 'HFRO | Edit Event')
+
 @push('styles')
-    <style>
+<style>
     .card { border-radius: 12px; }
     .uppercase { text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; font-weight: bold; display: block; }
     .btn-xs { padding: 1px 5px; font-size: 12px; line-height: 1.5; }
     .custom-file-label::after { content: "Browse"; }
     [x-cloak] { display: none !important; }
+    .doc-item:hover { background-color: #f8f9fa; }
 </style>
 @endpush
+
 @section('content')
 <section class="content-header">
     <div class="container-fluid">
@@ -58,10 +61,65 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- Document Management Card --}}
+                <div class="card shadow-sm border-0 mt-4" 
+                     x-data="{ 
+                        existingDocs: {{ Js::from($event->documents) }},
+                        removedDocIds: [],
+                        newDocNames: []
+                     }" x-cloak>
+                    <div class="card-header bg-white font-weight-bold">
+                        <i class="fas fa-file-pdf mr-1 text-danger"></i> Event Documents
+                    </div>
+                    <div class="card-body">
+                        {{-- Current Documents --}}
+                        <label class="small text-muted uppercase">Existing Documents</label>
+                        <div class="list-group list-group-flush mb-3 border rounded">
+                            <template x-for="doc in existingDocs" :key="doc.id">
+                                <div class="list-group-item d-flex justify-content-between align-items-center py-2 doc-item">
+                                    <div class="text-truncate mr-2">
+                                        <i class="far fa-file-alt mr-2 text-muted"></i>
+                                        <span x-text="doc.title" class="small"></span>
+                                    </div>
+                                    <button type="button" @click="removedDocIds.push(doc.id); existingDocs = existingDocs.filter(d => d.id !== doc.id)"
+                                            class="btn btn-outline-danger btn-xs border-0">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </template>
+                            <template x-if="existingDocs.length === 0">
+                                <div class="list-group-item text-muted small italic">No documents currently attached.</div>
+                            </template>
+                        </div>
+
+                        {{-- Upload New Documents --}}
+                        <label class="small text-muted uppercase">Add New Documents</label>
+                        <div class="custom-file">
+                            <input type="file" name="documents[]" id="documents" class="custom-file-input" 
+                                   accept=".pdf,.doc,.docx,.zip,.xlsx" multiple
+                                   @change="newDocNames = Array.from($event.target.files).map(f => f.name)">
+                            <label class="custom-file-label" for="documents">Choose documents...</label>
+                        </div>
+
+                        {{-- New Selection List --}}
+                        <template x-if="newDocNames.length > 0">
+                            <ul class="list-group mt-2">
+                                <template x-for="name in newDocNames" :key="name">
+                                    <li class="list-group-item py-1 bg-light small text-primary border-primary">
+                                        <i class="fas fa-plus mr-2"></i> <span x-text="name"></span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </template>
+
+                        <input type="hidden" name="removed_documents" :value="removedDocIds.join(',')">
+                    </div>
+                </div>
             </div>
 
             <div class="col-md-4">
-                {{-- Schedule Card --}}
+                {{-- Schedule & Location --}}
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white font-weight-bold"><i class="far fa-clock mr-1 text-primary"></i> Schedule</div>
                     <div class="card-body">
@@ -76,7 +134,7 @@
                     </div>
                 </div>
 
-                {{-- Location & Link --}}
+                {{-- Venue & Status --}}
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white font-weight-bold"><i class="fas fa-map-marker-alt mr-1 text-danger"></i> Venue</div>
                     <div class="card-body">
@@ -98,72 +156,58 @@
                     </div>
                 </div>
 
-{{-- Photo Management Card --}}
-<div class="card shadow-sm border-0" 
-     x-data="{ 
-        photoPreviews: [], 
-        existingPhotos: {{ Js::from($event->event_photos) }},
-        removedPhotoIds: [],
-        handleFileChange(event) {
-            this.photoPreviews = [];
-            const files = Array.from(event.target.files);
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.photoPreviews.push(e.target.result);
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-     }" x-cloak>
-    <div class="card-header bg-white font-weight-bold">
-        <i class="far fa-images mr-1 text-info"></i> Event Gallery
-    </div>
-    <div class="card-body">
-        {{-- Existing Photos Grid --}}
-        <label class="small text-muted uppercase">Current Photos</label>
-        <div class="d-flex flex-wrap mb-3" style="gap: 8px;">
-            <template x-for="photo in existingPhotos" :key="photo.id">
-                <div class="position-relative border rounded p-1 shadow-sm">
-                    <img :src="'{{ asset('storage') }}/' + photo.file_path" 
-                         class="rounded" style="width: 70px; height: 70px; object-fit: cover;">
-                    <button type="button" @click="removedPhotoIds.push(photo.id); existingPhotos = existingPhotos.filter(p => p.id !== photo.id)"
-                            class="btn btn-danger btn-xs position-absolute shadow-sm"
-                            style="top: -5px; right: -5px; border-radius: 50%; padding: 0 5px;">
-                        &times;
-                    </button>
-                </div>
-            </template>
-            <template x-if="existingPhotos.length === 0">
-                <p class="text-muted small italic">No photos currently attached.</p>
-            </template>
-        </div>
+                {{-- Photo Management Card --}}
+                <div class="card shadow-sm border-0" 
+                     x-data="{ 
+                        photoPreviews: [], 
+                        existingPhotos: {{ Js::from($event->event_photos) }},
+                        removedPhotoIds: [],
+                        handleFileChange(event) {
+                            this.photoPreviews = [];
+                            Array.from(event.target.files).forEach(file => {
+                                const reader = new FileReader();
+                                reader.onload = (e) => { this.photoPreviews.push(e.target.result); };
+                                reader.readAsDataURL(file);
+                            });
+                        }
+                     }" x-cloak>
+                    <div class="card-header bg-white font-weight-bold">
+                        <i class="far fa-images mr-1 text-info"></i> Event Gallery
+                    </div>
+                    <div class="card-body">
+                        <label class="small text-muted uppercase">Current Photos</label>
+                        <div class="d-flex flex-wrap mb-3" style="gap: 8px;">
+                            <template x-for="photo in existingPhotos" :key="photo.id">
+                                <div class="position-relative border rounded p-1 shadow-sm">
+                                    <img :src="'{{ asset('storage') }}/' + photo.file_path" 
+                                         class="rounded" style="width: 70px; height: 70px; object-fit: cover;">
+                                    <button type="button" @click="removedPhotoIds.push(photo.id); existingPhotos = existingPhotos.filter(p => p.id !== photo.id)"
+                                            class="btn btn-danger btn-xs position-absolute shadow-sm"
+                                            style="top: -5px; right: -5px; border-radius: 50%; padding: 0 5px;">
+                                        &times;
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
 
-        {{-- New Uploads --}}
-        <label class="small text-muted uppercase">Upload New</label>
-        <div class="custom-file mb-2">
-            <input type="file" name="photos[]" id="photos" class="custom-file-input" 
-                   accept="image/*" multiple
-                   @change="handleFileChange($event)">
-            <label class="custom-file-label" for="photos">Add more...</label>
-        </div>
+                        <label class="small text-muted uppercase">Upload New</label>
+                        <div class="custom-file mb-2">
+                            <input type="file" name="photos[]" id="photos" class="custom-file-input" 
+                                   accept="image/*" multiple @change="handleFileChange($event)">
+                            <label class="custom-file-label" for="photos">Add more...</label>
+                        </div>
 
-        {{-- NEW PREVIEWS --}}
-        <div class="mt-2 d-flex flex-wrap" style="gap: 8px;">
-            <template x-for="(src, index) in photoPreviews" :key="index">
-                <div class="position-relative border rounded p-1 border-primary shadow-sm" style="background-color: #f0f7ff">
-                    <img :src="src" class="rounded" style="width: 70px; height: 70px; object-fit: cover;">
-                    <div class="position-absolute bg-primary text-white" style="top: -5px; left: -5px; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-plus"></i>
+                        <div class="mt-2 d-flex flex-wrap" style="gap: 8px;">
+                            <template x-for="(src, index) in photoPreviews" :key="index">
+                                <div class="position-relative border rounded p-1 border-primary shadow-sm" style="background-color: #f0f7ff">
+                                    <img :src="src" class="rounded" style="width: 70px; height: 70px; object-fit: cover;">
+                                </div>
+                            </template>
+                        </div>
+
+                        <input type="hidden" name="removed_photos" :value="removedPhotoIds.join(',')">
                     </div>
                 </div>
-            </template>
-        </div>
-
-        {{-- Hidden input for removal --}}
-        <input type="hidden" name="removed_photos" :value="removedPhotoIds.join(',')">
-    </div>
-</div>
 
                 {{-- Submit Buttons --}}
                 <div class="mt-4">
@@ -180,11 +224,10 @@
 
 @push('scripts')
 <script>
-    // File input label update
-   $('.custom-file-input').on('change', function() {
-    let files = $(this)[0].files;
-    let label = files.length > 1 ? files.length + ' files selected' : files[0].name;
-    $(this).next('.custom-file-label').addClass("selected").html(label);
-});
+   $(document).on('change', '.custom-file-input', function() {
+        let files = $(this)[0].files;
+        let label = files.length > 1 ? files.length + ' files selected' : (files.length === 1 ? files[0].name : 'Choose file');
+        $(this).next('.custom-file-label').addClass("selected").html(label);
+    });
 </script>
 @endpush

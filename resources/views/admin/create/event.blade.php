@@ -48,10 +48,38 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- Document Upload Card --}}
+                <div class="card shadow-sm border-0 mt-4" x-data="{ docNames: [] }">
+                    <div class="card-header bg-white font-weight-bold">
+                        <i class="fas fa-file-pdf mr-1 text-danger"></i> Event Documents
+                    </div>
+                    <div class="card-body">
+                        <div class="custom-file">
+                            <input type="file" name="documents[]" id="documents" class="custom-file-input" 
+                                   accept=".pdf,.doc,.docx,.zip,.xlsx" multiple
+                                   @change="docNames = Array.from($event.target.files).map(f => f.name)">
+                            <label class="custom-file-label" for="documents">Choose documents (PDF, Doc, Zip)</label>
+                        </div>
+                        
+                        {{-- Document List Preview --}}
+                        <template x-if="docNames.length > 0">
+                            <ul class="list-group list-group-flush mt-3 border rounded">
+                                <template x-for="name in docNames" :key="name">
+                                    <li class="list-group-item d-flex align-items-center py-2">
+                                        <i class="far fa-file-alt mr-2 text-muted"></i>
+                                        <span x-text="name" class="small text-truncate"></span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </template>
+                        <small class="text-muted mt-2 d-block">Attach reports, programs, or registration forms.</small>
+                    </div>
+                </div>
             </div>
 
             <div class="col-md-4">
-                {{-- Date & Time Card --}}
+                {{-- Schedule & Location --}}
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white font-weight-bold">Schedule & Location</div>
                     <div class="card-body">
@@ -89,16 +117,14 @@
 
                 {{-- Photo Upload Card --}}
                 <div class="card shadow-sm border-0" x-data="{ photoPreviews: [] }">
-                    <div class="card-header bg-white font-weight-bold">Event Media</div>
+                    <div class="card-header bg-white font-weight-bold"><i class="far fa-images mr-1 text-info"></i> Event Media</div>
                     <div class="card-body">
                         <div class="custom-file">
                             <input type="file" name="photos[]" id="photos" class="custom-file-input" 
                                    accept="image/*" multiple
                                    @change="
-                                        photoPreviews = [];
-                                        Array.from($event.target.files).forEach(file => {
-                                            photoPreviews.push(URL.createObjectURL(file));
-                                        })
+                                        photoPreviews.forEach(p => URL.revokeObjectURL(p));
+                                        photoPreviews = Array.from($event.target.files).map(file => URL.createObjectURL(file));
                                    ">
                             <label class="custom-file-label" for="photos">Choose images</label>
                         </div>
@@ -136,10 +162,16 @@
 
 @push('scripts')
 <script>
-    // To show file name in the custom file input label
-    $('.custom-file-input').on('change', function() {
-        let fileName = $(this).val().split('\\').pop();
-        $(this).next('.custom-file-label').addClass("selected").html(fileName || 'Choose images');
+    // To show file name in the custom file input label for single/multiple files
+    $(document).on('change', '.custom-file-input', function() {
+        let files = $(this)[0].files;
+        let label = $(this).next('.custom-file-label');
+        if (files.length > 1) {
+            label.addClass("selected").html(files.length + " files selected");
+        } else {
+            let fileName = $(this).val().split('\\').pop();
+            label.addClass("selected").html(fileName || 'Choose file');
+        }
     });
 </script>
 @endpush
