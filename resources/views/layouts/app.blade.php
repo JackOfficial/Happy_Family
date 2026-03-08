@@ -64,21 +64,53 @@
         @yield('content')
     </main>
 
-    <livewire:footer-component />
+   <livewire:footer-component />
 
     <button 
+        x-cloak
         x-show="scrolled" 
-        x-transition 
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 transform translate-y-4"
+        x-transition:enter-end="opacity-100 transform translate-y-0"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 transform translate-y-0"
+        x-transition:leave-end="opacity-0 transform translate-y-4"
         @click="window.scrollTo({top: 0, behavior: 'smooth'})"
-        class="btn back-to-top position-fixed shadow-lg text-white" 
-        style="bottom: 30px; right: 30px; width: 55px; height: 55px; border-radius: 12px; z-index: 1000;">
+        class="btn position-fixed shadow-lg text-white d-flex align-items-center justify-content-center" 
+        style="bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 12px; z-index: 1000; background-color: var(--accent-color); border: none;">
         <i class="fa fa-arrow-up"></i>
     </button>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="{{ asset('frontend/lib/owlcarousel/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('frontend/lib/lightbox/js/lightbox.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function(){
+            // Initialize Owl Carousel (Example for your events)
+            $(".event-carousel").owlCarousel({
+                autoplay: true,
+                smartSpeed: 1000,
+                center: false,
+                dots: true,
+                loop: true,
+                margin: 25,
+                nav : true,
+                navText : [
+                    '<i class="bi bi-arrow-left"></i>',
+                    '<i class="bi bi-arrow-right"></i>'
+                ],
+                responsive: {
+                    0:{ items:1 },
+                    768:{ items:2 },
+                    992:{ items:3 }
+                }
+            });
+        });
+    </script>
     
     @livewireScripts
 </body>
