@@ -17,15 +17,23 @@
     <div class="container-fluid">
         <div class="row mb-3">
             <div class="col-sm-6">
-                <h1 class="font-weight-bold">Event Overview</h1>
+                <h1 class="font-weight-bold text-dark">
+                    <i class="fas fa-file-invoice mr-2 text-muted"></i>Event Overview
+                </h1>
             </div>
             <div class="col-sm-6 text-right">
-                <a href="{{ route('admin.events.index') }}" class="btn btn-outline-secondary shadow-sm mr-1">
-                    <i class="fas fa-arrow-left mr-1"></i> Back
-                </a>
-                <a href="{{ route('admin.events.edit', $event->id) }}" class="btn btn-info shadow-sm">
-                    <i class="fas fa-pencil-alt mr-1"></i> Edit Event
-                </a>
+                <div class="btn-group shadow-sm">
+                    <a href="{{ route('admin.events.index') }}" class="btn btn-white border">
+                        <i class="fas fa-arrow-left mr-1 text-muted"></i> Back
+                    </a>
+                    {{-- PDF Download Button --}}
+                    <a href="{{ route('admin.events.download-pdf', $event->slug) }}" class="btn btn-outline-danger border-left-0">
+                        <i class="fas fa-file-pdf mr-1"></i> Download PDF
+                    </a>
+                    <a href="{{ route('admin.events.edit', $event->slug) }}" class="btn btn-info">
+                        <i class="fas fa-pencil-alt mr-1"></i> Edit Event
+                    </a>
+                </div>
             </div>
         </div>
     </div>

@@ -9,6 +9,8 @@ use App\Models\Organization;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class EventController extends Controller
 {
@@ -19,6 +21,26 @@ class EventController extends Controller
     {
         $events = Event::with(['event_photos', 'documents'])->latest()->get();
         return view('admin.manage.events', compact('events'));
+    }
+
+    public function downloadPdf(Event $event)
+    {
+        $eventUrl = route('events.show', $event->slug);
+        // 1. Eager load relationships for the PDF
+        $event->load(['event_photos', 'documents']);
+
+        // Create the QR Code as a Base64 string
+    // format('png') is best for PDF rendering
+    $qrcode = base64_encode(QrCode::format('png')
+        ->size(150)
+        ->margin(1)
+        ->generate($eventUrl));
+
+        // 2. Load the specific blade view for the PDF layout
+        $pdf = Pdf::loadView('admin.events.pdf', compact('event', 'qrcode'));
+
+        // 3. Return the PDF as a download with a clean filename
+        return $pdf->download("Event-Report-{$event->slug}.pdf");
     }
 
     /**

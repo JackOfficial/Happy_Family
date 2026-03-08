@@ -109,6 +109,7 @@ Route::middleware(['auth', 'role:admin|super-admin'])->prefix('admin')->name('ad
     Route::post('applications/reject', [ApplicationsController::class, 'reject']);
     Route::resource('volunteers', VolunteersController::class);
     Route::resource('events', EventController::class);
+    Route::get('{event:slug}/download-pdf', [EventController::class, 'downloadPdf'])->name('download-pdf');
     Route::resource('users', UsersController::class);
     Route::resource('partners', PartnerController::class);
     Route::resource('organization', OrganizationController::class);
