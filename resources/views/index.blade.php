@@ -494,19 +494,22 @@
 </div>
 
         <!-- Stories -->
-       <div class="container-fluid impact-section py-5 {{ $stories->count() > 0 ? '' : 'd-none' }}">
+<div class="container-fluid impact-section py-5 {{ $stories->count() > 0 ? '' : 'd-none' }}" 
+     x-data="{ isMobile: window.innerWidth < 992 }" 
+     x-init="window.addEventListener('resize', () => isMobile = window.innerWidth < 992)">
+    
     <div class="container py-5">
         <div class="text-center mx-auto pb-5" style="max-width: 800px;">
             <h5 class="brand-subtitle-centered mb-2">Our Impact</h5>
             <h2 class="brand-title-dark display-5 mb-3">Stories of Change</h2>
             <div class="title-line-center mx-auto mb-4"></div>
-            <p class="mb-0 tab-description">Discover how Happy Family is fostering resilience and making a real impact in local communities. Join us in building a brighter future together.</p>
+            <p class="mb-0 tab-description">Discover how Happy Family is fostering resilience and making a real impact in local communities.</p>
         </div>
         
-        <div class="row g-4">
+        <div class="row g-4 impact-carousel" :class="isMobile ? 'owl-carousel owl-theme' : ''">
             @foreach ($stories as $story)
-            <div class="col-lg-4 col-md-6">
-                <div class="impact-card">
+            <div class="item" :class="!isMobile ? 'col-lg-4 col-md-6' : ''">
+                <div class="impact-card h-100">
                     <div class="impact-img-container">
                         @if($story->photo)
                             <img src="{{ asset('storage/' . $story->photo->file_path) }}" alt="{{ $story->title }}">
@@ -515,15 +518,9 @@
                                 <i class="fas fa-image fa-3x text-muted opacity-50"></i>
                             </div>
                         @endif
-                        
-                        <div class="impact-tag">
-                            {{ $story->cause->name ?? 'Community' }}
-                        </div>
-
+                        <div class="impact-tag">{{ $story->cause->name ?? 'Community' }}</div>
                         <div class="impact-overlay">
-                            <a href="{{ url('story/' . $story->slug) }}" class="btn-impact-view">
-                                View Story
-                            </a>
+                            <a href="{{ url('story/' . $story->slug) }}" class="btn-impact-view">View Story</a>
                         </div>
                     </div>
                     
@@ -531,26 +528,24 @@
                         <a href="{{ url('story/' . $story->slug) }}" class="impact-card-title h4 mb-3">
                             {{ Str::limit($story->title, 50) }}
                         </a>
-                        
                         <p class="impact-text mb-4">
                             {!! Str::limit(strip_tags($story->summary ?? $story->content), 95) !!}
                         </p>
-                        
                         <div class="mt-auto pt-3 border-top">
                             <a href="{{ url('story/' . $story->slug) }}" class="link-learn-more">
-                                READ FULL STORY <i class="fas fa-chevron-right ml-1 small"></i>
+                                READ FULL STORY <i class="fas fa-chevron-right ms-1 small"></i>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
             @endforeach
+        </div>
 
-            <div class="col-12 text-center mt-5">
-                <a href="/stories" class="btn-modern-purple py-3 px-5">
-                    Explore More Stories <i class="fas fa-arrow-right ml-2"></i>
-                </a>
-            </div>
+        <div class="col-12 text-center mt-5">
+            <a href="/stories" class="btn-modern-purple py-3 px-5">
+                Explore More Stories <i class="fas fa-arrow-right ms-2"></i>
+            </a>
         </div>
     </div>
 </div>
