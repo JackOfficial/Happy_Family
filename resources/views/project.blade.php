@@ -1,165 +1,122 @@
 @extends('layouts.app')
+
 @section('content')
-<!-- Header Start -->
-<div class="container-fluid bg-breadcrumb" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url({{ asset('storage/' . $project->project_photo->file_path) }});
-background-position: center center;
-         background-repeat: no-repeat;
-         background-size: cover;
-         padding: 100px 0 0 0;">
-    <div class="container text-center py-5" style="max-width: 900px;">
-        <h3 class="text-white display-3 mb-4">Project</h1>
-        <p class="fs-5 text-white mb-4">{{ $project->title }}</p>
-        <ol class="breadcrumb justify-content-center mb-0">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/projects">Projects</a></li>
-         
-        </ol>    
+<div class="container-fluid position-relative overflow-hidden" style="min-height: 450px; background: #000;">
+    <img src="{{ asset('storage/' . $project->project_photo->file_path) }}" class="position-absolute top-0 start-0 w-100 h-100" style="object-fit: cover; opacity: 0.5;" alt="{{ $project->title }}">
+    <div class="container position-relative d-flex flex-column justify-content-center text-center" style="min-height: 450px; z-index: 5;">
+        <span class="badge-pill-aura mb-3 mx-auto">Project Showcase</span>
+        <h1 class="text-white display-3 fw-bold mb-4">{{ $project->title }}</h1>
+        
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="/" class="text-white opacity-75">Home</a></li>
+                <li class="breadcrumb-item"><a href="/projects" class="text-white opacity-75">Projects</a></li>
+                <li class="breadcrumb-item active text-pink fw-bold" aria-current="page">Current</li>
+            </ol>
+        </nav>
     </div>
 </div>
-<!-- Header End -->
-<div class="container-fluid event py-5">
-<div class="container py-5">
-	<div class="container">
-		<div class="row no-gutters">
-			<!-- section title -->
-		
-			<!-- /section title -->
-			
-            <div class="col-md-12">
-					<div class="row">
-					      <div class="col-md-8">
-					       <div>{!! $project->description !!}</div>
-					        <div>Project Budget: {{ $project->budget ? number_format($project->budget, 2) : '-' }}</div>
-                            <div>
-                                Project Duration: {{ $project->start_date?->format('d M, Y') ?? '-' }} 
-                                - 
-                                {{ $project->end_date?->format('d M, Y') ?? '-' }}
+
+<div class="container-fluid py-5 bg-light">
+    <div class="container py-5">
+        <div class="row g-5">
+            
+            <div class="col-lg-8">
+                <div class="row g-3 mb-5">
+                    <div class="col-md-4">
+                        <div class="stat-glass-card">
+                            <i class="fas fa-wallet text-pink mb-2"></i>
+                            <span class="d-block small text-uppercase text-muted fw-bold">Budget</span>
+                            <span class="h5 fw-bold text-purple">RWF {{ $project->budget ? number_format($project->budget, 0) : '-' }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-glass-card">
+                            <i class="fas fa-calendar-alt text-pink mb-2"></i>
+                            <span class="d-block small text-uppercase text-muted fw-bold">Timeline</span>
+                            <span class="h6 fw-bold text-purple">{{ $project->start_date?->format('M Y') }} - {{ $project->end_date?->format('M Y') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-glass-card">
+                            <i class="fas fa-spinner text-pink mb-2"></i>
+                            <span class="d-block small text-uppercase text-muted fw-bold">Progress</span>
+                            <div class="progress mt-2" style="height: 10px; border-radius: 50px;">
+                                <div class="progress-bar bg-pink-gradient" style="width: {{ $project->progress }}%"></div>
                             </div>
-                            
-                             <div>
-                                    Project Status: {{ $project->progress }}%
-                              </div>
-                                
-					   </div>
-					   <div class="col-md-4">
-					       @if($project->project_photo)
-                                
-                                        <img src="{{ asset('storage/' . $project->project_photo->file_path) }}" 
-                                            alt="{{ $project->title }}" class="w-100">
-                                @else
-                                    <span class="text-muted">No Photo</span>
-                                @endif
-                               <form>
-                                     <div class="form-group my-2">
-                                <select class="form-control" name="cause">
+                            <span class="small fw-bold">{{ $project->progress }}% Completed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-5 shadow-premium">
+                    <h3 class="brand-title-dark mb-4">Project Overview</h3>
+                    <article class="brand-rich-text fs-5 text-muted">
+                        {!! $project->description !!}
+                    </article>
+                    <hr class="my-5 opacity-5">
+                    <div class="d-flex justify-content-between">
+                        <a href="/donate" class="btn-aura-pink">Donate to this cause</a>
+                        <div class="share-links">
+                            <span class="small text-muted me-2">Share:</span>
+                            <a href="#" class="btn btn-sm btn-light rounded-circle"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="btn btn-sm btn-light rounded-circle"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="sticky-top" style="top: 100px;">
+                    <div class="bg-purple text-white p-4 rounded-5 shadow-lg mb-4">
+                        <h5 class="fw-bold mb-3"><i class="fas fa-search me-2"></i>Explore Causes</h5>
+                        <form action="/projects/search" method="GET">
+                            <div class="mb-3">
+                                <select class="form-select border-0 py-3 rounded-4 shadow-sm" name="cause">
+                                    <option selected disabled>Choose a Category</option>
                                     @foreach($causes as $cause)
-                                     <option>{{ $cause->name  }}</option>
+                                        <option value="{{ $cause->id }}">{{ $cause->name }}</option>
                                     @endforeach
-                                   
                                 </select>
                             </div>
-                            <button class="btn bg-primary, rounded-pill">Search</button> 
-                               </form> 
-                         
-					   </div>
-					</div>
-            </div>
-            
-            <section>
-                      <div class="container-fluid causes py-5 {{ $otherProjects->count() > 0 ? '' : 'd-none' }}">
-            <div class="container py-5">
-                <div class="text-center mx-auto pb-5" style="max-width: 800px;">
-                    <h5 class="text-uppercase text-primary">Other projects done in {{ $project->cause?->name }}</h5>
-                </div>
-                <div class="row g-4">
-                    @foreach($otherProjects as $project)
-                    <div class="col-lg-6 col-md-6 col-xl-4 mb-4">
-    <div class="card shadow-sm border-0 h-100 overflow-hidden project-card">
-        <!-- Project Image with Overlay -->
-        <div class="position-relative">
-            <img src="{{ $project->project_photo?->file_path ? asset('storage/' . $project->project_photo->file_path) : asset('images/default.png') }}" 
-                class="card-img-top img-fluid" alt="{{ $project->title }}">
-            
-            <div class="overlay d-flex flex-column justify-content-between p-3">
-                <div>
-                    <small class="text-white d-block">
-                        <i class="fas fa-chart-bar text-primary me-2"></i> Goal: {{ $project->budget ? number_format($project->budget, 2) : '-' }}
-                    </small>
-                    <small class="text-white d-block">
-                        <i class="fa fa-thumbs-up text-primary me-2"></i> Raised: 0
-                    </small>
-                </div>
-                <div class="text-end">
-                    <a href="#" class="btn btn-sm btn-primary text-white py-1 px-3 btn-hover-bg">Donate Now</a>
-                </div>
-            </div>
-        </div>
+                            <button class="btn btn-pink w-100 rounded-pill py-2 fw-bold">Filter Projects</button>
+                        </form>
+                    </div>
 
-        <!-- Progress Bar -->
-        <div class="progress" style="height:6px;">
-            <div class="progress-bar {{ $project->progress == 100 ? 'bg-success' : 'bg-info' }}" 
-                 role="progressbar" style="width: {{ $project->progress }}%;" 
-                 aria-valuenow="{{ $project->progress }}" aria-valuemin="0" aria-valuemax="100">
+                    <div class="bg-white p-4 rounded-5 shadow-premium border-start border-pink border-4">
+                        <h6 class="text-pink fw-bold text-uppercase small">Our Impact</h6>
+                        <p class="text-muted small mb-0">Every donation made to our projects in <strong>{{ $project->cause?->name }}</strong> is managed with 100% transparency.</p>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Project Content -->
-        <div class="card-body p-4 d-flex flex-column">
-            <h5 class="card-title mb-2">{{ $project->title }}</h5>
-            <p class="card-text text-muted mb-4">{{ Str::limit(strip_tags($project->summary), 120) }}</p>
-            <div class="mt-auto d-flex justify-content-between align-items-center">
-                <span class="badge {{ $project->progress == 100 ? 'bg-success' : 'bg-warning' }}">
-                    {{ $project->progress == 100 ? 'Completed' : ucfirst($project->status) }}
-                </span>
-                <a href="{{ url('project/'.$project->id) }}" class="btn btn-sm btn-outline-primary btn-hover-bg">
-                    Read More
-                </a>
-            </div>
         </div>
     </div>
-</div> 
-                    @endforeach
-                </div>
-            </div>
-        </div>
-            </section>
-
-		</div> <!-- End row -->
-	</div> <!-- End container -->
-</div> 
 </div>
 
-<style>
-.project-card {
-    transition: transform 0.3s, box-shadow 0.3s;
-    border-radius: 12px;
-}
-.project-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-}
-.project-card .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.5);
-    opacity: 0;
-    transition: opacity 0.3s;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
-.project-card:hover .overlay {
-    opacity: 1;
-}
-.btn-hover-bg:hover {
-    background-color: #0056b3 !important;
-    color: #fff !important;
-}
-.progress {
-    border-radius: 0;
-    margin-bottom: 0;
-}
-</style>
+<div class="container-fluid py-5 bg-white {{ $otherProjects->count() > 0 ? '' : 'd-none' }}">
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-end mb-5">
+            <div>
+                <h5 class="text-pink fw-bold mb-0">Discover More</h5>
+                <h2 class="brand-title-dark">Others in {{ $project->cause?->name }}</h2>
+            </div>
+            <a href="/projects" class="btn btn-outline-dark rounded-pill px-4">See All</a>
+        </div>
+
+        <div class="row g-4">
+            @foreach($otherProjects as $other)
+                <div class="col-lg-4">
+                    <div class="project-mini-card">
+                        <img src="{{ $other->project_photo?->file_path ? asset('storage/' . $other->project_photo->file_path) : asset('images/default.png') }}" alt="">
+                        <div class="p-3">
+                            <h6 class="fw-bold mb-1">{{ $other->title }}</h6>
+                            <a href="{{ url('project/'.$other->id) }}" class="text-pink small fw-bold text-decoration-none">View Details <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</div>
 @endsection
