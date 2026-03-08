@@ -1020,7 +1020,7 @@
     <div class="event-item impact-card mx-2">
         <div class="impact-img-container">
             {{-- Fixed photo reference --}}
-            <img src="{{ asset('storage/'.$event->photo) }}" alt="{{ $event->event }}">
+            <img src="{{ asset('storage/' . $event->event_photos->first()->file_path) }}" alt="{{ $event->event }}">
             
             <div class="event-date-badge">
                 <span class="day">{{ \Carbon\Carbon::parse($event->date)->format('d') }}</span>
