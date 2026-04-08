@@ -43,22 +43,26 @@ class Project extends Model
     /**
      * Boot method to handle cascading soft deletes
      */
-    protected static function boot()
-    {
-        parent::boot();
+   protected static function boot()
+{
+    parent::boot();
 
-        static::deleting(function ($project) {
-            // Check if it's a permanent delete or a soft delete
-            if ($project->isForceDeleting()) {
-                $project->project_photos()->forceDelete();
-                $project->documents()->forceDelete();
-            } else {
-                $project->project_photos()->delete();
-                $project->documents()->delete();
-                $project->donations()->delete();
-            }
-        });
-    }
+    static::deleting(function ($project) {
+        if ($project->isForceDeleting()) {
+            // Force delete children
+            $project->project_photos()->forceDelete();
+            $project->documents()->forceDelete();
+            $project->donations()->forceDelete();
+        } else {
+            // To ensure the "deleting" event fires for each child 
+            // (important if they have their own file cleanup logic), 
+            // it is better to do this:
+            $project->project_photos->each->delete();
+            $project->documents->each->delete();
+            $project->donations->each->delete();
+        }
+    });
+}
 
     /* -------------------------------------------------------------------------- */
     /* RELATIONSHIPS                               */
@@ -102,6 +106,16 @@ class Project extends Model
     {
         return $this->hasMany(Donation::class);
     }
+
+    /**
+ * Get the featured image URL or a default placeholder.
+ */
+public function getFeaturedImageUrlAttribute(): string
+{
+    return $this->project_photo 
+        ? asset('storage/' . $this->project_photo->file_path) 
+        : asset('images/placeholder-project.jpg');
+}
 
     /* -------------------------------------------------------------------------- */
     /* SCOPES                                   */
