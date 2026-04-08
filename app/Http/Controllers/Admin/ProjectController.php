@@ -4,47 +4,39 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Project, Cause, Organization, Document};
+use App\Models\{Project, Cause, Organization};
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\{Storage, DB};
+use Illuminate\Support\Facades\{Storage, DB, Auth};
 
 class ProjectController extends Controller
 {
-    /**
-     * Display a listing of projects
-     */
     public function index()
     {
-        $projects = Project::with(['project_photo', 'documents', 'cause'])
+        // Eager load project_photos (plural) and documents
+        $projects = Project::with(['project_photos', 'documents', 'cause'])
             ->latest()
             ->paginate(15);
 
         return view('admin.manage.projects', compact('projects'));
     }
 
-    /**
-     * Show the form for creating a new project
-     */
     public function create()
     {
         $causes = Cause::all();
         return view('admin.create.project', compact('causes'));
     }
 
-    /**
-     * Store a newly created project
-     */
     public function store(Request $request)
     {
         $validated = $this->validateProject($request);
 
         return DB::transaction(function () use ($request, $validated) {
-            // Generate unique slug
             $slug = Str::slug($validated['title']);
             if (Project::where('slug', $slug)->exists()) {
                 $slug .= '-' . Str::lower(Str::random(5));
             }
 
+            // Using the first organization as default
             $organization = Organization::first();
 
             $project = Project::create(array_merge($validated, [
@@ -60,19 +52,13 @@ class ProjectController extends Controller
         });
     }
 
-    /**
-     * Show the form for editing a project
-     */
     public function edit(Project $project)
     {
         $causes = Cause::all();
-        $project->load(['project_photo', 'documents', 'cause']);
+        $project->load(['project_photos', 'documents', 'cause']);
         return view('admin.edit.project', compact('project', 'causes'));
     }
 
-    /**
-     * Update a project
-     */
     public function update(Request $request, Project $project)
     {
         $validated = $this->validateProject($request, $project->id);
@@ -86,32 +72,26 @@ class ProjectController extends Controller
         });
     }
 
-    /**
-     * Delete a project and its associated files
-     */
     public function destroy(Project $project)
     {
         return DB::transaction(function () use ($project) {
-            // Delete Featured Photo
-            if ($project->project_photo) {
-                Storage::disk('public')->delete($project->project_photo->file_path);
-                $project->project_photo->delete();
+            // Photos and Documents have SoftDeletes, but we want to clean up storage
+            // Your Project model boot method handles the database side, 
+            // but physical file deletion should happen here if you want to save space.
+            
+            foreach ($project->project_photos as $photo) {
+                Storage::disk('public')->delete($photo->file_path);
             }
 
-            // Delete Multi-Documents
             foreach ($project->documents as $doc) {
                 Storage::disk('public')->delete($doc->file_path);
-                $doc->delete();
             }
 
             $project->delete();
-            return redirect()->route('admin.projects.index')->with('success', 'Project and all files removed.');
+            return redirect()->route('admin.projects.index')->with('success', 'Project removed successfully.');
         });
     }
 
-    /**
-     * Centralized Validation Rules
-     */
     protected function validateProject(Request $request, $id = null)
     {
         return $request->validate([
@@ -124,39 +104,42 @@ class ProjectController extends Controller
             'start_date'    => 'nullable|date',
             'end_date'      => 'nullable|date|after_or_equal:start_date',
             'progress'      => 'nullable|integer|between:0,100',
-            'status'        => 'in:active,completed,paused,cancelled',
-            'photo'         => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'documents.*'   => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,txt,jpg,jpeg,png|max:10240',
+            'status'        => 'in:active,completed,paused,planned,cancelled',
+            'photos.*'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'featured_index'=> 'nullable|integer',
+            'documents.*'   => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,txt|max:10240',
         ]);
     }
 
-    /**
-     * File Upload Logic Handler
-     */
     protected function handleFileUploads(Request $request, Project $project)
     {
-        // 1. Handle Main Project Photo
-        if ($request->hasFile('photo')) {
-            if ($project->project_photo) {
-                Storage::disk('public')->delete($project->project_photo->file_path);
-                $project->project_photo->delete();
-            }
+        // 1. Handle Multiple Project Photos
+        if ($request->hasFile('photos')) {
+            $featuredIndex = $request->input('featured_index', 0);
 
-            $path = $request->file('photo')->store('projects/photos', 'public');
-            $project->project_photo()->create([
-                'file_path' => $path,
-                'caption'   => $project->title,
-            ]);
+            foreach ($request->file('photos') as $index => $file) {
+                $path = $file->store('projects/photos', 'public');
+                
+                $project->project_photos()->create([
+                    'file_path'   => $path,
+                    'file_type'   => $file->getClientOriginalExtension(),
+                    'file_size'   => $file->getSize(),
+                    'is_featured' => ($index == $featuredIndex),
+                ]);
+            }
         }
 
         // 2. Handle Multiple Documents
         if ($request->hasFile('documents')) {
             foreach ($request->file('documents') as $file) {
                 $path = $file->store('projects/documents', 'public');
+                
                 $project->documents()->create([
-                    'title'          => $file->getClientOriginalName(),
-                    'file_path'      => $path,
-                    'file_extension' => $file->getClientOriginalExtension(),
+                    'title'       => $file->getClientOriginalName(),
+                    'file_path'   => $path,
+                    'file_type'   => $file->getClientOriginalExtension(),
+                    'file_size'   => $file->getSize(),
+                    'uploaded_by' => Auth::id(), // Tracks who uploaded it
                 ]);
             }
         }
