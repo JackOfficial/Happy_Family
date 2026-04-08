@@ -87,7 +87,7 @@ class Project extends Model
      */
     public function project_photo(): MorphOne
     {
-        return $this->morphOne(Photo::class, 'imageable')->latestOfMany();
+       return $this->morphOne(Photo::class, 'imageable')->where('is_featured', true);
     }
 
     /**
