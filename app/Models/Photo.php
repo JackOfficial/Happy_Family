@@ -17,6 +17,7 @@ class Photo extends Model
         'caption', 
         'file_size', 
         'file_type', 
+        'is_featured',
         'imageable_id', 
         'imageable_type'
     ];
@@ -41,6 +42,14 @@ class Photo extends Model
                 : asset('images/placeholder.jpg')
         );
     }
+
+    /**
+ * Scope a query to only include featured photos.
+ */
+public function scopeFeatured($query)
+{
+    return $query->where('is_featured', true);
+}
 
     /**
      * Accessor: Get human-readable file size.

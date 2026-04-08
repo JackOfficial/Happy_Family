@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('photos', function (Blueprint $table) {
             $table->unsignedBigInteger('file_size')->nullable()->after('caption');
             $table->string('file_type')->nullable()->after('file_size');
+            $table->boolean('is_featured')->default(false)->after('file_type');
         });
     }
 
@@ -23,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('photos', function (Blueprint $table) {
-            $table->dropColumn(['file_size', 'file_type']);
+            $table->dropColumn(['file_size', 'file_type', 'is_featured']);
         });
     }
 };
