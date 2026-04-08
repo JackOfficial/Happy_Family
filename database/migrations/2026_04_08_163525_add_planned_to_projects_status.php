@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('projects_status', function (Blueprint $table) {
+        Schema::table('projects', function (Blueprint $table) {
             $table->enum('status', ['active', 'completed', 'paused', 'cancelled', 'planned'])
                   ->default('active')
                   ->change();
@@ -23,7 +23,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('projects_status', function (Blueprint $table) {
+        Schema::table('projects', function (Blueprint $table) {
             $table->enum('status', ['active', 'completed', 'paused', 'cancelled'])
                   ->default('active')
                   ->change();
