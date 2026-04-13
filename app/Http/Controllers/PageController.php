@@ -178,11 +178,6 @@ public function index()
         }
     }
 
-    function projects(){
-        $projects = Project::with('project_photo', 'cause')->latest()->get();
-        return view('projects', compact('projects')); 
-    }
-
     function stories(){
         $stories = Stories::join('bloggers', 'stories.blogger_id', 'bloggers.id')
         ->select('stories.*', 'bloggers.first_name', 'bloggers.last_name')
@@ -192,24 +187,11 @@ public function index()
     }
 
     function story($id){
-         $story = Stories::join('bloggers', 'stories.blogger_id', 'bloggers.id')
+         $story = stories::join('bloggers', 'stories.blogger_id', 'bloggers.id')
         ->where('stories.id', $id)
         ->select('stories.*', 'bloggers.first_name', 'bloggers.last_name')
         ->first();
         return view('story', compact('story'));  
-    }
-
-    function project($id){
-        $project = Project::with(['project_photo', 'cause'])->where('projects.id', $id)->first();
-        
-           $otherProjects = Project::with('project_photo')
-    ->where('cause_id', $project->cause_id)
-    ->where('id', '!=', $project->id)
-    ->get();
-    
-         $causes = Cause::all(); 
-         
-        return view('project', compact('project', 'otherProjects', 'causes'));  
     }
     
     function causes(){

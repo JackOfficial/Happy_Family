@@ -51,7 +51,7 @@
                     <a href="/" class="nav-item nav-link mx-2 {{ Request::is('/') ? 'active' : '' }}">Home</a>
                     <a href="/about" class="nav-item nav-link mx-2 {{ Request::is('about*') ? 'active' : '' }}">About</a>
                     <a href="/causes" class="nav-item nav-link mx-2 {{ Request::is('causes*') ? 'active' : '' }}">Causes</a>
-                    <a href="/projects" class="nav-item nav-link mx-2 {{ Request::is('projects*') ? 'active' : '' }}">Projects</a>
+                    <a href="{{ route('projects.index') }}" class="nav-item nav-link mx-2 {{ Request::is('projects*') ? 'active' : '' }}">Projects</a>
                     
                     <div class="nav-item dropdown" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
                         <a href="#" class="nav-link dropdown-toggle mx-2" :class="{ 'active': open }">Resources</a>

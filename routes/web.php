@@ -30,6 +30,7 @@ use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\Admin\ApplicationsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Admin\OrganizationController;
+use App\Http\Controllers\ProjectController as Projects;
 
 //Guest routes
 // Route::get('/', function() {
@@ -42,8 +43,10 @@ Route::get('/gallery', [PageController::class, 'gallery']);
 Route::get('/blogs', [PageController::class, 'blogs']);
 Route::get('/blog/{title}', [PageController::class, 'blog']);
 Route::get('/blogs/{id}', [PageController::class, 'blog_category']);
-Route::get('/projects', [PageController::class, 'projects']);
-Route::get('/project/{id}', [PageController::class, 'project']);
+
+Route::get('/projects', [Projects::class, 'index'])->name('projects.index');
+Route::get('/project/{project:slug}', [Projects::class, 'show'])->name('projects.show');
+
 Route::get('/stories', [PageController::class, 'stories']);
 Route::get('/story/{id}', [PageController::class, 'story']);
 Route::get('/causes', [PageController::class, 'causes']);
