@@ -151,40 +151,51 @@
     <div class="card-header bg-white py-3">
         <h5 class="card-title font-weight-bold mb-0 text-secondary text-uppercase small">Project Settings</h5>
     </div>
-    <div class="card-body" x-data="{ progress: {{ old('progress', 0) }} }">
-        <div class="form-group mb-3">
-            <label class="small font-weight-bold">Status</label>
-            <select name="status" class="form-control">
-                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
-                <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
-                <option value="planned" {{ old('status') == 'planned' ? 'selected' : '' }}>Planned</option>
-            </select>
-        </div>
+   <div class="card-body" x-data="{ progress: {{ old('progress', 0) }} }">
+    <div class="form-group mb-3">
+        <label class="small font-weight-bold">Status</label>
+        <select name="status" class="form-control">
+            <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
+            <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+            <option value="planned" {{ old('status') == 'planned' ? 'selected' : '' }}>Planned</option>
+        </select>
+    </div>
 
-        <div class="form-group mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-                <label class="small font-weight-bold mb-0">Project Progress</label>
-                <span class="badge badge-primary rounded-pill px-2" x-text="progress + '%'"></span>
-            </div>
-            <input type="range" name="progress" class="custom-range" 
-                   min="0" max="100" step="5" 
-                   x-model="progress">
-            <div class="d-flex justify-content-between small text-muted mt-1">
-                <span>0%</span>
-                <span>50%</span>
-                <span>100%</span>
-            </div>
+    <div class="form-group mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+            <label class="small font-weight-bold mb-0">Project Progress</label>
+            <span class="badge badge-primary rounded-pill px-2" x-text="progress + '%'"></span>
         </div>
-
-        <div class="form-group mb-3">
-            <label class="small font-weight-bold">Target Budget (RWF)</label>
-            <input type="number" name="budget" class="form-control" value="{{ old('budget') }}" placeholder="0.00">
-        </div>
-        <div class="form-group">
-            <label class="small font-weight-bold">Start Date</label>
-            <input type="date" name="start_date" class="form-control" value="{{ old('start_date') }}">
+        <input type="range" name="progress" class="custom-range" 
+               min="0" max="100" step="5" 
+               x-model="progress">
+        <div class="d-flex justify-content-between small text-muted mt-1">
+            <span>0%</span>
+            <span>50%</span>
+            <span>100%</span>
         </div>
     </div>
+
+    <div class="form-group mb-3">
+        <label class="small font-weight-bold">Target Budget (RWF)</label>
+        <input type="number" name="budget" class="form-control" value="{{ old('budget') }}" placeholder="0.00">
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label class="small font-weight-bold">Start Date</label>
+                <input type="date" name="start_date" class="form-control" value="{{ old('start_date') }}">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label class="small font-weight-bold">Est. Duration</label>
+                <input type="text" name="duration" class="form-control" value="{{ old('duration') }}" placeholder="e.g. 6 Months">
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 
                     <button type="submit" class="btn btn-primary btn-lg btn-block shadow-sm font-weight-bold mb-3">
