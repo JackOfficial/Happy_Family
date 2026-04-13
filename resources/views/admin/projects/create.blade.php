@@ -68,7 +68,6 @@
         </div>
     </div>
 </div>
-
                             <div class="form-group">
                                 <label class="font-weight-bold small text-muted text-uppercase">Full Description</label>
                                 <textarea name="description" id="myeditorinstance" rows="8" class="form-control"></textarea>
@@ -150,9 +149,9 @@
     <div class="form-group mb-3">
         <label class="small font-weight-bold">Status</label>
         <select name="status" class="form-control">
-            <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
-            <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
-            <option value="planned" {{ old('status') == 'planned' ? 'selected' : '' }}>Planned</option>
+            <option value="Upcoming" {{ old('status') == 'Upcoming' ? 'selected' : '' }}>Upcoming</option>
+            <option value="Ongoing" {{ old('status') == 'Ongoing' ? 'selected' : '' }}>Ongoing</option>
+            <option value="Completed" {{ old('status') == 'Completed' ? 'selected' : '' }}>Completed</option>
         </select>
     </div>
 

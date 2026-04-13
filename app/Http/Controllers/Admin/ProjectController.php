@@ -12,18 +12,17 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        // Eager load project_photos (plural) and documents
         $projects = Project::with(['project_photos', 'documents', 'cause'])
             ->latest()
             ->paginate(15);
 
-        return view('admin.manage.projects', compact('projects'));
+        return view('admin.projects.index', compact('projects'));
     }
 
     public function create()
     {
         $causes = Cause::all();
-        return view('admin.create.project', compact('causes'));
+        return view('admin.projects.create', compact('causes'));
     }
 
     public function store(Request $request)
@@ -36,15 +35,23 @@ class ProjectController extends Controller
                 $slug .= '-' . Str::lower(Str::random(5));
             }
 
-            // Using the first organization as default
             $organization = Organization::first();
 
-            $project = Project::create(array_merge($validated, [
+            // Handle the Many-to-Many or Single Cause relationship
+            // If cause_ids is an array from checkboxes, we remove it from the main create
+            $projectData = collect($validated)->except(['cause_ids', 'photos', 'documents', 'featured_index'])->toArray();
+
+            $project = Project::create(array_merge($projectData, [
                 'slug' => $slug,
                 'organization_id' => $organization?->id,
                 'progress' => $request->progress ?? 0,
-                'status' => $request->status ?? 'active',
+                'status' => $request->status ?? 'Upcoming', // Default to your dropdown value
             ]));
+
+            // Sync Mission Categories if using checkboxes
+            if ($request->has('cause_ids')) {
+                $project->causes()->sync($request->cause_ids);
+            }
 
             $this->handleFileUploads($request, $project);
 
@@ -55,8 +62,16 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $causes = Cause::all();
-        $project->load(['project_photos', 'documents', 'cause']);
-        return view('admin.edit.project', compact('project', 'causes'));
+        $project->load(['project_photos', 'documents', 'causes']);
+        return view('admin.projects.edit', compact('project', 'causes'));
+    }
+
+    public function show(Project $project)
+    {
+        // Eager load all relationships to avoid N+1 issues in the show blade
+        $project->load(['project_photos', 'documents', 'causes']);
+
+        return view('admin.projects.show', compact('project'));
     }
 
     public function update(Request $request, Project $project)
@@ -64,7 +79,13 @@ class ProjectController extends Controller
         $validated = $this->validateProject($request, $project->id);
 
         return DB::transaction(function () use ($request, $project, $validated) {
-            $project->update($validated);
+            $projectData = collect($validated)->except(['cause_ids', 'photos', 'documents', 'featured_index'])->toArray();
+            
+            $project->update($projectData);
+
+            if ($request->has('cause_ids')) {
+                $project->causes()->sync($request->cause_ids);
+            }
 
             $this->handleFileUploads($request, $project);
 
@@ -75,10 +96,6 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         return DB::transaction(function () use ($project) {
-            // Photos and Documents have SoftDeletes, but we want to clean up storage
-            // Your Project model boot method handles the database side, 
-            // but physical file deletion should happen here if you want to save space.
-            
             foreach ($project->project_photos as $photo) {
                 Storage::disk('public')->delete($photo->file_path);
             }
@@ -95,25 +112,24 @@ class ProjectController extends Controller
     protected function validateProject(Request $request, $id = null)
     {
         return $request->validate([
-            'title'         => 'required|string|max:255',
-            'cause_id'      => 'nullable|exists:causes,id',
-            'summary'       => 'nullable|string|max:500',
-            'description'   => 'nullable|string',
-            'beneficiaries' => 'nullable|integer|min:0',
-            'budget'        => 'nullable|numeric|min:0',
-            'start_date'    => 'nullable|date',
-            'end_date'      => 'nullable|date|after_or_equal:start_date',
-            'progress'      => 'nullable|integer|between:0,100',
-            'status'        => 'in:active,completed,paused,planned,cancelled',
-            'photos.*'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'featured_index'=> 'nullable|integer',
-            'documents.*'   => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,txt|max:10240',
+            'title'          => 'required|string|max:255',
+            'cause_ids'      => 'nullable|array',
+            'cause_ids.*'    => 'exists:causes,id',
+            'summary'        => 'nullable|string|max:500',
+            'description'    => 'nullable|string',
+            'budget'         => 'nullable|numeric|min:0',
+            'start_date'     => 'nullable|date',
+            'duration'       => 'nullable|string|max:100', // Added Duration field
+            'progress'       => 'nullable|integer|between:0,100',
+            'status'         => 'required|in:Upcoming,Ongoing,Completed', // Updated to match UI
+            'photos.*'       => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'featured_index' => 'nullable|integer',
+            'documents.*'    => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,txt|max:10240',
         ]);
     }
 
     protected function handleFileUploads(Request $request, Project $project)
     {
-        // 1. Handle Multiple Project Photos
         if ($request->hasFile('photos')) {
             $featuredIndex = $request->input('featured_index', 0);
 
@@ -129,7 +145,6 @@ class ProjectController extends Controller
             }
         }
 
-        // 2. Handle Multiple Documents
         if ($request->hasFile('documents')) {
             foreach ($request->file('documents') as $file) {
                 $path = $file->store('projects/documents', 'public');
@@ -139,7 +154,7 @@ class ProjectController extends Controller
                     'file_path'   => $path,
                     'file_type'   => $file->getClientOriginalExtension(),
                     'file_size'   => $file->getSize(),
-                    'uploaded_by' => Auth::id(), // Tracks who uploaded it
+                    'uploaded_by' => Auth::id(),
                 ]);
             }
         }

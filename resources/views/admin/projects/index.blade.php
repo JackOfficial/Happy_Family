@@ -38,7 +38,7 @@
                         <thead class="bg-light text-muted small text-uppercase">
                             <tr>
                                 <th class="border-0 pl-4">Project Details</th>
-                                <th class="border-0">Cause</th>
+                                <th class="border-0">Mission Categories</th>
                                 <th class="border-0 text-center">Budget</th>
                                 <th class="border-0">Progress</th>
                                 <th class="border-0">Status</th>
@@ -51,8 +51,14 @@
                                     <td class="pl-4 py-3">
                                         <div class="d-flex align-items-center">
                                             <div class="mr-3">
-                                                @if($project->project_photo)
-                                                    <img src="{{ asset('storage/' . $project->project_photo->file_path) }}" 
+                                                @php
+                                                    // Get the featured photo or just the first available one
+                                                    $displayPhoto = $project->project_photos->where('is_featured', true)->first() 
+                                                                    ?? $project->project_photos->first();
+                                                @endphp
+
+                                                @if($displayPhoto)
+                                                    <img src="{{ asset('storage/' . $displayPhoto->file_path) }}" 
                                                          alt="" class="rounded shadow-sm" 
                                                          style="width: 50px; height: 50px; object-fit: cover; border: 2px solid #fff;">
                                                 @else
@@ -65,16 +71,22 @@
                                             <div>
                                                 <div class="font-weight-bold text-dark mb-0">{{ $project->title }}</div>
                                                 <div class="small text-muted">
-                                                    <i class="far fa-calendar-alt mr-1"></i> 
-                                                    {{ $project->start_date?->format('M d') ?? 'N/A' }} - {{ $project->end_date?->format('M d, Y') ?? 'N/A' }}
+                                                    <i class="far fa-clock mr-1"></i> 
+                                                    {{ $project->duration ?? ($project->start_date?->format('M Y') ?? 'N/A') }}
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="badge badge-light px-3 py-2 text-muted border">
-                                            {{ $project->cause?->name ?? 'Uncategorized' }}
-                                        </span>
+                                        <div class="d-flex flex-wrap" style="gap: 4px;">
+                                            @forelse($project->causes as $cause)
+                                                <span class="badge badge-light px-2 py-1 text-muted border small">
+                                                    {{ $cause->name }}
+                                                </span>
+                                            @empty
+                                                <span class="text-muted small italic">None</span>
+                                            @endforelse
+                                        </div>
                                     </td>
                                     <td class="text-center font-weight-bold text-secondary">
                                         {{ $project->budget ? 'RWF ' . number_format($project->budget) : '-' }}
@@ -90,16 +102,15 @@
                                     </td>
                                     <td>
                                         @php
-                                            $statusClass = match(strtolower($project->status)) {
-                                                'completed' => 'badge-success',
-                                                'active' => 'badge-primary',
-                                                'pending' => 'badge-warning',
-                                                'on hold' => 'badge-danger',
-                                                default => 'badge-secondary'
+                                            $statusClass = match($project->status) {
+                                                'Completed' => 'badge-success',
+                                                'Ongoing'   => 'badge-primary',
+                                                'Upcoming'  => 'badge-warning',
+                                                default     => 'badge-secondary'
                                             };
                                         @endphp
                                         <span class="badge {{ $statusClass }} px-2 py-1 small shadow-none">
-                                            <i class="fas fa-circle mr-1" style="font-size: 8px;"></i> {{ ucfirst($project->status) }}
+                                            <i class="fas fa-circle mr-1" style="font-size: 8px;"></i> {{ $project->status }}
                                         </span>
                                     </td>
                                     <td class="text-right pr-4">
@@ -109,7 +120,7 @@
                                                 <i class="fas fa-pencil-alt text-primary"></i>
                                             </a>
                                             <form action="{{ route('admin.projects.destroy', $project->id) }}" method="POST" 
-                                                  class="d-inline" onsubmit="return confirm('Archive this project?');">
+                                                  class="d-inline" onsubmit="return confirm('Archive this project and delete its files?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-white btn-sm border" title="Delete">
@@ -151,6 +162,6 @@
     .badge-success { background-color: #d1e7dd !important; color: #0f5132 !important; }
     .badge-primary { background-color: #cfe2ff !important; color: #084298 !important; }
     .badge-warning { background-color: #fff3cd !important; color: #664d03 !important; }
-    .badge-danger { background-color: #f8d7da !important; color: #842029 !important; }
+    .badge-secondary { background-color: #e2e3e5 !important; color: #41464b !important; }
 </style>
 @endsection
