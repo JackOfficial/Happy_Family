@@ -11,7 +11,7 @@ class ProjectController extends Controller
     /**
      * Display the list of all projects
      */
-    public function projects()
+    public function index()
     {
         // Use 'causes' (plural) and the smart featured image logic
         $projects = Project::with(['causes', 'project_photos'])
@@ -24,7 +24,7 @@ class ProjectController extends Controller
     /**
      * Display a single project by its slug
      */
-    public function project($slug)
+    public function show($slug)
     {
         // 1. Fetch project by slug with all necessary relationships
         $project = Project::with(['project_photos', 'documents', 'causes'])
