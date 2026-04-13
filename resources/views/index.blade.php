@@ -359,7 +359,7 @@
                                 <i class="fa fa-heart text-pink me-2"></i> Status: {{ $project->status }}
                             </small>
                         </div>
-                        <a href="{{ route('project.show', $project->id) }}" class="btn-impact-view py-2">View Details</a>
+                        <a href="{{ route('projects.show', $project->id) }}" class="btn-impact-view py-2">View Details</a>
                     </div>
                 </div>
 
@@ -385,7 +385,7 @@
                     </span>
                 </div>
                 
-                <a href="{{ route('project.show', $project->id) }}" class="impact-card-title h5 mb-3 text-decoration-none text-dark font-weight-bold">
+                <a href="{{ route('projects.show', $project->id) }}" class="impact-card-title h5 mb-3 text-decoration-none text-dark font-weight-bold">
                     {{ $project->title }}
                 </a>
                 
