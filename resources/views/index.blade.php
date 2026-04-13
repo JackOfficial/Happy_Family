@@ -359,7 +359,7 @@
                                 <i class="fa fa-heart text-pink me-2"></i> Status: {{ $project->status }}
                             </small>
                         </div>
-                        <a href="{{ route('projects.show', $project->id) }}" class="btn-impact-view py-2">View Details</a>
+                        <a href="{{ route('project.show', $project->id) }}" class="btn-impact-view py-2">View Details</a>
                     </div>
                 </div>
 
@@ -385,7 +385,7 @@
                     </span>
                 </div>
                 
-                <a href="{{ route('projects.show', $project->id) }}" class="impact-card-title h5 mb-3 text-decoration-none text-dark font-weight-bold">
+                <a href="{{ route('project.show', $project->id) }}" class="impact-card-title h5 mb-3 text-decoration-none text-dark font-weight-bold">
                     {{ $project->title }}
                 </a>
                 
@@ -394,7 +394,7 @@
                 </p>
                 
                 <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
-                    <a href="{{ route('projects.show', $project->id) }}" class="link-learn-more font-weight-bold text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">
+                    <a href="{{ route('project.show', $project->id) }}" class="link-learn-more font-weight-bold text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">
                         LEARN MORE <i class="fas fa-arrow-right ml-1 small"></i>
                     </a>
                     <a href="#" class="btn-modern-accent py-2 px-3 text-white border-0" style="font-size: 0.8rem; background-color: var(--accent-pink); border-radius: 4px;">
