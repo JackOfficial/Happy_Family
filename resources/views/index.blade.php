@@ -340,71 +340,72 @@
             </p>
         </div>
 
-        <div class="row g-4">
-            @foreach($projects as $project)
-            <div class="col-lg-6 col-md-6 col-xl-4 mb-4">
-                <div class="impact-card shadow-sm h-100">
-                    <div class="impact-img-container">
-                        <img src="{{ $project->project_photo?->file_path ? asset('storage/' . $project->project_photo->file_path) : asset('images/default.png') }}" 
-                             alt="{{ $project->title }}">
-                        
-                        <div class="impact-overlay p-3">
-                            <div class="text-center w-100 px-3">
-                                <div class="mb-3">
-                                    <small class="text-white d-block mb-1">
-                                        <i class="fas fa-bullseye text-pink me-2"></i> Goal: <strong>${{ number_format($project->budget, 0) }}</strong>
-                                    </small>
-                                    <small class="text-white d-block">
-                                        <i class="fa fa-heart text-pink me-2"></i> Status: {{ ucfirst($project->status) }}
-                                    </small>
-                                </div>
-                                <a href="{{ url('project/'.$project->id) }}" class="btn-impact-view py-2">View Details</a>
-                            </div>
+      <div class="row g-4">
+    @foreach($projects as $project)
+    <div class="col-lg-6 col-md-6 col-xl-4 mb-4">
+        <div class="impact-card shadow-sm h-100">
+            <div class="impact-img-container">
+                <img src="{{ $project->featured_image_url }}" 
+                     alt="{{ $project->title }}"
+                     style="width: 100%; height: 250px; object-fit: cover;">
+                
+                <div class="impact-overlay p-3">
+                    <div class="text-center w-100 px-3">
+                        <div class="mb-3">
+                            <small class="text-white d-block mb-1">
+                                <i class="fas fa-bullseye text-pink me-2"></i> Goal: <strong>RWF {{ number_format($project->budget, 0) }}</strong>
+                            </small>
+                            <small class="text-white d-block">
+                                <i class="fa fa-heart text-pink me-2"></i> Status: {{ $project->status }}
+                            </small>
                         </div>
-
-                        <div class="impact-tag">
-                            {{ $project->cause->name ?? 'Impact' }}
-                        </div>
-                    </div>
-
-                    <div class="impact-progress-bar w-100" style="height: 8px; border-radius: 0;">
-                        <div class="progress-bar" 
-                             role="progressbar" 
-                             style="width: {{ $project->progress }}%; background-color: var(--accent-pink);" 
-                             aria-valuenow="{{ $project->progress }}" aria-valuemin="0" aria-valuemax="100">
-                        </div>
-                    </div>
-
-                    <div class="card-body p-4 d-flex flex-column">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <small class="text-purple font-weight-bold">{{ $project->progress }}% Achieved</small>
-                            <span class="badge {{ $project->progress == 100 ? 'bg-success' : '' }}" 
-                                  style="background-color: {{ $project->progress == 100 ? '#28a745' : 'var(--primary-purple)' }}; color: white; border-radius: 50px; font-size: 0.7rem;">
-                                {{ $project->progress == 100 ? 'COMPLETED' : 'ACTIVE' }}
-                            </span>
-                        </div>
-                        
-                        <a href="{{ url('project/'.$project->id) }}" class="impact-card-title h5 mb-3">
-                            {{ $project->title }}
-                        </a>
-                        
-                        <p class="impact-text mb-4">
-                            {{ Str::limit(strip_tags($project->summary), 110) }}
-                        </p>
-                        
-                        <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
-                            <a href="{{ url('project/'.$project->id) }}" class="link-learn-more">
-                                LEARN MORE <i class="fas fa-arrow-right ml-1 small"></i>
-                            </a>
-                            <a href="#" class="btn-modern-accent py-2 px-3" style="font-size: 0.8rem;">
-                                DONATE
-                            </a>
-                        </div>
+                        <a href="{{ route('projects.show', $project->id) }}" class="btn-impact-view py-2">View Details</a>
                     </div>
                 </div>
-            </div> 
-            @endforeach
+
+                <div class="impact-tag">
+                    {{ $project->causes->first()->name ?? 'General' }}
+                </div>
+            </div>
+
+            <div class="impact-progress-bar w-100" style="height: 8px; border-radius: 0;">
+                <div class="progress-bar" 
+                     role="progressbar" 
+                     style="width: {{ $project->progress }}%; background-color: var(--accent-pink);" 
+                     aria-valuenow="{{ $project->progress }}" aria-valuemin="0" aria-valuemax="100">
+                </div>
+            </div>
+
+            <div class="card-body p-4 d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <small class="text-purple font-weight-bold">{{ $project->progress }}% Achieved</small>
+                    <span class="badge" 
+                          style="background-color: {{ $project->status == 'Completed' ? '#28a745' : 'var(--primary-purple)' }}; color: white; border-radius: 50px; font-size: 0.7rem; padding: 5px 12px;">
+                        {{ strtoupper($project->status) }}
+                    </span>
+                </div>
+                
+                <a href="{{ route('projects.show', $project->id) }}" class="impact-card-title h5 mb-3 text-decoration-none text-dark font-weight-bold">
+                    {{ $project->title }}
+                </a>
+                
+                <p class="impact-text mb-4 text-muted" style="font-size: 0.9rem;">
+                    {{ Str::limit(strip_tags($project->summary), 110) }}
+                </p>
+                
+                <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
+                    <a href="{{ route('projects.show', $project->id) }}" class="link-learn-more font-weight-bold text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">
+                        LEARN MORE <i class="fas fa-arrow-right ml-1 small"></i>
+                    </a>
+                    <a href="#" class="btn-modern-accent py-2 px-3 text-white border-0" style="font-size: 0.8rem; background-color: var(--accent-pink); border-radius: 4px;">
+                        DONATE
+                    </a>
+                </div>
+            </div>
         </div>
+    </div> 
+    @endforeach
+</div>
     </div>
 </div>
 

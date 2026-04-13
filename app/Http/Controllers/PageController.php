@@ -18,22 +18,25 @@ use App\Models\Organization;
 
 class PageController extends Controller
 {
-    public function index()
+public function index()
 {
     // 1. Load basic organization/header info
     $organization = Organization::first();
     $header = Page::where('page_name', 'Home')->first();
 
-    // 2. Fetch Projects (Reuse the first one to avoid a second DB hit)
-    $projects = Project::with(['project_photo', 'cause'])
+    // 2. Fetch Projects (Updated to use 'causes' and 'project_photos')
+    $projects = Project::with([
+            'project_photos' => fn($q) => $q->where('is_featured', true), 
+            'causes'
+        ])
         ->latest()
         ->take(3)
         ->get();
 
-    // Instead of querying Project::latest()->first(), just pull it from the collection
+    // Pull current project from the collection
     $current_project = $projects->first();
 
-    // 3. Optimized Blogs (Added take(3) so you don't load 100+ blogs into memory)
+    // 3. Optimized Blogs
     $blogs = Blog::with(['blogPhoto', 'cause', 'user', 'likes', 'comments'])
         ->latest()
         ->take(3) 
@@ -41,11 +44,14 @@ class PageController extends Controller
 
     // 4. Other Sections
     $events = Event::latest()->take(3)->get();
+    
+    // Updated 'causes' to match the plural relationship if you updated that model too
     $causes = Cause::with('mainPhoto')->latest()->take(4)->get(); 
+    
     $partners = Partner::with('organization')->latest()->get();
     $stories = Story::with(['organization', 'user', 'cause', 'photo'])->latest()->take(3)->get();
     
-    // 5. Gallery (Filtering for specific imageable types if needed)
+    // 5. Gallery
     $gallery = Photo::latest()->take(6)->get();
 
     return view('index', compact(
