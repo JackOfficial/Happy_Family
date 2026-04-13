@@ -12,7 +12,7 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        $projects = Project::with(['project_photos', 'documents', 'cause'])
+        $projects = Project::with(['project_photos', 'documents', 'causes'])
             ->latest()
             ->paginate(15);
 
