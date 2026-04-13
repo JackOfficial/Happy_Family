@@ -360,6 +360,7 @@
                                         <i class="fa fa-heart text-pink me-2"></i> Status: {{ $project->status }}
                                     </small>
                                 </div>
+                                <div>img: {{ $project->featured_image_url }}</div>
                                 <a href="{{ route('projects.show', $project->slug) }}" class="btn-impact-view py-2 px-4 rounded-pill">View Details</a>
                             </div>
                         </div>
