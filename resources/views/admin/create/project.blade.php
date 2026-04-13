@@ -41,21 +41,38 @@
                                 @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-6 form-group mb-4">
-                                    <label class="font-weight-bold small text-muted text-uppercase">Mission Category</label>
-                                    <select name="cause_id" class="custom-select">
-                                        <option value="">Select a cause</option>
-                                        @foreach($causes as $cause)
-                                            <option value="{{ $cause->id }}">{{ $cause->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-6 form-group mb-4">
-                                    <label class="font-weight-bold small text-muted text-uppercase">Short Summary</label>
-                                    <input type="text" name="summary" class="form-control" placeholder="Brief tagline">
-                                </div>
-                            </div>
+                           <div class="row">
+    <div class="col-md-12 form-group mb-4">
+        <label class="font-weight-bold small text-muted text-uppercase d-block">Mission Categories <span class="text-danger">*</span></label>
+        <div class="p-3 border rounded bg-light">
+            <div class="row">
+                @foreach($causes as $cause)
+                    <div class="col-md-4 mb-2">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" 
+                                   name="cause_ids[]" 
+                                   class="custom-control-input" 
+                                   id="cause_{{ $cause->id }}" 
+                                   value="{{ $cause->id }}"
+                                   {{ (is_array(old('cause_ids')) && in_array($cause->id, old('cause_ids'))) ? 'checked' : '' }}>
+                            <label class="custom-control-label font-weight-normal" for="cause_{{ $cause->id }}">
+                                {{ $cause->name }}
+                            </label>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            @error('cause_ids')
+                <small class="text-danger d-block mt-2">{{ $message }}</small>
+            @enderror
+        </div>
+    </div>
+    
+    <div class="col-md-12 form-group mb-4">
+        <label class="font-weight-bold small text-muted text-uppercase">Short Summary</label>
+        <input type="text" name="summary" class="form-control form-control-lg" value="{{ old('summary') }}" placeholder="Brief tagline for the project">
+    </div>
+</div>
 
                             <div class="form-group">
                                 <label class="font-weight-bold small text-muted text-uppercase">Full Description</label>
@@ -131,28 +148,44 @@
 
                 <div class="col-lg-4">
                     <div class="card shadow-sm border-0 mb-4">
-                        <div class="card-header bg-white py-3">
-                            <h5 class="card-title font-weight-bold mb-0 text-secondary text-uppercase small">Project Settings</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group mb-3">
-                                <label class="small font-weight-bold">Status</label>
-                                <select name="status" class="form-control">
-                                    <option value="active">Active</option>
-                                    <option value="completed">Completed</option>
-                                    <option value="planned">Planned</option>
-                                </select>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label class="small font-weight-bold">Target Budget (RWF)</label>
-                                <input type="number" name="budget" class="form-control" placeholder="0.00">
-                            </div>
-                            <div class="form-group">
-                                <label class="small font-weight-bold">Start Date</label>
-                                <input type="date" name="start_date" class="form-control">
-                            </div>
-                        </div>
-                    </div>
+    <div class="card-header bg-white py-3">
+        <h5 class="card-title font-weight-bold mb-0 text-secondary text-uppercase small">Project Settings</h5>
+    </div>
+    <div class="card-body" x-data="{ progress: {{ old('progress', 0) }} }">
+        <div class="form-group mb-3">
+            <label class="small font-weight-bold">Status</label>
+            <select name="status" class="form-control">
+                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
+                <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                <option value="planned" {{ old('status') == 'planned' ? 'selected' : '' }}>Planned</option>
+            </select>
+        </div>
+
+        <div class="form-group mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <label class="small font-weight-bold mb-0">Project Progress</label>
+                <span class="badge badge-primary rounded-pill px-2" x-text="progress + '%'"></span>
+            </div>
+            <input type="range" name="progress" class="custom-range" 
+                   min="0" max="100" step="5" 
+                   x-model="progress">
+            <div class="d-flex justify-content-between small text-muted mt-1">
+                <span>0%</span>
+                <span>50%</span>
+                <span>100%</span>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="small font-weight-bold">Target Budget (RWF)</label>
+            <input type="number" name="budget" class="form-control" value="{{ old('budget') }}" placeholder="0.00">
+        </div>
+        <div class="form-group">
+            <label class="small font-weight-bold">Start Date</label>
+            <input type="date" name="start_date" class="form-control" value="{{ old('start_date') }}">
+        </div>
+    </div>
+</div>
 
                     <button type="submit" class="btn btn-primary btn-lg btn-block shadow-sm font-weight-bold mb-3">
                         <i class="fas fa-save mr-2"></i> SAVE PROJECT
