@@ -4,7 +4,7 @@
 {{-- Hero Section --}}
 <div class="container-fluid position-relative overflow-hidden section-hero">
     {{-- Optimization: Standardized path for headers --}}
-    <img src="{{ asset('storage/headers/team.jpg') }}" class="hero-bg-img" alt="Projects Header">
+    <img src="{{ asset('images/banner1.png') }}" class="hero-bg-img" alt="Projects Header">
     <div class="hero-overlay"></div>
     
     <div class="container text-center position-relative hero-content">
