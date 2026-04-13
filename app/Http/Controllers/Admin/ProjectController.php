@@ -46,6 +46,7 @@ class ProjectController extends Controller
                 'organization_id' => $organization?->id,
                 'progress' => $request->progress ?? 0,
                 'status' => $request->status ?? 'Upcoming', // Default to your dropdown value
+                'created_by' => Auth::id(),
             ]));
 
             // Sync Mission Categories if using checkboxes
@@ -81,7 +82,9 @@ class ProjectController extends Controller
         return DB::transaction(function () use ($request, $project, $validated) {
             $projectData = collect($validated)->except(['cause_ids', 'photos', 'documents', 'featured_index'])->toArray();
             
-            $project->update($projectData);
+            $project->update(array_merge($projectData, [
+              'updated_by' => Auth::id(),
+            ]));
 
             if ($request->has('cause_ids')) {
                 $project->causes()->sync($request->cause_ids);

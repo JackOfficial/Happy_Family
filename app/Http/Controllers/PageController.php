@@ -25,13 +25,10 @@ public function index()
     $header = Page::where('page_name', 'Home')->first();
 
     // 2. Fetch Projects (Updated to use 'causes' and 'project_photos')
-    $projects = Project::with([
-            'project_photos' => fn($q) => $q->where('is_featured', true), 
-            'causes'
-        ])
-        ->latest()
-        ->take(3)
-        ->get();
+    $projects = Project::with(['featured_photo', 'project_photos', 'causes'])
+    ->latest()
+    ->take(3)
+    ->get();
 
     // Pull current project from the collection
     $current_project = $projects->first();

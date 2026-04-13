@@ -12,19 +12,21 @@ class Project extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'organization_id',
-        'title',
-        'slug',
-        'summary',
-        'description',
-        'goal',
-        'beneficiaries',
-        'budget',
-        'start_date',
-        'end_date',
-        'duration', // Added to match UI
-        'progress',
-        'status',
+    'organization_id',
+    'created_by', // Add this
+    'updated_by', // Add this
+    'title',
+    'slug',
+    'summary',
+    'description',
+    'goal',
+    'beneficiaries',
+    'budget',
+    'start_date',
+    'end_date',
+    'duration',
+    'progress',
+    'status',
     ];
 
     /**
