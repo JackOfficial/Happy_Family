@@ -340,14 +340,15 @@
             </p>
         </div>
 
-      <div class="row g-4">
+<div class="row g-4">
     @foreach($projects as $project)
     <div class="col-lg-6 col-md-6 col-xl-4 mb-4">
-        <div class="impact-card shadow-sm h-100">
-            <div class="impact-img-container">
+        <div class="impact-card shadow-sm h-100 border-0">
+            <div class="impact-img-container position-relative overflow-hidden">
                 <img src="{{ $project->featured_image_url }}" 
                      alt="{{ $project->title }}"
-                     style="width: 100%; height: 250px; object-fit: cover;">
+                     class="img-fluid"
+                     style="width: 100%; height: 260px; object-fit: cover;">
                 
                 <div class="impact-overlay p-3">
                     <div class="text-center w-100 px-3">
@@ -359,16 +360,16 @@
                                 <i class="fa fa-heart text-pink me-2"></i> Status: {{ $project->status }}
                             </small>
                         </div>
-                        <a href="{{ route('projects.show', $project->id) }}" class="btn-impact-view py-2">View Details</a>
+                        <a href="{{ route('projects.show', $project->slug) }}" class="btn-impact-view py-2 px-4 rounded-pill">View Details</a>
                     </div>
                 </div>
 
-                <div class="impact-tag">
-                    {{ $project->causes->first()->name ?? 'General' }}
+                <div class="impact-tag position-absolute" style="top: 15px; left: 15px; background: var(--accent-pink); color: white; padding: 4px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">
+                    {{ $project->causes->first()->name ?? 'Impact' }}
                 </div>
             </div>
 
-            <div class="impact-progress-bar w-100" style="height: 8px; border-radius: 0;">
+            <div class="impact-progress-bar w-100" style="height: 6px; background: #eee;">
                 <div class="progress-bar" 
                      role="progressbar" 
                      style="width: {{ $project->progress }}%; background-color: var(--accent-pink);" 
@@ -377,27 +378,29 @@
             </div>
 
             <div class="card-body p-4 d-flex flex-column">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <small class="text-purple font-weight-bold">{{ $project->progress }}% Achieved</small>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <small class="text-muted">
+                        <i class="far fa-user-circle me-1"></i> {{ $project->creator->name ?? 'Admin' }}
+                    </small>
                     <span class="badge" 
-                          style="background-color: {{ $project->status == 'Completed' ? '#28a745' : 'var(--primary-purple)' }}; color: white; border-radius: 50px; font-size: 0.7rem; padding: 5px 12px;">
+                          style="background-color: {{ $project->status == 'Completed' ? '#28a745' : 'var(--primary-purple)' }}; color: white; border-radius: 4px; font-size: 0.65rem; padding: 4px 8px;">
                         {{ strtoupper($project->status) }}
                     </span>
                 </div>
                 
-                <a href="{{ route('projects.show', $project->id) }}" class="impact-card-title h5 mb-3 text-decoration-none text-dark font-weight-bold">
+                <a href="{{ route('projects.show', $project->slug) }}" class="impact-card-title h5 mb-2 text-decoration-none text-dark font-weight-bold">
                     {{ $project->title }}
                 </a>
                 
-                <p class="impact-text mb-4 text-muted" style="font-size: 0.9rem;">
-                    {{ Str::limit(strip_tags($project->summary), 110) }}
+                <p class="impact-text mb-4 text-muted" style="font-size: 0.85rem; line-height: 1.6;">
+                    {{ Str::limit(strip_tags($project->summary), 100) }}
                 </p>
                 
                 <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
-                    <a href="{{ route('projects.show', $project->id) }}" class="link-learn-more font-weight-bold text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">
-                        LEARN MORE <i class="fas fa-arrow-right ml-1 small"></i>
+                    <a href="{{ route('projects.show', $project->slug) }}" class="link-learn-more font-weight-bold text-uppercase text-decoration-none" style="font-size: 0.7rem; color: var(--primary-purple);">
+                        LEARN MORE <i class="fas fa-arrow-right ms-1"></i>
                     </a>
-                    <a href="#" class="btn-modern-accent py-2 px-3 text-white border-0" style="font-size: 0.8rem; background-color: var(--accent-pink); border-radius: 4px;">
+                    <a href="#" class="btn-modern-accent py-2 px-3 text-white border-0 shadow-sm" style="font-size: 0.8rem; background-color: var(--accent-pink); border-radius: 6px; font-weight: 600;">
                         DONATE
                     </a>
                 </div>
@@ -406,6 +409,7 @@
     </div> 
     @endforeach
 </div>
+
     </div>
 </div>
 
