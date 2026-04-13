@@ -67,11 +67,6 @@
             @enderror
         </div>
     </div>
-    
-    <div class="col-md-12 form-group mb-4">
-        <label class="font-weight-bold small text-muted text-uppercase">Short Summary</label>
-        <input type="text" name="summary" class="form-control form-control-lg" value="{{ old('summary') }}" placeholder="Brief tagline for the project">
-    </div>
 </div>
 
                             <div class="form-group">
