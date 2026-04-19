@@ -208,40 +208,44 @@
         </div>
         
         <div class="row g-4 impact-carousel" :class="isMobile ? 'owl-carousel owl-theme' : ''">
-            @foreach ($stories as $story)
-            <div class="item" :class="!isMobile ? 'col-lg-4 col-md-6' : ''">
-                <div class="impact-card h-100">
-                    <div class="impact-img-container">
-                        @if($story->photo)
-                            <img src="{{ asset('storage/' . $story->photo->file_path) }}" alt="{{ $story->title }}">
-                        @else
-                            <div class="bg-light d-flex align-items-center justify-content-center h-100">
-                                <i class="fas fa-image fa-3x text-muted opacity-50"></i>
-                            </div>
-                        @endif
-                        <div class="impact-tag">{{ $story->cause->name ?? 'Community' }}</div>
-                        <div class="impact-overlay">
-                            <a href="{{ url('story/' . $story->slug) }}" class="btn-impact-view">View Story</a>
-                        </div>
+    @foreach ($stories as $story)
+    <div class="item" :class="!isMobile ? 'col-lg-4 col-md-6' : ''">
+        <div class="impact-card h-100">
+            <div class="impact-img-container">
+                {{-- Updated to check for featuredPhoto polymorphic relationship --}}
+                @if($story->featuredPhoto)
+                    <img src="{{ asset('storage/' . $story->featuredPhoto->file_path) }}" 
+                         alt="{{ $story->title }}" 
+                         class="img-fluid w-100 h-100 object-fit-cover">
+                @else
+                    <div class="bg-light d-flex align-items-center justify-content-center h-100" style="min-height: 250px;">
+                        <i class="fas fa-image fa-3x text-muted opacity-50"></i>
                     </div>
-                    
-                    <div class="p-4 d-flex flex-column flex-grow-1">
-                        <a href="{{ url('story/' . $story->slug) }}" class="impact-card-title h4 mb-3">
-                            {{ Str::limit($story->title, 50) }}
-                        </a>
-                        <p class="impact-text mb-4">
-                            {!! Str::limit(strip_tags($story->summary ?? $story->content), 95) !!}
-                        </p>
-                        <div class="mt-auto pt-3 border-top">
-                            <a href="{{ url('story/' . $story->slug) }}" class="link-learn-more">
-                                READ FULL STORY <i class="fas fa-chevron-right ms-1 small"></i>
-                            </a>
-                        </div>
-                    </div>
+                @endif
+                
+                <div class="impact-tag">{{ $story->cause->name ?? 'Community' }}</div>
+                <div class="impact-overlay">
+                    <a href="{{ url('story/' . $story->slug) }}" class="btn-impact-view">View Story</a>
                 </div>
             </div>
-            @endforeach
+            
+            <div class="p-4 d-flex flex-column flex-grow-1">
+                <a href="{{ url('story/' . $story->slug) }}" class="impact-card-title h4 mb-3 text-decoration-none">
+                    {{ Str::limit($story->title, 50) }}
+                </a>
+                <p class="impact-text mb-4">
+                    {!! Str::limit(strip_tags($story->summary ?? $story->content), 95) !!}
+                </p>
+                <div class="mt-auto pt-3 border-top">
+                    <a href="{{ url('story/' . $story->slug) }}" class="link-learn-more text-uppercase fw-bold small text-decoration-none">
+                        READ FULL STORY <i class="fas fa-chevron-right ms-1 small"></i>
+                    </a>
+                </div>
+            </div>
         </div>
+    </div>
+    @endforeach
+</div>
 
         <div class="col-12 text-center mt-5">
             <a href="/stories" class="btn-modern-purple py-3 px-5">
