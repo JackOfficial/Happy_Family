@@ -62,7 +62,7 @@ class StoryController extends Controller
                 'updated_by' => Auth::id(),
             ]);
 
-            // 2. Process removals (Photos & Documents)
+            // 2. Process removals (Updated for Polymorphic Relationship)
             $this->processRemovals($request, $story);
 
             // 3. Update Featured Photo ID
@@ -87,9 +87,6 @@ class StoryController extends Controller
         });
     }
 
-    /**
-     * Centralized validation for both Store and Update
-     */
     protected function validateStory(Request $request)
     {
         return $request->validate([
@@ -108,12 +105,17 @@ class StoryController extends Controller
 
     /**
      * Syncs the database and filesystem with Alpine.js removal requests
+     * Uses Polymorphic ID and Type for accurate filtering
      */
     protected function processRemovals(Request $request, Story $story)
     {
         // Remove Documents
         if ($request->has('remove_documents')) {
-            $docs = Document::whereIn('id', $request->remove_documents)->where('story_id', $story->id)->get();
+            $docs = Document::whereIn('id', $request->remove_documents)
+                ->where('documentable_id', $story->id)
+                ->where('documentable_type', Story::class)
+                ->get();
+
             foreach ($docs as $doc) {
                 Storage::disk('public')->delete($doc->file_path);
                 $doc->delete();
@@ -122,7 +124,11 @@ class StoryController extends Controller
 
         // Remove Photos
         if ($request->has('remove_photos')) {
-            $photos = Photo::whereIn('id', $request->remove_photos)->where('story_id', $story->id)->get();
+            $photos = Photo::whereIn('id', $request->remove_photos)
+                ->where('photoable_id', $story->id)
+                ->where('photoable_type', Story::class)
+                ->get();
+
             foreach ($photos as $photo) {
                 Storage::disk('public')->delete($photo->file_path);
                 $photo->delete();
@@ -133,7 +139,7 @@ class StoryController extends Controller
     protected function handleFileUploads(Request $request, Story $story)
     {
         if ($request->hasFile('photos')) {
-            foreach ($request->file('photos') as $index => $file) {
+            foreach ($request->file('photos') as $file) {
                 $path = $file->store('stories/photos', 'public');
                 
                 $story->photos()->create([
@@ -141,7 +147,6 @@ class StoryController extends Controller
                     'file_type'   => $file->getClientOriginalExtension(),
                     'file_size'   => $file->getSize(),
                     'caption'     => $story->title,
-                    // Only set as featured if no featured photo exists yet
                     'is_featured' => !$story->photos()->where('is_featured', true)->exists(),
                 ]);
             }
