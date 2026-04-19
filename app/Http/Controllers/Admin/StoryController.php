@@ -23,6 +23,17 @@ class StoryController extends Controller
         return view('admin.stories.create', compact('causes'));
     }
 
+    public function edit(Story $story)
+{
+    // We fetch all causes so the user can change the category if needed
+    $causes = Cause::all();
+    
+    // Eager load photos and documents to show them in the edit form
+    $story->load(['photos', 'documents']);
+
+    return view('admin.stories.edit', compact('story', 'causes'));
+}
+
     public function store(Request $request)
     {
         $validated = $this->validateStory($request);
