@@ -62,7 +62,7 @@ class StoryController extends Controller
                 'updated_by' => Auth::id(),
             ]);
 
-            // 2. Process removals (Updated for Polymorphic Relationship)
+            // 2. Process removals (Uses relationship to automatically handle polymorphic logic)
             $this->processRemovals($request, $story);
 
             // 3. Update Featured Photo ID
@@ -76,6 +76,12 @@ class StoryController extends Controller
 
             return redirect()->route('admin.stories.index')->with('success', 'Story updated successfully.');
         });
+    }
+
+    public function show(Story $story)
+    {
+        $story->load(['photos', 'documents', 'cause', 'user']);
+        return view('admin.stories.show', compact('story'));
     }
 
     public function destroy(Story $story)
@@ -105,16 +111,13 @@ class StoryController extends Controller
 
     /**
      * Syncs the database and filesystem with Alpine.js removal requests
-     * Uses Polymorphic ID and Type for accurate filtering
+     * Using relationship-based queries to stay polymorphic-safe
      */
     protected function processRemovals(Request $request, Story $story)
     {
         // Remove Documents
         if ($request->has('remove_documents')) {
-            $docs = Document::whereIn('id', $request->remove_documents)
-                ->where('documentable_id', $story->id)
-                ->where('documentable_type', Story::class)
-                ->get();
+            $docs = $story->documents()->whereIn('id', $request->remove_documents)->get();
 
             foreach ($docs as $doc) {
                 Storage::disk('public')->delete($doc->file_path);
@@ -124,10 +127,7 @@ class StoryController extends Controller
 
         // Remove Photos
         if ($request->has('remove_photos')) {
-            $photos = Photo::whereIn('id', $request->remove_photos)
-                ->where('photoable_id', $story->id)
-                ->where('photoable_type', Story::class)
-                ->get();
+            $photos = $story->photos()->whereIn('id', $request->remove_photos)->get();
 
             foreach ($photos as $photo) {
                 Storage::disk('public')->delete($photo->file_path);
@@ -166,12 +166,6 @@ class StoryController extends Controller
             }
         }
     }
-
-    public function show(Story $story)
-{
-    $story->load(['photos', 'documents', 'cause', 'user']);
-    return view('admin.stories.show', compact('story'));
-}
 
     private function cleanupFiles(Story $story)
     {
