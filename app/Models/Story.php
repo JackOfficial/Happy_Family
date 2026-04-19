@@ -10,16 +10,10 @@ class Story extends Model
 {
     use HasFactory, SoftDeletes;
     
-    protected $fillable = [
-        'title', 
-        'slug', 
-        'organization_id', 
-        'user_id',
-        'cause_id', // Added this since you have a cause() relationship
-        'summary', 
-        'content', 
-        'status'
-    ]; 
+  protected $fillable = [
+    'title', 'slug', 'organization_id', 'user_id', 'cause_id', 
+    'summary', 'content', 'status', 'created_by', 'updated_by' // Added user tracking
+];
 
     /**
      * Use Slug for Route Model Binding
@@ -28,6 +22,14 @@ class Story extends Model
     {
         return 'slug';
     }
+
+    public function creator() {
+    return $this->belongsTo(User::class, 'created_by');
+}
+
+public function documents() {
+    return $this->morphMany(Document::class, 'documentable'); // Fixed to Polymorphic
+}
     
     protected static function boot()
     {
@@ -68,10 +70,5 @@ class Story extends Model
     public function user() 
     {
         return $this->belongsTo(User::class); 
-    }
-    
-    public function documents()
-    {
-        return $this->hasMany(Document::class);
     }
 }

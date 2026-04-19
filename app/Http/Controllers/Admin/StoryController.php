@@ -4,151 +4,149 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Story;
-use App\Models\Photo;
-use App\Models\Organization;
+use App\Models\{Story, Photo, Document, Organization, Cause};
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\{Storage, DB, Auth};
 
 class StoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-   public function index()
+    public function index()
     {
-        // Added pagination - better for performance as stories grow
-        $stories = Story::with(['organization', 'user', 'photo'])
+        // Eager load everything needed for the index UI
+        $stories = Story::with(['organization', 'user', 'photos', 'documents', 'cause'])
                         ->latest()
                         ->paginate(15); 
-        return view('admin.manage.stories', compact('stories'));
+        return view('admin.stories.index', compact('stories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        
-        return view('admin.create.story');
+        $causes = Cause::all();
+        return view('admin.stories.create', compact('causes'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-   public function store(Request $request)
+    public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title'   => 'required|string|max:255',
-            'summary' => 'nullable|string',
-            'content' => 'required|string',
-            'status'  => 'required|in:draft,published,archived',
-            'photo'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120', // Increased to 5MB
-        ]);
+        $validated = $this->validateStory($request);
 
-        $slug = Str::slug($request->title);
-        if (Story::where('slug', $slug)->exists()) {
-            $slug .= '-' . Str::lower(Str::random(4)); // More elegant than time()
-        }
-        
-        // Using a fallback for organization if none exists to prevent crashes
-        $organization = Organization::first() ?? new Organization(['id' => 1]);
-
-        $story = Story::create([
-            'title'           => $validated['title'],
-            'slug'            => $slug,
-            'organization_id' => $organization->id,
-            'user_id'         => auth()->id(),
-            'summary'         => $validated['summary'],
-            'content'         => $validated['content'],
-            'status'          => $validated['status'],
-        ]);
-        
-        if ($request->hasFile('photo')) {
-            $filePath = $request->file('photo')->store('stories', 'public');
-            $story->photo()->create([
-                'file_path' => $filePath,
-                'caption'   => $validated['title'],
-            ]);
-        }
-
-        return redirect()->route('admin.stories.index')->with('success', 'Story created successfully.');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Story $story)
-    {
-       return view('admin.stories.show', compact('story'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Story $story)
-    {
-        return view('admin.edit.story', compact('story'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-public function update(Request $request, Story $story)
-    {
-        $validated = $request->validate([
-            'title'   => 'required|string|max:255',
-            'summary' => 'nullable|string',
-            'content' => 'required|string',
-            'status'  => 'required|in:draft,published,archived',
-            'photo'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-        ]);
-
-        // Logic fix: Only update slug if the title actually changed
-        $slug = $story->slug;
-        if ($validated['title'] !== $story->title) {
+        return DB::transaction(function () use ($request, $validated) {
             $slug = Str::slug($validated['title']);
-            if (Story::where('slug', $slug)->where('id', '!=', $story->id)->exists()) {
-                $slug .= '-' . Str::lower(Str::random(4));
+            if (Story::where('slug', $slug)->exists()) {
+                $slug .= '-' . Str::lower(Str::random(5));
             }
-        }
+            
+            $organization = Organization::first();
 
-        $story->update([
-            'title'   => $validated['title'],
-            'slug'    => $slug,
-            'summary' => $validated['summary'],
-            'content' => $validated['content'],
-            'status'  => $validated['status'],
-        ]);
-
-        if ($request->hasFile('photo')) {
-            if ($story->photo) {
-                Storage::disk('public')->delete($story->photo->file_path);
-                $story->photo()->delete();
-            }
-
-            $filePath = $request->file('photo')->store('stories', 'public');
-            $story->photo()->create([
-                'file_path' => $filePath,
-                'caption'   => $validated['title'],
+            $story = Story::create([
+                'title'           => $validated['title'],
+                'slug'            => $slug,
+                'organization_id' => $organization?->id,
+                'user_id'         => Auth::id(), // Primary author
+                'created_by'      => Auth::id(), // Tracking
+                'cause_id'        => $request->cause_id,
+                'summary'         => $validated['summary'],
+                'content'         => $validated['content'],
+                'status'          => $validated['status'],
             ]);
-        }
+            
+            $this->handleFileUploads($request, $story);
 
-        return redirect()->route('admin.stories.index')->with('success', 'Story updated successfully.');
+            return redirect()->route('admin.stories.index')->with('success', 'Story created successfully.');
+        });
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-   public function destroy(Story $story)
+    public function update(Request $request, Story $story)
     {
-        // polymorphic cleanup is good!
-        if ($story->photo) {
-            Storage::disk('public')->delete($story->photo->file_path);
-            $story->photo->delete();
+        $validated = $this->validateStory($request, $story->id);
+
+        return DB::transaction(function () use ($request, $story, $validated) {
+            $slug = $story->slug;
+            if ($validated['title'] !== $story->title) {
+                $slug = Str::slug($validated['title']);
+                if (Story::where('slug', $slug)->where('id', '!=', $story->id)->exists()) {
+                    $slug .= '-' . Str::lower(Str::random(5));
+                }
+            }
+
+            $story->update([
+                'title'      => $validated['title'],
+                'slug'       => $slug,
+                'summary'    => $validated['summary'],
+                'content'    => $validated['content'],
+                'status'     => $validated['status'],
+                'cause_id'   => $request->cause_id,
+                'updated_by' => Auth::id(),
+            ]);
+
+            $this->handleFileUploads($request, $story);
+
+            return redirect()->route('admin.stories.index')->with('success', 'Story updated successfully.');
+        });
+    }
+
+    public function destroy(Story $story)
+    {
+        return DB::transaction(function () use ($story) {
+            // Cleanup Photos from storage
+            foreach ($story->photos as $photo) {
+                Storage::disk('public')->delete($photo->file_path);
+                $photo->delete();
+            }
+
+            // Cleanup Documents from storage
+            foreach ($story->documents as $doc) {
+                Storage::disk('public')->delete($doc->file_path);
+                $doc->delete();
+            }
+            
+            $story->delete();
+            return redirect()->route('admin.stories.index')->with('success', 'Story removed successfully.');
+        });
+    }
+
+    protected function validateStory(Request $request, $id = null)
+    {
+        return $request->validate([
+            'title'       => 'required|string|max:255',
+            'cause_id'    => 'nullable|exists:causes,id',
+            'summary'     => 'nullable|string|max:500',
+            'content'     => 'required|string',
+            'status'      => 'required|in:draft,published,archived',
+            'photos.*'    => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'documents.*' => 'nullable|file|mimes:pdf,doc,docx,txt|max:10240',
+        ]);
+    }
+
+    protected function handleFileUploads(Request $request, Story $story)
+    {
+        // Handle Multiple Photos (Gallery)
+        if ($request->hasFile('photos')) {
+            foreach ($request->file('photos') as $index => $file) {
+                $path = $file->store('stories/photos', 'public');
+                
+                $story->photos()->create([
+                    'file_path'   => $path,
+                    'file_type'   => $file->getClientOriginalExtension(),
+                    'file_size'   => $file->getSize(),
+                    'caption'     => $story->title,
+                    'is_featured' => ($index == 0 && !$story->photos()->where('is_featured', true)->exists()),
+                ]);
+            }
         }
-        
-        $story->delete();
-        return redirect()->route('admin.stories.index')->with('success', 'Story deleted successfully.');
+
+        // Handle Documents (PDFs/Files)
+        if ($request->hasFile('documents')) {
+            foreach ($request->file('documents') as $file) {
+                $path = $file->store('stories/documents', 'public');
+                
+                $story->documents()->create([
+                    'title'       => $file->getClientOriginalName(),
+                    'file_path'   => $path,
+                    'file_type'   => $file->getClientOriginalExtension(),
+                    'file_size'   => $file->getSize(),
+                    'uploaded_by' => Auth::id(),
+                ]);
+            }
+        }
     }
 }

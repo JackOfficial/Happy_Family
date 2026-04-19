@@ -12,17 +12,11 @@ class Event extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'organization_id',
-        'title',
-        'slug',
-        'description',
-        'location',
-        'date',
-        'time',
-        'link',
-        'status',
-    ];
+  protected $fillable = [
+    'organization_id', 'title', 'slug', 'description', 
+    'location', 'date', 'time', 'link', 'status',
+    'created_by', 'updated_by' // Added user tracking
+];
     
     protected $casts = [
         'date' => 'date',
@@ -47,6 +41,10 @@ class Event extends Model
             $event->documents()->delete(); // Also cleanup documents
         });
     }
+
+    public function creator() {
+    return $this->belongsTo(User::class, 'created_by');
+}
 
     /**
      * Generate a unique slug based on the title.
