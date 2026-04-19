@@ -2,154 +2,135 @@
 @section('title', 'HFRO | Edit Story')
 
 @section('content')
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="font-weight-bold text-dark">Edit Story</h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right bg-transparent">
-                    <li class="breadcrumb-item"><a href="/admin">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('admin.stories.index') }}">Stories</a></li>
-                    <li class="breadcrumb-item active">Edit</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="content">
+<section class="content" x-data="storyManager()">
     <form method="POST" action="{{ route('admin.stories.update', $story->slug) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-        
+
+        {{-- Hidden tracking for Alpine --}}
+        <template x-for="id in removedPhotos" :key="id">
+            <input type="hidden" name="remove_photos[]" :value="id">
+        </template>
+        <template x-for="id in removedDocs" :key="id">
+            <input type="hidden" name="remove_documents[]" :value="id">
+        </template>
+        <input type="hidden" name="featured_photo_id" :value="featuredPhotoId">
+
         <div class="row">
-            {{-- LEFT COLUMN: Content --}}
+            {{-- LEFT COLUMN --}}
             <div class="col-md-8">
-                <div class="card shadow-sm border-0">
+                <div class="card shadow-sm border-0 mb-4">
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="title" class="font-weight-bold">Story Title <span class="text-danger">*</span></label>
-                            <input type="text" name="title" id="title" value="{{ old('title', $story->title) }}" 
-                                class="form-control form-control-lg @error('title') is-invalid @enderror" 
-                                placeholder="Enter title..." required>
-                            @error('title')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
+                            <label class="font-weight-bold">Story Title <span class="text-danger">*</span></label>
+                            <input type="text" name="title" value="{{ old('title', $story->title) }}" 
+                                class="form-control form-control-lg border-0 border-bottom rounded-0 px-0">
                         </div>
 
-                        {{-- Added Cause Selector --}}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="small font-weight-bold text-muted">IMPACT CAUSE</label>
+                                    <select name="cause_id" class="form-control select2">
+                                        <option value="">General / None</option>
+                                        @foreach($causes as $cause)
+                                            <option value="{{ $cause->id }}" {{ $story->cause_id == $cause->id ? 'selected' : '' }}>
+                                                {{ $cause->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="small font-weight-bold text-muted">STATUS</label>
+                                    <select name="status" class="form-control">
+                                        <option value="published" {{ $story->status == 'published' ? 'selected' : '' }}>Published</option>
+                                        <option value="draft" {{ $story->status == 'draft' ? 'selected' : '' }}>Draft</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
-                            <label for="cause_id" class="font-weight-bold text-muted small">Impact</label>
-                            <select name="cause_id" id="cause_id" class="form-control select2 @error('cause_id') is-invalid @enderror">
-                                <option value="">-- No Specific Cause --</option>
-                                @foreach($causes as $cause)
-                                    <option value="{{ $cause->id }}" {{ (old('cause_id', $story->cause_id) == $cause->id) ? 'selected' : '' }}>
-                                        {{ $cause->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('cause_id')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label for="summary" class="font-weight-bold">Short Summary</label>
-                            <textarea name="summary" id="summary" rows="3" 
-                                class="form-control @error('summary') is-invalid @enderror">{{ old('summary', $story->summary) }}</textarea>
-                            @error('summary')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group mb-0">
-                            <label for="myeditorinstance" class="font-weight-bold">Detailed Content <span class="text-danger">*</span></label>
-                            <textarea name="content" id="myeditorinstance" 
-                                class="form-control @error('content') is-invalid @enderror">{{ old('content', $story->content) }}</textarea>
-                            @error('content')
-                                <span class="invalid-feedback d-block">{{ $message }}</span>
-                            @enderror
+                            <label class="font-weight-bold">Detailed Content</label>
+                            <textarea name="content" id="myeditorinstance" class="form-control">{{ $story->content }}</textarea>
                         </div>
                     </div>
                 </div>
 
-                {{-- PHOTO GALLERY SECTION --}}
+                {{-- DYNAMIC PHOTO GALLERY --}}
                 <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white">
-                        <h3 class="card-title font-weight-bold text-muted small text-uppercase">Current Photo Gallery</h3>
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h3 class="card-title font-weight-bold text-muted small text-uppercase">Gallery Management</h3>
+                        <label class="btn btn-xs btn-outline-primary mb-0">
+                            <i class="fas fa-plus mr-1"></i> Add Photos
+                            <input type="file" name="photos[]" multiple class="d-none" @change="previewNewPhotos">
+                        </label>
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            @forelse($story->photos as $photo)
-                                <div class="col-md-3 col-6 mb-3">
-                                    <div class="position-relative rounded border p-1 shadow-sm">
-                                        <img src="{{ asset('storage/' . $photo->file_path) }}" 
-                                             class="img-fluid rounded" 
-                                             style="height: 100px; width: 100%; object-fit: cover;">
-                                        @if($photo->is_featured)
-                                            <span class="badge badge-success position-absolute" style="top: 10px; left: 10px;">Featured</span>
-                                        @endif
+                            {{-- Existing Photos --}}
+                            @foreach($story->photos as $photo)
+                            <div class="col-md-3 col-6 mb-4" x-show="!removedPhotos.includes({{ $photo->id }})">
+                                <div class="position-relative gallery-item rounded overflow-hidden border shadow-sm">
+                                    <img src="{{ asset('storage/' . $photo->file_path) }}" class="img-fluid w-100" style="height: 120px; object-fit: cover;">
+                                    
+                                    {{-- Overlay Actions --}}
+                                    <div class="gallery-overlay d-flex flex-column justify-content-between p-2">
+                                        <div class="text-right">
+                                            <button type="button" @click="removePhoto({{ $photo->id }})" class="btn btn-danger btn-xs rounded-circle shadow">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                        <button type="button" @click="setFeatured({{ $photo->id }})" 
+                                            :class="featuredPhotoId == {{ $photo->id }} ? 'btn-warning' : 'btn-light'"
+                                            class="btn btn-xs btn-block font-weight-bold shadow-sm">
+                                            <i class="fas fa-star mr-1"></i> <span x-text="featuredPhotoId == {{ $photo->id }} ? 'Featured' : 'Set Featured'"></span>
+                                        </button>
                                     </div>
                                 </div>
-                            @empty
-                                <div class="col-12 text-center py-3 text-muted">
-                                    No photos uploaded yet for this story.
+                            </div>
+                            @endforeach
+
+                            {{-- New Upload Previews --}}
+                            <template x-for="(img, index) in newPhotoPreviews" :key="index">
+                                <div class="col-md-3 col-6 mb-4">
+                                    <div class="position-relative rounded overflow-hidden border border-primary shadow-sm" style="height: 120px;">
+                                        <img :src="img" class="img-fluid w-100 h-100" style="object-fit: cover; opacity: 0.7;">
+                                        <div class="position-absolute" style="top: 5px; right: 5px;">
+                                            <span class="badge badge-primary">New</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            @endforelse
+                            </template>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{-- RIGHT COLUMN: Status & Media --}}
+            {{-- RIGHT COLUMN --}}
             <div class="col-md-4">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white">
-                        <h3 class="card-title font-weight-bold text-muted small text-uppercase">Publishing</h3>
-                    </div>
+                {{-- SAVE CARD --}}
+                <div class="card shadow-sm border-0 mb-4 sticky-top" style="top: 20px; z-index: 1020;">
                     <div class="card-body">
-                        <div class="form-group">
-                            <label for="status">Post Status</label>
-                            <select name="status" id="status" class="form-control custom-select">
-                                <option value="published" {{ old('status', $story->status) == 'published' ? 'selected' : '' }}>Published</option>
-                                <option value="draft" {{ old('status', $story->status) == 'draft' ? 'selected' : '' }}>Draft</option>
-                                <option value="archived" {{ old('status', $story->status) == 'archived' ? 'selected' : '' }}>Archived</option>
-                            </select>
-                        </div>
-                        <div class="small text-muted mb-3">
-                            <i class="fas fa-history mr-1"></i> Last updated: {{ $story->updated_at->diffForHumans() }}
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block shadow-sm">
-                            <i class="fa fa-save mr-1"></i> Save Changes
+                        <button type="submit" class="btn btn-primary btn-block btn-lg shadow">
+                            <i class="fas fa-cloud-upload-alt mr-2"></i> Update Story
                         </button>
-                        <a href="{{ route('admin.stories.index') }}" class="btn btn-light btn-block mt-2">Back to List</a>
-                    </div>
-                </div>
-
-                {{-- UPLOAD NEW IMAGES --}}
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white">
-                        <h3 class="card-title font-weight-bold text-muted small text-uppercase">Add More Photos</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group mb-0">
-                            <label class="small text-muted">Select Images (Optional):</label>
-                            <div class="custom-file">
-                                {{-- Changed name to photos[] to match controller expectations --}}
-                                <input type="file" name="photos[]" id="photos" class="custom-file-input" accept="image/*" multiple>
-                                <label class="custom-file-label" for="photos">Choose files...</label>
+                        <a href="{{ route('admin.stories.index') }}" class="btn btn-link btn-block text-muted">Discard Changes</a>
+                        <hr>
+                        <div class="small">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>Images:</span> <b x-text="{{ $story->photos->count() }} - removedPhotos.length + newPhotoPreviews.length"></b>
                             </div>
-                            <p class="x-small text-muted mt-2 mb-0">You can select multiple images to add to the gallery.</p>
-                            @error('photos.*')
-                                <span class="text-danger small mt-2 d-block">{{ $message }}</span>
-                            @enderror
+                            <div class="d-flex justify-content-between">
+                                <span>Docs:</span> <b x-text="{{ $story->documents->count() }} - removedDocs.length"></b>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {{-- DOCUMENTS SECTION --}}
+                {{-- DOCUMENT MANAGEMENT --}}
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white">
                         <h3 class="card-title font-weight-bold text-muted small text-uppercase">Documents</h3>
@@ -157,16 +138,21 @@
                     <div class="card-body p-0">
                         <ul class="list-group list-group-flush">
                             @foreach($story->documents as $doc)
-                                <li class="list-group-item d-flex justify-content-between align-items-center small">
-                                    <span class="text-truncate" style="max-width: 150px;">{{ $doc->title }}</span>
-                                    <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="text-info">
-                                        <i class="fas fa-download"></i>
-                                    </a>
-                                </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" x-show="!removedDocs.includes({{ $doc->id }})">
+                                <div class="text-truncate" style="max-width: 180px;">
+                                    <i class="far fa-file-pdf text-danger mr-2"></i>
+                                    <span class="small">{{ $doc->title }}</span>
+                                </div>
+                                <div class="btn-group">
+                                    <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="btn btn-xs btn-light border"><i class="fas fa-eye"></i></a>
+                                    <button type="button" @click="removeDoc({{ $doc->id }})" class="btn btn-xs btn-light border text-danger"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </li>
                             @endforeach
                         </ul>
-                        <div class="p-3 border-top">
-                            <input type="file" name="documents[]" class="form-control-file small" multiple>
+                        <div class="p-3 bg-light border-top">
+                            <label class="small font-weight-bold">Attach New Documents</label>
+                            <input type="file" name="documents[]" multiple class="form-control-file small">
                         </div>
                     </div>
                 </div>
@@ -175,10 +161,52 @@
     </form>
 </section>
 
+<script>
+function storyManager() {
+    return {
+        removedPhotos: [],
+        removedDocs: [],
+        newPhotoPreviews: [],
+        featuredPhotoId: {{ $story->photos->where('is_featured', true)->first()->id ?? 'null' }},
+
+        removePhoto(id) {
+            if(confirm('Mark photo for removal?')) {
+                this.removedPhotos.push(id);
+                if(this.featuredPhotoId == id) this.featuredPhotoId = null;
+            }
+        },
+
+        removeDoc(id) {
+            if(confirm('Remove this document?')) {
+                this.removedDocs.push(id);
+            }
+        },
+
+        setFeatured(id) {
+            this.featuredPhotoId = id;
+        },
+
+        previewNewPhotos(event) {
+            this.newPhotoPreviews = [];
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                this.newPhotoPreviews.push(URL.createObjectURL(files[i]));
+            }
+        }
+    }
+}
+</script>
+
 <style>
-    .card-title { font-size: 0.85rem; letter-spacing: 0.5px; }
-    .form-control-lg { font-size: 1.5rem; border-color: transparent; border-bottom: 2px solid #eee; border-radius: 0; padding-left: 0; }
-    .form-control-lg:focus { border-color: transparent; border-bottom-color: #007bff; box-shadow: none; }
-    .custom-file-label::after { content: "Browse"; }
+    .gallery-item .gallery-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.4);
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .btn-xs { padding: 1px 5px; font-size: 10px; }
+    .select2-container--default .select2-selection--single { height: 38px !important; border: 1px solid #ced4da !important; }
 </style>
 @endsection
