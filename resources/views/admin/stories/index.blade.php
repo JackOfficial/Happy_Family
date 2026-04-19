@@ -83,7 +83,7 @@
                                 {{-- Added Cause Display --}}
                                 @if($story->cause)
                                     <span class="badge badge-light border text-primary px-2 py-1" style="font-weight: 500;">
-                                        <i class="fas fa-hand-holding-heart mr-1"></i> {{ $story->cause->cause }}
+                                        <i class="fas fa-hand-holding-heart mr-1"></i> {{ $story->cause->name }}
                                     </span>
                                 @else
                                     <span class="text-muted small italic">General</span>
