@@ -105,21 +105,28 @@
                                 </div>
                             </td>
                             <td class="text-right pr-4">
-                                <div class="btn-group">
-                                    <a class="btn btn-white btn-sm border shadow-sm mr-2" href="{{ route('admin.stories.edit', $story->slug) }}" title="Edit">
-                                        <i class="fas fa-pencil-alt text-info"></i>
-                                    </a>
+    <div class="btn-group">
+        {{-- Show Button --}}
+        <a class="btn btn-white btn-sm border shadow-sm mr-2" href="{{ route('admin.stories.show', $story->slug) }}" title="View Details">
+            <i class="fas fa-eye text-primary"></i>
+        </a>
 
-                                    <form action="{{ route('admin.stories.destroy', $story->slug) }}" method="POST" class="d-inline" 
-                                          onsubmit="return confirm('Archive this story and its media?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-white btn-sm border shadow-sm">
-                                            <i class="fas fa-trash text-danger"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
+        {{-- Edit Button --}}
+        <a class="btn btn-white btn-sm border shadow-sm mr-2" href="{{ route('admin.stories.edit', $story->slug) }}" title="Edit">
+            <i class="fas fa-pencil-alt text-info"></i>
+        </a>
+
+        {{-- Delete/Archive Form --}}
+        <form action="{{ route('admin.stories.destroy', $story->slug) }}" method="POST" class="d-inline" 
+              onsubmit="return confirm('Archive this story and its media?');">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-white btn-sm border shadow-sm" title="Delete">
+                <i class="fas fa-trash text-danger"></i>
+            </button>
+        </form>
+    </div>
+</td>
                         </tr>
                         @empty
                         <tr>

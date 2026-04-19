@@ -46,7 +46,7 @@ public function index()
     $causes = Cause::with('mainPhoto')->latest()->take(4)->get(); 
     
     $partners = Partner::with('organization')->latest()->get();
-    $stories = Story::with(['organization', 'user', 'cause', 'featuredPhoto'])
+    $stories = Story::with(['user', 'cause', 'featuredPhoto'])
                 ->where('status', 'published') 
                 ->latest()
                 ->take(3)
