@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Event, Organization};
+use App\Models\{Event, Organization, Cause};
 use Illuminate\Support\Facades\{Storage, Auth, DB};
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -14,14 +14,15 @@ class EventController extends Controller
 {
     public function index()
     {
-        $events = Event::with(['event_photos', 'documents'])->latest()->paginate(15);
+        // Updated to use 'photos' and included 'cause' for the table view
+        $events = Event::with(['photos', 'documents', 'cause'])->latest()->paginate(15);
         return view('admin.events.index', compact('events'));
     }
 
     public function downloadPdf(Event $event)
     {
         $eventUrl = route('admin.events.show', $event->slug);
-        $event->load(['event_photos', 'documents']);
+        $event->load(['photos', 'documents', 'cause']);
 
         $qrcode = base64_encode(QrCode::format('png')
             ->size(150)
@@ -34,7 +35,8 @@ class EventController extends Controller
 
     public function create()
     {
-        return view('admin.events.create');
+        $causes = Cause::all();
+        return view('admin.events.create', compact('causes'));
     }
 
     public function store(Request $request)
@@ -46,8 +48,7 @@ class EventController extends Controller
 
             $event = Event::create(array_merge($validated, [
                 'organization_id' => $organization?->id,
-                'created_by' => Auth::id(),
-                // Slug is handled by your Model's booted() method
+                'created_by'      => Auth::id(),
             ]));
 
             $this->handleFileUploads($request, $event);
@@ -58,14 +59,15 @@ class EventController extends Controller
 
     public function show(Event $event)
     {
-        $event->load(['event_photos', 'documents']);
+        $event->load(['photos', 'documents', 'cause', 'creator']);
         return view('admin.events.show', compact('event'));
     }
 
     public function edit(Event $event)
     {
-        $event->load(['event_photos', 'documents']);
-        return view('admin.events.edit', compact('event'));
+        $causes = Cause::all();
+        $event->load(['photos', 'documents']);
+        return view('admin.events.edit', compact('event', 'causes'));
     }
 
     public function update(Request $request, Event $event)
@@ -73,25 +75,15 @@ class EventController extends Controller
         $validated = $this->validateEvent($request, $event->id);
 
         return DB::transaction(function () use ($request, $event, $validated) {
-            if ($event->title !== $validated['title']) {
-                $event->slug = Str::slug($validated['title']);
-            }
-
+            // Updated to handle 'updated_by'
             $event->update(array_merge($validated, [
                 'updated_by' => Auth::id(),
             ]));
 
-            // 1. Handle Photo Deletions (Alpine.js UI)
-            if ($request->removed_photos) {
-                $ids = explode(',', $request->removed_photos);
-                $photos = $event->event_photos()->whereIn('id', $ids)->get();
-                foreach ($photos as $photo) {
-                    Storage::disk('public')->delete($photo->file_path);
-                    $photo->delete();
-                }
-            }
+            // Handle Polymorphic Asset Removals (Photos & Documents)
+            $this->processRemovals($request, $event);
 
-            // 2. Upload New Files
+            // Upload New Files
             $this->handleFileUploads($request, $event);
 
             return redirect()->route('admin.events.index')->with('success', 'Event updated successfully!');
@@ -101,53 +93,68 @@ class EventController extends Controller
     public function destroy(Event $event)
     {
         return DB::transaction(function () use ($event) {
-            // Delete Physical Files
-            foreach ($event->event_photos as $photo) {
+            // Note: Since you use SoftDeletes, we cleanup files only if you implement forceDelete
+            // or if you want them gone from storage immediately:
+            foreach ($event->photos as $photo) {
                 Storage::disk('public')->delete($photo->file_path);
             }
-
             foreach ($event->documents as $document) {
                 Storage::disk('public')->delete($document->file_path);
             }
 
-            // Database records deleted via Model booted() hook
             $event->delete();
-
-            return redirect()->route('admin.events.index')->with('success', 'Event and associated assets deleted.');
+            return redirect()->route('admin.events.index')->with('success', 'Event archived successfully.');
         });
     }
 
-    /**
-     * Internal Validation Logic
-     */
     protected function validateEvent(Request $request, $id = null)
     {
         return $request->validate([
-            'title'       => 'required|string|max:255|unique:events,title,' . $id,
-            'description' => 'nullable|string',
-            'location'    => 'nullable|string|max:255',
-            'date'        => 'nullable|date',
-            'time'        => 'nullable',
-            'link'        => 'nullable|url',
-            'status'      => 'required|string|in:active,inactive',
-            'photos.*'    => 'nullable|image|max:5120',
-            'documents.*' => 'nullable|mimes:pdf,doc,docx,zip,xlsx|max:10240',
+            'title'             => 'required|string|max:255|unique:events,title,' . $id,
+            'cause_id'          => 'nullable|exists:causes,id',
+            'description'       => 'nullable|string',
+            'location'          => 'nullable|string|max:255',
+            'date'              => 'nullable|date',
+            'time'              => 'nullable',
+            'link'              => 'nullable|url',
+            'status'            => 'required|string|in:active,inactive',
+            'photos.*'          => 'nullable|image|max:5120',
+            'documents.*'       => 'nullable|mimes:pdf,doc,docx,zip,xlsx|max:10240',
+            'remove_photos'     => 'nullable|array',
+            'remove_documents'  => 'nullable|array',
         ]);
     }
 
-    /**
-     * Shared File Handling Logic
-     */
+    protected function processRemovals(Request $request, Event $event)
+    {
+        if ($request->has('remove_photos')) {
+            $photos = $event->photos()->whereIn('id', $request->remove_photos)->get();
+            foreach ($photos as $photo) {
+                Storage::disk('public')->delete($photo->file_path);
+                $photo->delete();
+            }
+        }
+
+        if ($request->has('remove_documents')) {
+            $docs = $event->documents()->whereIn('id', $request->remove_documents)->get();
+            foreach ($docs as $doc) {
+                Storage::disk('public')->delete($doc->file_path);
+                $doc->delete();
+            }
+        }
+    }
+
     protected function handleFileUploads(Request $request, Event $event)
     {
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $file) {
                 $path = $file->store('events/photos', 'public');
-                $event->event_photos()->create([
-                    'file_path' => $path,
-                    'file_type' => $file->getClientOriginalExtension(),
-                    'file_size' => $file->getSize(),
-                    'caption'   => $event->title,
+                $event->photos()->create([
+                    'file_path'   => $path,
+                    'file_type'   => $file->getClientOriginalExtension(),
+                    'file_size'   => $file->getSize(),
+                    'caption'     => $event->title,
+                    'is_featured' => !$event->photos()->where('is_featured', true)->exists(),
                 ]);
             }
         }
