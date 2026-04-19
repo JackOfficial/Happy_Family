@@ -50,6 +50,22 @@
                             @enderror
                         </div>
 
+                        {{-- Event Cause Selection --}}
+                        <div class="form-group">
+                            <label for="cause_id" class="font-weight-bold">Associated Cause</label>
+                            <select name="cause_id" id="cause_id" class="form-control custom-select @error('cause_id') is-invalid @enderror">
+                                <option value="">-- Select Cause (Optional) --</option>
+                                @foreach($causes as $cause)
+                                    <option value="{{ $cause->id }}" {{ old('cause_id', $event->cause_id) == $cause->id ? 'selected' : '' }}>
+                                        {{ $cause->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('cause_id')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                         {{-- Event Description --}}
                         <div class="form-group">
                             <label for="myeditorinstance" class="font-weight-bold">Description</label>
@@ -73,7 +89,6 @@
                         <i class="fas fa-file-pdf mr-1 text-danger"></i> Event Documents
                     </div>
                     <div class="card-body">
-                        {{-- Current Documents --}}
                         <label class="small text-muted uppercase">Existing Documents</label>
                         <div class="list-group list-group-flush mb-3 border rounded">
                             <template x-for="doc in existingDocs" :key="doc.id">
@@ -93,7 +108,6 @@
                             </template>
                         </div>
 
-                        {{-- Upload New Documents --}}
                         <label class="small text-muted uppercase">Add New Documents</label>
                         <div class="custom-file">
                             <input type="file" name="documents[]" id="documents" class="custom-file-input" 
@@ -102,7 +116,6 @@
                             <label class="custom-file-label" for="documents">Choose documents...</label>
                         </div>
 
-                        {{-- New Selection List --}}
                         <template x-if="newDocNames.length > 0">
                             <ul class="list-group mt-2">
                                 <template x-for="name in newDocNames" :key="name">
@@ -151,6 +164,8 @@
                             <select name="status" class="form-control custom-select">
                                 <option value="active" {{ old('status', $event->status) == 'active' ? 'selected' : '' }}>Active</option>
                                 <option value="inactive" {{ old('status', $event->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                <option value="completed" {{ old('status', $event->status) == 'completed' ? 'selected' : '' }}>Completed</option>
+                                <option value="cancelled" {{ old('status', $event->status) == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                             </select>
                         </div>
                     </div>
@@ -160,7 +175,7 @@
                 <div class="card shadow-sm border-0" 
                      x-data="{ 
                         photoPreviews: [], 
-                        existingPhotos: {{ Js::from($event->event_photos) }},
+                        existingPhotos: {{ Js::from($event->photos) }},
                         removedPhotoIds: [],
                         handleFileChange(event) {
                             this.photoPreviews = [];
@@ -209,7 +224,6 @@
                     </div>
                 </div>
 
-                {{-- Submit Buttons --}}
                 <div class="mt-4">
                     <button type="submit" class="btn btn-success btn-block btn-lg shadow-sm">
                         <i class="fas fa-check-circle mr-1"></i> Save Changes
