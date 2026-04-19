@@ -5,15 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\{Story, Photo, Document, Organization, Cause};
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\{Storage, DB, Auth};
 
 class StoryController extends Controller
 {
     public function index()
     {
-        // Eager load everything needed for the index UI
-        $stories = Story::with(['organization', 'user', 'photos', 'documents', 'cause'])
+        $stories = Story::with(['organization', 'user', 'cause', 'featuredPhoto'])
                         ->latest()
                         ->paginate(15); 
         return view('admin.stories.index', compact('stories'));
@@ -30,23 +28,14 @@ class StoryController extends Controller
         $validated = $this->validateStory($request);
 
         return DB::transaction(function () use ($request, $validated) {
-            $slug = Str::slug($validated['title']);
-            if (Story::where('slug', $slug)->exists()) {
-                $slug .= '-' . Str::lower(Str::random(5));
-            }
-            
             $organization = Organization::first();
 
+            // Slugs are now handled automatically by the Story Model boot method!
             $story = Story::create([
-                'title'           => $validated['title'],
-                'slug'            => $slug,
+                ...$validated, // PHP 8.x spread operator for cleaner code
                 'organization_id' => $organization?->id,
-                'user_id'         => Auth::id(), // Primary author
-                'created_by'      => Auth::id(), // Tracking
-                'cause_id'        => $request->cause_id,
-                'summary'         => $validated['summary'],
-                'content'         => $validated['content'],
-                'status'          => $validated['status'],
+                'user_id'         => Auth::id(),
+                'created_by'      => Auth::id(),
             ]);
             
             $this->handleFileUploads($request, $story);
@@ -57,24 +46,11 @@ class StoryController extends Controller
 
     public function update(Request $request, Story $story)
     {
-        $validated = $this->validateStory($request, $story->id);
+        $validated = $this->validateStory($request);
 
         return DB::transaction(function () use ($request, $story, $validated) {
-            $slug = $story->slug;
-            if ($validated['title'] !== $story->title) {
-                $slug = Str::slug($validated['title']);
-                if (Story::where('slug', $slug)->where('id', '!=', $story->id)->exists()) {
-                    $slug .= '-' . Str::lower(Str::random(5));
-                }
-            }
-
             $story->update([
-                'title'      => $validated['title'],
-                'slug'       => $slug,
-                'summary'    => $validated['summary'],
-                'content'    => $validated['content'],
-                'status'     => $validated['status'],
-                'cause_id'   => $request->cause_id,
+                ...$validated,
                 'updated_by' => Auth::id(),
             ]);
 
@@ -87,24 +63,17 @@ class StoryController extends Controller
     public function destroy(Story $story)
     {
         return DB::transaction(function () use ($story) {
-            // Cleanup Photos from storage
-            foreach ($story->photos as $photo) {
-                Storage::disk('public')->delete($photo->file_path);
-                $photo->delete();
-            }
-
-            // Cleanup Documents from storage
-            foreach ($story->documents as $doc) {
-                Storage::disk('public')->delete($doc->file_path);
-                $doc->delete();
-            }
+            // Note: Since you have SoftDeletes, we usually don't delete files here.
+            // We only delete files if we 'forceDelete()'. 
+            // But if you want them gone immediately:
+            $this->cleanupFiles($story);
             
             $story->delete();
             return redirect()->route('admin.stories.index')->with('success', 'Story removed successfully.');
         });
     }
 
-    protected function validateStory(Request $request, $id = null)
+    protected function validateStory(Request $request)
     {
         return $request->validate([
             'title'       => 'required|string|max:255',
@@ -119,7 +88,6 @@ class StoryController extends Controller
 
     protected function handleFileUploads(Request $request, Story $story)
     {
-        // Handle Multiple Photos (Gallery)
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $index => $file) {
                 $path = $file->store('stories/photos', 'public');
@@ -134,7 +102,6 @@ class StoryController extends Controller
             }
         }
 
-        // Handle Documents (PDFs/Files)
         if ($request->hasFile('documents')) {
             foreach ($request->file('documents') as $file) {
                 $path = $file->store('stories/documents', 'public');
@@ -147,6 +114,18 @@ class StoryController extends Controller
                     'uploaded_by' => Auth::id(),
                 ]);
             }
+        }
+    }
+
+    private function cleanupFiles(Story $story)
+    {
+        foreach ($story->photos as $photo) {
+            Storage::disk('public')->delete($photo->file_path);
+            $photo->delete();
+        }
+        foreach ($story->documents as $doc) {
+            Storage::disk('public')->delete($doc->file_path);
+            $doc->delete();
         }
     }
 }
