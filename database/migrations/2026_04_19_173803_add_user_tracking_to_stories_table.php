@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('stories', function (Blueprint $table) {
             // Adding tracking columns
-
+            $table->foreignId('cause_id')->nullable()->after('organization_id')->constrained('causes')->onDelete('set null');
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
         });
@@ -26,11 +26,10 @@ return new class extends Migration
     {
         Schema::table('stories', function (Blueprint $table) {
             // 1. Drop foreign key constraints first
-            // $table->dropForeign(['created_by']);
-            // $table->dropForeign(['updated_by']);
+            $table->dropForeign(['created_by', 'updated_by', 'cause_id']);
             
             // 2. Then drop the columns
-            $table->dropColumn(['created_by', 'updated_by']);
+            $table->dropColumn(['created_by', 'updated_by', 'cause_id']);
         });
     }
 };
