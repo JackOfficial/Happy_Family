@@ -5,24 +5,34 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\MorphMany; // Added this import
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 class Event extends Model
 {
     use HasFactory, SoftDeletes;
 
-  protected $fillable = [
-    'organization_id', 'title', 'slug', 'description', 
-    'location', 'date', 'time', 'link', 'status',
-    'created_by', 'updated_by' // Added user tracking
-];
-    
+    protected $fillable = [
+        'organization_id', 
+        'cause_id', // Added from migration
+        'title', 
+        'slug', 
+        'description', 
+        'location', 
+        'date', 
+        'time', 
+        'link', 
+        'status',
+        'created_by', 
+        'updated_by'
+    ];
+
     protected $casts = [
         'date' => 'date',
         'time' => 'datetime:H:i',
     ];
-    
+
     /**
      * The "booted" method of the model.
      */
@@ -36,19 +46,64 @@ class Event extends Model
         });
 
         // Cleanup related assets on deletion
+        // Note: With SoftDeletes, these will only be "hidden" unless force-deleted.
         static::deleting(function ($event) {
-            $event->event_photos()->delete();
-            $event->documents()->delete(); // Also cleanup documents
+            if ($event->isForceDeleting()) {
+                $event->photos()->delete();
+                $event->documents()->delete();
+            }
         });
     }
 
-    public function creator() {
-    return $this->belongsTo(User::class, 'created_by');
-}
+    /**
+     * Relationships
+     */
+
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function cause(): BelongsTo
+    {
+        return $this->belongsTo(Cause::class);
+    }
+
+    public function creator(): BelongsTo 
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updater(): BelongsTo 
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 
     /**
-     * Generate a unique slug based on the title.
+     * Polymorphic Relationships
+     * Using 'imageable' and 'documentable' to match your Photo/Document morphs
      */
+
+    public function photos(): MorphMany
+    {
+        return $this->morphMany(Photo::class, 'imageable');
+    }
+
+    // Helper for a single featured photo
+    public function featuredPhoto()
+    {
+        return $this->morphOne(Photo::class, 'imageable')->where('is_featured', true);
+    }
+
+    public function documents(): MorphMany
+    {
+        return $this->morphMany(Document::class, 'documentable');
+    }
+
+    /**
+     * Logic Helpers
+     */
+
     private static function generateUniqueSlug($title)
     {
         $slug = Str::slug($title);
@@ -62,30 +117,6 @@ class Event extends Model
         return $slug;
     }
 
-    public function organization() 
-    {
-        return $this->belongsTo(Organization::class);
-    }
-
-    /**
-     * Get all event photos.
-     */
-    public function event_photos(): MorphMany
-    {
-        return $this->morphMany(Photo::class, 'imageable');
-    }
-
-    /**
-     * Get all event related documents (PDFs, Reports, etc).
-     */
-    public function documents(): MorphMany
-    {
-        return $this->morphMany(Document::class, 'documentable');
-    }
-
-    /**
-     * Use 'slug' instead of 'id' for Route Model Binding.
-     */
     public function getRouteKeyName()
     {
         return 'slug';

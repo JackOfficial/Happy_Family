@@ -6,31 +6,32 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
-    {
-       Schema::create('events', function (Blueprint $table) {
-        $table->id(); 
-        $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
-        $table->string('title'); 
-        $table->longText('description')->nullable();
-        $table->string('location')->nullable();
-        $table->date('date')->nullable();
-        $table->time('time')->nullable();
-        $table->string('link')->nullable(); 
-        $table->string('status')->default('active'); 
-        $table->timestamps();
-        $table->softDeletes();
-      });
-    }
+   public function up(): void
+{
+    Schema::table('events', function (Blueprint $table) {
+        // Add the cause relation
+        $table->foreignId('cause_id')
+              ->nullable()
+              ->after('id') // Optional: keeps the DB organized
+              ->constrained('causes')
+              ->onDelete('set null');
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('events');
-    }
+        // Add user tracking columns
+        $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
+        $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
+    });
+}
+
+public function down(): void
+{
+    Schema::table('events', function (Blueprint $table) {
+        // Drop foreign keys first to avoid integrity constraint errors
+        $table->dropForeign(['cause_id']);
+        $table->dropForeign(['created_by']);
+        $table->dropForeign(['updated_by']);
+
+        // Then drop the columns
+        $table->dropColumn(['cause_id', 'created_by', 'updated_by']);
+    });
+}
 };
