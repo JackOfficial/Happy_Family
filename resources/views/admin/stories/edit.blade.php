@@ -2,6 +2,26 @@
 @section('title', 'HFRO | Edit Story')
 
 @section('content')
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2 align-items-center">
+            <div class="col-sm-6">
+                <h1 class="font-weight-bold text-dark">
+                    <i class="fas fa-edit mr-2 text-muted"></i>Edit Story
+                </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right bg-transparent border-0 m-0 p-0">
+                    <li class="breadcrumb-item"><a href="/admin" class="text-primary">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.stories.index') }}" class="text-primary">Stories</a></li>
+                    <li class="breadcrumb-item active text-muted">Edit Post</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section class="content" x-data="storyManager()">
     <form method="POST" action="{{ route('admin.stories.update', $story->slug) }}" enctype="multipart/form-data">
         @csrf
