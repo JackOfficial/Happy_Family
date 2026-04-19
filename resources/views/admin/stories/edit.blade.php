@@ -20,7 +20,6 @@
 </section>
 
 <section class="content">
-    {{-- Notice: Using $story->slug for the route to match your model's RouteKey --}}
     <form method="POST" action="{{ route('admin.stories.update', $story->slug) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
@@ -36,6 +35,22 @@
                                 class="form-control form-control-lg @error('title') is-invalid @enderror" 
                                 placeholder="Enter title..." required>
                             @error('title')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        {{-- Added Cause Selector --}}
+                        <div class="form-group">
+                            <label for="cause_id" class="font-weight-bold text-muted small">ASSIGNED CAUSE</label>
+                            <select name="cause_id" id="cause_id" class="form-control select2 @error('cause_id') is-invalid @enderror">
+                                <option value="">-- No Specific Cause --</option>
+                                @foreach($causes as $cause)
+                                    <option value="{{ $cause->id }}" {{ (old('cause_id', $story->cause_id) == $cause->id) ? 'selected' : '' }}>
+                                        {{ $cause->title }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('cause_id')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
@@ -59,11 +74,37 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- PHOTO GALLERY SECTION --}}
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white">
+                        <h3 class="card-title font-weight-bold text-muted small text-uppercase">Current Photo Gallery</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @forelse($story->photos as $photo)
+                                <div class="col-md-3 col-6 mb-3">
+                                    <div class="position-relative rounded border p-1 shadow-sm">
+                                        <img src="{{ asset('storage/' . $photo->file_path) }}" 
+                                             class="img-fluid rounded" 
+                                             style="height: 100px; width: 100%; object-fit: cover;">
+                                        @if($photo->is_featured)
+                                            <span class="badge badge-success position-absolute" style="top: 10px; left: 10px;">Featured</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="col-12 text-center py-3 text-muted">
+                                    No photos uploaded yet for this story.
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {{-- RIGHT COLUMN: Status & Media --}}
             <div class="col-md-4">
-                {{-- ACTIONS --}}
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white">
                         <h3 class="card-title font-weight-bold text-muted small text-uppercase">Publishing</h3>
@@ -87,43 +128,45 @@
                     </div>
                 </div>
 
-                {{-- FEATURED IMAGE --}}
-                <div class="card shadow-sm border-0" x-data="{ photoPreview: null }">
+                {{-- UPLOAD NEW IMAGES --}}
+                <div class="card shadow-sm border-0">
                     <div class="card-header bg-white">
-                        <h3 class="card-title font-weight-bold text-muted small text-uppercase">Featured Image</h3>
+                        <h3 class="card-title font-weight-bold text-muted small text-uppercase">Add More Photos</h3>
                     </div>
                     <div class="card-body">
-                        {{-- Show Current Image --}}
-                        <div class="mb-3 text-center">
-                            <label class="d-block text-left small text-muted">Current Photo:</label>
-                            @if($story->photo)
-                                <img src="{{ asset('storage/' . $story->photo->file_path) }}" 
-                                     class="img-fluid rounded border shadow-sm mb-2" 
-                                     style="max-height: 150px; width: 100%; object-fit: cover;">
-                            @else
-                                <div class="bg-light py-4 rounded border text-muted small">No photo uploaded</div>
-                            @endif
-                        </div>
-
-                        {{-- Upload New Image --}}
                         <div class="form-group mb-0">
-                            <label class="small text-muted">Upload New (Optional):</label>
+                            <label class="small text-muted">Select Images (Optional):</label>
                             <div class="custom-file">
-                                <input type="file" name="photo" id="photo" class="custom-file-input" accept="image/*"
-                                    @change="photoPreview = URL.createObjectURL($event.target.files[0])">
-                                <label class="custom-file-label" for="photo">Browse...</label>
+                                {{-- Changed name to photos[] to match controller expectations --}}
+                                <input type="file" name="photos[]" id="photos" class="custom-file-input" accept="image/*" multiple>
+                                <label class="custom-file-label" for="photos">Choose files...</label>
                             </div>
-
-                            {{-- Alpine Preview for New Upload --}}
-                            <template x-if="photoPreview">
-                                <div class="mt-3 text-center">
-                                    <label class="d-block text-left small text-success">New Photo Preview:</label>
-                                    <img :src="photoPreview" class="img-fluid rounded shadow-sm border-success border">
-                                </div>
-                            </template>
-                            @error('photo')
+                            <p class="x-small text-muted mt-2 mb-0">You can select multiple images to add to the gallery.</p>
+                            @error('photos.*')
                                 <span class="text-danger small mt-2 d-block">{{ $message }}</span>
                             @enderror
+                        </div>
+                    </div>
+                </div>
+
+                {{-- DOCUMENTS SECTION --}}
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white">
+                        <h3 class="card-title font-weight-bold text-muted small text-uppercase">Documents</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            @foreach($story->documents as $doc)
+                                <li class="list-group-item d-flex justify-content-between align-items-center small">
+                                    <span class="text-truncate" style="max-width: 150px;">{{ $doc->title }}</span>
+                                    <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="text-info">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                        <div class="p-3 border-top">
+                            <input type="file" name="documents[]" class="form-control-file small" multiple>
                         </div>
                     </div>
                 </div>
