@@ -167,6 +167,12 @@ class StoryController extends Controller
         }
     }
 
+    public function show(Story $story)
+{
+    $story->load(['photos', 'documents', 'cause', 'user']);
+    return view('admin.stories.show', compact('story'));
+}
+
     private function cleanupFiles(Story $story)
     {
         foreach ($story->photos as $photo) {
