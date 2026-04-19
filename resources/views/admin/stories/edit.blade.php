@@ -41,12 +41,12 @@
 
                         {{-- Added Cause Selector --}}
                         <div class="form-group">
-                            <label for="cause_id" class="font-weight-bold text-muted small">ASSIGNED CAUSE</label>
+                            <label for="cause_id" class="font-weight-bold text-muted small">Impact</label>
                             <select name="cause_id" id="cause_id" class="form-control select2 @error('cause_id') is-invalid @enderror">
                                 <option value="">-- No Specific Cause --</option>
                                 @foreach($causes as $cause)
                                     <option value="{{ $cause->id }}" {{ (old('cause_id', $story->cause_id) == $cause->id) ? 'selected' : '' }}>
-                                        {{ $cause->title }}
+                                        {{ $cause->name }}
                                     </option>
                                 @endforeach
                             </select>
