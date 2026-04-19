@@ -8,7 +8,7 @@
             <div class="col-sm-6">
                 <h1 class="font-weight-bold">
                     <i class="far fa-calendar-alt mr-2 text-primary"></i>Events 
-                    <span class="badge badge-pill badge-light border ml-2 text-muted" style="font-size: 0.5em;">{{ $events->count() }} Total</span>
+                    <span class="badge badge-pill badge-light border ml-2 text-muted" style="font-size: 0.5em;">{{ $events->total() }} Total</span>
                 </h1>
             </div>
             <div class="col-sm-6 text-right">
@@ -22,12 +22,10 @@
 
 <section class="content" x-data="{ 
     search: '',
-    visibleCount: {{ $events->count() }},
     filterRow(el) {
         let content = el.innerText.toLowerCase();
         let query = this.search.toLowerCase();
-        let match = content.includes(query);
-        return match;
+        return content.includes(query);
     }
 }">
     <div class="container-fluid">
@@ -41,7 +39,6 @@
         @endif
 
         <div class="card shadow-sm border-0">
-            {{-- Alpine Search Bar --}}
             <div class="card-header bg-white border-0 pt-3">
                 <div class="row justify-content-between align-items-center">
                     <div class="col-md-4">
@@ -70,6 +67,7 @@
                             <tr>
                                 <th class="border-top-0 pl-4" style="width: 50px;">#</th>
                                 <th class="border-top-0">Event Details</th>
+                                <th class="border-top-0">Cause</th>
                                 <th class="border-top-0">Schedule</th>
                                 <th class="border-top-0">Location</th>
                                 <th class="border-top-0">Assets</th>
@@ -83,12 +81,12 @@
                                     x-transition:enter="transition ease-out duration-200"
                                     x-transition:enter-start="opacity-0"
                                     x-transition:enter-end="opacity-100">
-                                    <td class="pl-4 text-muted small">{{ $loop->iteration }}</td>
+                                    <td class="pl-4 text-muted small">{{ ($events->currentPage()-1) * $events->perPage() + $loop->iteration }}</td>
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div class="mr-3">
-                                                @if($event->event_photos->count() > 0)
-                                                    <img src="{{ asset('storage/' . $event->event_photos->first()->file_path) }}" 
+                                                @if($event->photos->count() > 0)
+                                                    <img src="{{ asset('storage/' . $event->photos->first()->file_path) }}" 
                                                          class="rounded border shadow-xs" style="width: 42px; height: 42px; object-fit: cover;">
                                                 @else
                                                     <div class="bg-light rounded d-flex align-items-center justify-content-center border" style="width: 42px; height: 42px;">
@@ -103,6 +101,11 @@
                                         </div>
                                     </td>
                                     <td>
+                                        <span class="badge badge-light border text-muted">
+                                            {{ $event->cause->name ?? 'Uncategorized' }}
+                                        </span>
+                                    </td>
+                                    <td>
                                         <div class="small font-weight-bold text-dark"><i class="far fa-calendar-alt text-primary mr-1"></i> {{ $event->date ? $event->date->format('M d, Y') : 'TBD' }}</div>
                                         <div class="small text-muted mt-1"><i class="far fa-clock mr-1"></i> {{ $event->time ?? '--:--' }}</div>
                                     </td>
@@ -114,7 +117,7 @@
                                     <td>
                                         <div class="d-flex flex-column" style="gap: 4px;">
                                             <span class="badge badge-pill badge-light border text-info px-2 py-1" style="font-size: 0.7rem;">
-                                                <i class="far fa-images mr-1"></i> {{ $event->event_photos->count() }} Photos
+                                                <i class="far fa-images mr-1"></i> {{ $event->photos->count() }} Photos
                                             </span>
                                             @if($event->documents->count() > 0)
                                                 <span class="badge badge-pill badge-light border text-dark px-2 py-1" style="font-size: 0.7rem;">
@@ -138,32 +141,25 @@
                                         </span>
                                     </td>
                                     <td class="pr-4 text-center">
-                                       <td class="pr-4 text-center">
-    <div class="btn-group border rounded shadow-sm overflow-hidden bg-white">
-        {{-- View/Show Button --}}
-        <a href="{{ route('admin.events.show', $event->slug) }}" class="btn btn-white btn-sm px-3 border-0" title="View Details">
-            <i class="fas fa-eye text-primary"></i>
-        </a>
-        
-        {{-- Edit Button --}}
-        <a href="{{ route('admin.events.edit', $event->slug) }}" class="btn btn-white btn-sm px-3 border-0 border-left" title="Edit Event">
-            <i class="fas fa-pencil-alt text-info"></i>
-        </a>
-        
-        {{-- Delete Button --}}
-        <form action="{{ route('admin.events.destroy', $event->slug) }}" method="POST" class="d-inline m-0">
-            @csrf @method('DELETE')
-            <button type="button" class="btn btn-white btn-sm delete-btn px-3 border-0 border-left" title="Delete Event">
-                <i class="fas fa-trash text-danger"></i>
-            </button>
-        </form>
-    </div>
-</td>
+                                        <div class="btn-group border rounded shadow-sm overflow-hidden bg-white">
+                                            <a href="{{ route('admin.events.show', $event->slug) }}" class="btn btn-white btn-sm px-3 border-0" title="View Details">
+                                                <i class="fas fa-eye text-primary"></i>
+                                            </a>
+                                            <a href="{{ route('admin.events.edit', $event->slug) }}" class="btn btn-white btn-sm px-3 border-0 border-left" title="Edit Event">
+                                                <i class="fas fa-pencil-alt text-info"></i>
+                                            </a>
+                                            <form action="{{ route('admin.events.destroy', $event->slug) }}" method="POST" class="d-inline m-0 p-0">
+                                                @csrf @method('DELETE')
+                                                <button type="button" class="btn btn-white btn-sm delete-btn px-3 border-0 border-left" title="Delete Event">
+                                                    <i class="fas fa-trash text-danger"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center py-5">
+                                    <td colspan="8" class="text-center py-5">
                                         <i class="fas fa-folder-open fa-3x text-light mb-3"></i>
                                         <p class="text-muted">No events found in the database.</p>
                                     </td>
@@ -174,16 +170,11 @@
                 </div>
             </div>
             
-            {{-- Alpine Search Empty State --}}
-            <div x-show="search.length > 0 && $el.closest('.card').querySelectorAll('tbody tr[style*=\'display: none\']').length === {{ $events->count() }}" 
-                 class="text-center py-5 bg-white border-top" x-cloak>
-                <div class="py-3">
-                    <i class="fas fa-search fa-3x text-light mb-3"></i>
-                    <h5 class="text-dark">No matches found</h5>
-                    <p class="text-muted">No events match your search "<span x-text="search" class="font-weight-bold"></span>"</p>
-                    <button @click="search = ''" class="btn btn-sm btn-outline-primary rounded-pill px-3">Clear Search</button>
+            @if($events->hasPages())
+                <div class="card-footer bg-white border-top">
+                    {{ $events->links() }}
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 </section>
@@ -207,23 +198,3 @@
     .rounded-pill { border-radius: 50px !important; }
 </style>
 @endsection
-
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    $(document).on('click', '.delete-btn', function() {
-        let form = $(this).closest('form');
-        Swal.fire({
-            title: 'Confirm Deletion',
-            text: "This will permanently delete this event and all associated files.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#e3342f',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) form.submit();
-        });
-    });
-</script>
-@endpush
