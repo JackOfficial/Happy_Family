@@ -24,15 +24,12 @@ class StoryController extends Controller
     }
 
     public function edit(Story $story)
-{
-    // We fetch all causes so the user can change the category if needed
-    $causes = Cause::all();
-    
-    // Eager load photos and documents to show them in the edit form
-    $story->load(['photos', 'documents']);
+    {
+        $causes = Cause::all();
+        $story->load(['photos', 'documents']);
 
-    return view('admin.stories.edit', compact('story', 'causes'));
-}
+        return view('admin.stories.edit', compact('story', 'causes'));
+    }
 
     public function store(Request $request)
     {
@@ -41,9 +38,8 @@ class StoryController extends Controller
         return DB::transaction(function () use ($request, $validated) {
             $organization = Organization::first();
 
-            // Slugs are now handled automatically by the Story Model boot method!
             $story = Story::create([
-                ...$validated, // PHP 8.x spread operator for cleaner code
+                ...$validated,
                 'organization_id' => $organization?->id,
                 'user_id'         => Auth::id(),
                 'created_by'      => Auth::id(),
@@ -60,11 +56,22 @@ class StoryController extends Controller
         $validated = $this->validateStory($request);
 
         return DB::transaction(function () use ($request, $story, $validated) {
+            // 1. Update basic fields
             $story->update([
                 ...$validated,
                 'updated_by' => Auth::id(),
             ]);
 
+            // 2. Process removals (Photos & Documents)
+            $this->processRemovals($request, $story);
+
+            // 3. Update Featured Photo ID
+            if ($request->filled('featured_photo_id')) {
+                $story->photos()->update(['is_featured' => false]);
+                $story->photos()->where('id', $request->featured_photo_id)->update(['is_featured' => true]);
+            }
+
+            // 4. Handle new uploads
             $this->handleFileUploads($request, $story);
 
             return redirect()->route('admin.stories.index')->with('success', 'Story updated successfully.');
@@ -74,27 +81,53 @@ class StoryController extends Controller
     public function destroy(Story $story)
     {
         return DB::transaction(function () use ($story) {
-            // Note: Since you have SoftDeletes, we usually don't delete files here.
-            // We only delete files if we 'forceDelete()'. 
-            // But if you want them gone immediately:
             $this->cleanupFiles($story);
-            
             $story->delete();
             return redirect()->route('admin.stories.index')->with('success', 'Story removed successfully.');
         });
     }
 
+    /**
+     * Centralized validation for both Store and Update
+     */
     protected function validateStory(Request $request)
     {
         return $request->validate([
-            'title'       => 'required|string|max:255',
-            'cause_id'    => 'nullable|exists:causes,id',
-            'summary'     => 'nullable|string|max:500',
-            'content'     => 'required|string',
-            'status'      => 'required|in:draft,published,archived',
-            'photos.*'    => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
-            'documents.*' => 'nullable|file|mimes:pdf,doc,docx,txt|max:10240',
+            'title'             => 'required|string|max:255',
+            'cause_id'          => 'nullable|exists:causes,id',
+            'summary'           => 'nullable|string|max:500',
+            'content'           => 'required|string',
+            'status'            => 'required|in:draft,published,archived',
+            'photos.*'          => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'documents.*'       => 'nullable|file|mimes:pdf,doc,docx,txt|max:10240',
+            'remove_photos'     => 'nullable|array',
+            'remove_documents'  => 'nullable|array',
+            'featured_photo_id' => 'nullable|integer',
         ]);
+    }
+
+    /**
+     * Syncs the database and filesystem with Alpine.js removal requests
+     */
+    protected function processRemovals(Request $request, Story $story)
+    {
+        // Remove Documents
+        if ($request->has('remove_documents')) {
+            $docs = Document::whereIn('id', $request->remove_documents)->where('story_id', $story->id)->get();
+            foreach ($docs as $doc) {
+                Storage::disk('public')->delete($doc->file_path);
+                $doc->delete();
+            }
+        }
+
+        // Remove Photos
+        if ($request->has('remove_photos')) {
+            $photos = Photo::whereIn('id', $request->remove_photos)->where('story_id', $story->id)->get();
+            foreach ($photos as $photo) {
+                Storage::disk('public')->delete($photo->file_path);
+                $photo->delete();
+            }
+        }
     }
 
     protected function handleFileUploads(Request $request, Story $story)
@@ -108,7 +141,8 @@ class StoryController extends Controller
                     'file_type'   => $file->getClientOriginalExtension(),
                     'file_size'   => $file->getSize(),
                     'caption'     => $story->title,
-                    'is_featured' => ($index == 0 && !$story->photos()->where('is_featured', true)->exists()),
+                    // Only set as featured if no featured photo exists yet
+                    'is_featured' => !$story->photos()->where('is_featured', true)->exists(),
                 ]);
             }
         }
