@@ -187,13 +187,21 @@ public function index()
         return view('stories', compact('stories')); 
     }
 
-    function story($id){
-         $story = stories::join('bloggers', 'stories.blogger_id', 'bloggers.id')
-        ->where('stories.id', $id)
-        ->select('stories.*', 'bloggers.first_name', 'bloggers.last_name')
-        ->first();
-        return view('story', compact('story'));  
-    }
+  public function story($slug)
+{
+    $story = Story::with([
+        'user',              // Replacing manual join on bloggers
+        'cause',             // To show the category/tag
+        'photos',            // All polymorphic photos
+        'documents',         // All polymorphic documents
+        'featuredPhoto'      // Specifically for the header/main image
+    ])
+    ->where('slug', $slug)
+    ->where('status', 'published') // Ensure users can't see drafts
+    ->firstOrFail();               // Returns 404 if not found
+
+    return view('story', compact('story'));  
+}
     
     function causes(){
         $causes = Cause::with('mainPhoto')->latest()->get(); 
