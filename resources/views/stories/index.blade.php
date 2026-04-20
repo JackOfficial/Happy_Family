@@ -78,7 +78,7 @@
             <div class="col-lg-10">
                 <h2 class="display-5 mb-3">Together, we can make a difference.</h2>
                 <p class="lead mb-4">We rely on the support and generosity of individuals like you to continue our life-changing work. Whether through donations or volunteering, your help transforms communities.</p>
-                <a href="{{ route('contact') }}" class="btn btn-primary btn-lg rounded-pill px-5 shadow">Get Involved</a>
+                <a href="{{ route('contact.index') }}" class="btn btn-primary btn-lg rounded-pill px-5 shadow">Get Involved</a>
             </div>
         </div>
     </div>
