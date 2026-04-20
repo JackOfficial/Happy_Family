@@ -30,6 +30,7 @@ use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\Admin\ApplicationsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Admin\OrganizationController;
+use App\Http\Controllers\CauseController as Causes;
 use App\Http\Controllers\EventController as Events;
 use App\Http\Controllers\ProjectController as Projects;
 use App\Http\Controllers\StoryController as Stories;
@@ -46,6 +47,11 @@ Route::get('/blogs', [PageController::class, 'blogs']);
 Route::get('/blog/{title}', [PageController::class, 'blog']);
 Route::get('/blogs/{id}', [PageController::class, 'blog_category']);
 
+Route::controller(Causes::class)->group(function () {
+    Route::get('/causes', 'index')->name('causes.index');
+    Route::get('/cause/{slug}', 'show')->name('causes.show');
+});
+
 Route::controller(Projects::class)->group(function () {
     Route::get('/projects', 'index')->name('projects.index');
     Route::get('/project/{project:slug}', 'show')->name('projects.show');
@@ -61,7 +67,6 @@ Route::controller(Events::class)->group(function () {
     Route::get('/events/{slug}', 'show')->name('events.show');
 });
 
-Route::get('/causes', [PageController::class, 'causes']);
 Route::get('/cause/{id}', [PageController::class, 'cause']);
 Route::get('/donate', [PageController::class, 'donate']);
 Route::get('/volunteer', [PageController::class, 'volunteer']);

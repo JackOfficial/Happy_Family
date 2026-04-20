@@ -175,9 +175,9 @@
                             </div>
                         </div>
 
-                        <a href="/cause/{{ $cause->id }}" class="link-learn-more">
-                            Learn More <i class="fas fa-arrow-right ml-1"></i>
-                        </a>
+                        <a href="{{ route('causes.show', $cause->slug) }}" class="link-learn-more">
+    Learn More <i class="fas fa-arrow-right ml-1"></i>
+</a>
                     </div>
                 </div>
             </div>   
@@ -185,7 +185,7 @@
 
             <div class="col-12 mt-5">
                 <div class="text-center">
-                    <a class="btn-modern-purple py-3 px-5 shadow-sm" href="/causes">
+                    <a class="btn-modern-purple py-3 px-5 shadow-sm" href="{{ route('causes.index') }}">
                         Explore All Impacts
                     </a>
                 </div>
