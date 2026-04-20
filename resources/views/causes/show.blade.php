@@ -70,7 +70,7 @@
             @foreach($cause->projects as $project)
             <div class="col-md-6">
                 {{-- Wrapped in a link with a 'project-card' class for styling --}}
-                <a href="{{ route('projects.show', $project->id) }}" class="text-decoration-none project-card d-block h-100">
+                <a href="{{ route('projects.show', $project->slug) }}" class="text-decoration-none project-card d-block h-100">
                     <div class="d-flex align-items-center p-4 bg-white shadow-sm rounded-4 border-start border-primary border-4 h-100">
                         <div class="flex-grow-1">
                             <h4 class="fw-bold mb-1 text-dark">{{ $project->name }}</h4>
