@@ -117,7 +117,7 @@ class EventController extends Controller
             'date'              => 'nullable|date',
             'time'              => 'nullable',
             'link'              => 'nullable|url',
-            'status'            => 'required|string|in:active,inactive',
+            'status'            => 'required|string',
             'photos.*'          => 'nullable|image|max:5120',
             'documents.*'       => 'nullable|mimes:pdf,doc,docx,zip,xlsx|max:10240',
             'remove_photos'     => 'nullable|array',
