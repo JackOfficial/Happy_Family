@@ -59,7 +59,7 @@
         </div>
     </div>
 
-    {{-- Projects Section --}}
+{{-- Projects Section --}}
     @if($cause->projects->count() > 0)
     <div class="mt-5 pt-5">
         <div class="mb-5">
@@ -69,12 +69,18 @@
         <div class="row g-4">
             @foreach($cause->projects as $project)
             <div class="col-md-6">
-                <div class="d-flex align-items-center p-4 bg-white shadow-sm rounded-4 border-start border-primary border-4 h-100">
-                    <div class="flex-grow-1">
-                        <h4 class="fw-bold mb-1">{{ $project->name }}</h4>
-                        <p class="text-muted small mb-0">{{ Str::limit(strip_tags($project->description), 120) }}</p>
+                {{-- Wrapped in a link with a 'project-card' class for styling --}}
+                <a href="{{ route('projects.show', $project->id) }}" class="text-decoration-none project-card d-block h-100">
+                    <div class="d-flex align-items-center p-4 bg-white shadow-sm rounded-4 border-start border-primary border-4 h-100">
+                        <div class="flex-grow-1">
+                            <h4 class="fw-bold mb-1 text-dark">{{ $project->name }}</h4>
+                            <p class="text-muted small mb-0">{{ Str::limit(strip_tags($project->description), 120) }}</p>
+                        </div>
+                        <div class="ms-3 text-primary opacity-50">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
             @endforeach
         </div>
