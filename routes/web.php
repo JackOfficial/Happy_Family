@@ -30,7 +30,9 @@ use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\Admin\ApplicationsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Admin\OrganizationController;
+use App\Http\Controllers\EventController as Events;
 use App\Http\Controllers\ProjectController as Projects;
+use App\Http\Controllers\StoryController as Stories;
 
 //Guest routes
 // Route::get('/', function() {
@@ -44,17 +46,26 @@ Route::get('/blogs', [PageController::class, 'blogs']);
 Route::get('/blog/{title}', [PageController::class, 'blog']);
 Route::get('/blogs/{id}', [PageController::class, 'blog_category']);
 
-Route::get('/projects', [Projects::class, 'index'])->name('projects.index');
-Route::get('/project/{project:slug}', [Projects::class, 'show'])->name('projects.show');
+Route::controller(Projects::class)->group(function () {
+    Route::get('/projects', 'index')->name('projects.index');
+    Route::get('/project/{project:slug}', 'show')->name('projects.show');
+});
 
-Route::get('/stories', [PageController::class, 'stories']);
-Route::get('/story/{id}', [PageController::class, 'story']);
+Route::controller(Stories::class)->group(function () {
+    Route::get('/stories', 'index')->name('stories.index');
+    Route::get('/stories/{slug}', 'show')->name('stories.show');
+});
+
+Route::controller(Events::class)->group(function () {
+    Route::get('/events', 'index')->name('events.index');
+    Route::get('/events/{slug}', 'show')->name('events.show');
+});
+
 Route::get('/causes', [PageController::class, 'causes']);
 Route::get('/cause/{id}', [PageController::class, 'cause']);
 Route::get('/donate', [PageController::class, 'donate']);
 Route::get('/volunteer', [PageController::class, 'volunteer']);
-Route::get('/events', [PageController::class, 'events']);
-Route::get('/events/{slug}', [PageController::class, 'event'])->name('events.show');
+
 Route::get('/application-sent', [PageController::class, 'application_sent']);
 Route::get('blogs/search/{keyword}', [PageController::class, 'search']);
 Route::resource('contact', ContactController::class);

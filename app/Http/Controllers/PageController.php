@@ -40,7 +40,11 @@ public function index()
         ->get();
 
     // 4. Other Sections
-    $events = Event::latest()->take(3)->get();
+    $events = Event::with(['photos']) // Eager load photos for the thumbnails
+    ->whereIn('status', ['upcoming', 'ongoing']) 
+    ->latest()
+    ->take(3)
+    ->get();
     
     // Updated 'causes' to match the plural relationship if you updated that model too
     $causes = Cause::with('mainPhoto')->latest()->take(4)->get(); 
@@ -210,17 +214,6 @@ public function index()
 
     function application_sent(){
         return Inertia::render('ApplicationSent');  
-    }
-
-    function events(){
-        $upcomingEvents = Events::where('date', '>=', date('Y-m-d'))->get();
-        $passedEvents = Events::where('date', '<', date('Y-m-d'))->get();
-        return view('events', compact('upcomingEvents', 'passedEvents'));  
-    }
-
-    function show($event){
-        $event = Events::where('event', $event)->first();
-        return view('event', compact('event'));  
     }
     
 }

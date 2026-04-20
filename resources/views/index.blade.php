@@ -248,7 +248,7 @@
 </div>
 
         <div class="col-12 text-center mt-5">
-            <a href="/stories" class="btn-modern-purple py-3 px-5">
+            <a href="{{ route('stories.index') }}" class="btn-modern-purple py-3 px-5">
                 Explore More Stories <i class="fas fa-arrow-right ms-2"></i>
             </a>
         </div>
@@ -422,8 +422,7 @@
     </div>
 </div>
 
-        <!-- Events Start -->
-    <div class="container-fluid event py-5 impact-section {{ $events->count() > 0 ? '' : 'd-none' }}">
+<div class="container-fluid event py-5 impact-section {{ $events->count() > 0 ? '' : 'd-none' }}">
     <div class="container py-5">
         <div class="text-center mx-auto mb-5" style="max-width: 800px;">
             <h5 class="brand-subtitle-centered mb-2">Upcoming Events</h5>
@@ -434,68 +433,82 @@
             </p>
         </div>
 
-       <div 
-    x-data="{}" 
-    x-init="
-        $(document).ready(function(){
-            $('.event-carousel').owlCarousel({
-                loop: true,
-                margin: 10,
-                nav: true,
-                dots: true,
-                autoplay: true,
-                responsive:{
-                    0:{ items:1 },
-                    600:{ items:2 },
-                    1000:{ items:3 }
-                }
+        <div x-data="{}" x-init="
+            $(document).ready(function(){
+                $('.event-carousel').owlCarousel({
+                    loop: {{ $events->count() > 3 ? 'true' : 'false' }},
+                    margin: 20,
+                    nav: true,
+                    dots: true,
+                    autoplay: true,
+                    autoplayTimeout: 5000,
+                    responsive:{
+                        0:{ items:1 },
+                        600:{ items:2 },
+                        1000:{ items:3 }
+                    }
+                });
             });
-        });
-    "
-    class="event-carousel owl-carousel"
->
-    @foreach ($events as $event)
-    <div class="event-item impact-card mx-2">
-        <div class="impact-img-container">
-            {{-- Fixed photo reference --}}
-            <img src="{{ asset('storage/' . $event->event_photos->first()->file_path) }}" alt="{{ $event->event }}">
-            
-            <div class="event-date-badge">
-                <span class="day">{{ \Carbon\Carbon::parse($event->date)->format('d') }}</span>
-                <span class="month">{{ \Carbon\Carbon::parse($event->date)->format('M') }}</span>
-            </div>
+        " class="event-carousel owl-carousel">
+            @foreach ($events as $event)
+            <div class="event-item impact-card mx-2 h-100 shadow-sm">
+                <div class="impact-img-container position-relative">
+                    {{-- Status Badge --}}
+                    <div class="position-absolute" style="top: 15px; left: 15px; z-index: 10;">
+                        @if($event->status === 'ongoing')
+                            <span class="badge badge-danger px-3 py-2 shadow-sm text-uppercase" style="letter-spacing: 1px;">
+                                <i class="fas fa-circle mr-1 animate-pulse"></i> Ongoing
+                            </span>
+                        @else
+                            <span class="badge badge-primary px-3 py-2 shadow-sm text-uppercase" style="letter-spacing: 1px;">
+                                Upcoming
+                            </span>
+                        @endif
+                    </div>
 
-            <div class="impact-overlay">
-                <a href="{{ route('events.show', $event->slug ?? $event->id) }}" class="btn-impact-view">Interested</a>
-            </div>
+                    {{-- Event Image --}}
+                    @php 
+                        $firstPhoto = $event->event_photos->first(); 
+                    @endphp
+                    <img src="{{ $firstPhoto ? asset('storage/' . $firstPhoto->file_path) : asset('images/event-placeholder.jpg') }}" 
+                         alt="{{ $event->event }}" 
+                         style="height: 250px; object-fit: cover; width: 100%;">
+                    
+                    <div class="event-date-badge">
+                        <span class="day">{{ \Carbon\Carbon::parse($event->date)->format('d') }}</span>
+                        <span class="month">{{ \Carbon\Carbon::parse($event->date)->format('M') }}</span>
+                    </div>
+
+                    <div class="impact-overlay">
+                        <a href="{{ route('events.show', $event->slug ?? $event->id) }}" class="btn-impact-view">Interested</a>
+                    </div>
+                </div>
+
+                <div class="event-content p-4 d-flex flex-column" style="min-height: 280px;">
+                    <div class="d-flex align-items-center mb-3 text-muted small font-weight-bold">
+                        <span class="mr-3"><i class="fas fa-map-marker-alt text-pink mr-1"></i> {{ Str::limit($event->location, 20) }}</span>
+                        <span><i class="fas fa-clock text-pink mr-1"></i> {{ \Carbon\Carbon::parse($event->date)->format('h:i A') }}</span>
+                    </div>
+
+                    <a href="{{ route('events.show', $event->slug ?? $event->id) }}" class="impact-card-title h4 mb-3 font-weight-bold">
+                        {{ Str::limit($event->event, 45) }}
+                    </a>
+
+                    <p class="impact-text mb-4 flex-grow-1">
+                        {{ Str::limit(strip_tags($event->description), 100) }}
+                    </p>
+
+                    <div class="mt-auto">
+                        <a class="btn-modern-purple py-2 px-4 w-100 text-center" href="{{ route('events.show', $event->slug ?? $event->id) }}">
+                            View Details <i class="fas fa-chevron-right ml-2 small"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>  
+            @endforeach
         </div>
-
-        <div class="event-content p-4 d-flex flex-column h-100">
-            <div class="d-flex align-items-center mb-3 text-muted small font-weight-bold">
-                <span class="mr-3"><i class="fas fa-map-marker-alt text-pink mr-1"></i> {{ Str::limit($event->location, 20) }}</span>
-                <span><i class="fas fa-clock text-pink mr-1"></i> {{ \Carbon\Carbon::parse($event->date)->format('h:i A') }}</span>
-            </div>
-
-            <a href="{{ route('events.show', $event->slug ?? $event->id) }}" class="impact-card-title h4 mb-3">
-                {{ Str::limit($event->event, 50) }}
-            </a>
-
-            <p class="impact-text mb-4">
-                {!! Str::limit(strip_tags($event->description), 120) !!}
-            </p>
-
-            <div class="mt-auto">
-                <a class="btn-modern-purple py-2 px-4 w-100 text-center" href="{{ route('events.show', $event->slug ?? $event->id) }}">
-                    View Details <i class="fas fa-chevron-right ml-2 small"></i>
-                </a>
-            </div>
-        </div>
-    </div>  
-    @endforeach
-</div>
     </div>
 </div>
-        <!-- Events End -->
 
         <!-- Blog Start -->
         <div class="container-fluid blog py-5 mb-5 {{ $blogs->count() > 0 ? '' : 'd-none' }}">

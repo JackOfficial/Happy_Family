@@ -18,7 +18,7 @@ class ProjectController extends Controller
             ->latest()
             ->paginate(12); // Added pagination for better performance
 
-        return view('projects', compact('projects')); 
+        return view('projects.index', compact('projects')); 
     }
 
     /**
@@ -47,6 +47,6 @@ class ProjectController extends Controller
         // 3. Fetch all categories for a sidebar if needed
         $causes = Cause::all(); 
          
-        return view('project', compact('project', 'otherProjects', 'causes'));  
+        return view('projects.show', compact('project', 'otherProjects', 'causes'));  
     }
 }
