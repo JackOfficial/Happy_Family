@@ -85,6 +85,12 @@ class Story extends Model
         return $this->morphOne(Photo::class, 'imageable')->oldestOfMany();
     }
 
+// Relationship for the cover image of a story
+public function mainPhoto()
+{
+    return $this->morphOne(Photo::class, 'imageable')->latestOfMany();
+}
+
     // Polymorphic Documents
     public function documents(): MorphMany
     {
