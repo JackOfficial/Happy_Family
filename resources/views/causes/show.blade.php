@@ -4,7 +4,7 @@
 {{-- Hero Section --}}
 <div class="position-relative vh-100 d-flex align-items-center overflow-hidden" style="background: #000;">
     @php $heroPhoto = $cause->mainPhoto ?? $cause->photos->first(); @endphp
-    <img src="{{ $heroPhoto ? asset('storage/'.$heroPhoto->file_path) : asset('images/impact.jpg') }}" 
+    <img src="{{ $heroPhoto ? $heroPhoto->url : asset('images/impact.jpg') }}" 
          class="position-absolute top-0 start-0 w-100 h-100" 
          style="object-fit: cover; opacity: 0.4; filter: grayscale(20%);" alt="{{ $cause->name }}">
     
@@ -46,7 +46,6 @@
                     </div>
                     <div class="col-md-4 text-center border-start d-none d-md-block">
                         <div class="mb-4">
-                            {{-- Combined total of all impact types --}}
                             <h1 class="text-primary fw-bold mb-0">{{ $cause->events_count + $cause->stories_count + $cause->projects_count }}</h1>
                             <p class="text-uppercase tracking-widest small fw-bold text-muted">Successful Milestones</p>
                         </div>
@@ -85,11 +84,9 @@
     {{-- Events Section --}}
     @if($cause->events->count() > 0)
     <div class="mt-5 pt-5">
-        <div class="d-flex justify-content-between align-items-end mb-5">
-            <div>
-                <h5 class="text-primary text-uppercase fw-bold">Community Engagement</h5>
-                <h2 class="display-5 fw-bold">Ongoing Events</h2>
-            </div>
+        <div class="mb-5">
+            <h5 class="text-primary text-uppercase fw-bold">Community Engagement</h5>
+            <h2 class="display-5 fw-bold">Ongoing Events</h2>
         </div>
         <div class="row g-4">
             @foreach($cause->events as $event)
@@ -97,7 +94,7 @@
                 <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
                     <div class="position-relative" style="height: 200px;">
                         @php $eventPhoto = $event->photos->first(); @endphp
-                        <img src="{{ $eventPhoto ? asset('storage/'.$eventPhoto->file_path) : asset('images/impact.jpg') }}" 
+                        <img src="{{ $eventPhoto ? $eventPhoto->url : asset('images/impact.jpg') }}" 
                              class="w-100 h-100" style="object-fit: cover;" alt="{{ $event->title }}">
                         <span class="position-absolute top-0 end-0 m-3 badge bg-{{ $event->status == 'ongoing' ? 'danger' : 'primary' }}">
                             {{ strtoupper($event->status) }}
@@ -131,7 +128,7 @@
             <div class="col-lg-6">
                 <div class="card border-0 bg-dark text-white rounded-5 overflow-hidden position-relative">
                     @php $storyPhoto = $story->mainPhoto ?? $story->photos->first(); @endphp
-                    <img src="{{ $storyPhoto ? asset('storage/'.$storyPhoto->file_path) : asset('images/impact.jpg') }}" 
+                    <img src="{{ $storyPhoto ? $storyPhoto->url : asset('images/impact.jpg') }}" 
                          class="card-img opacity-50" style="height: 400px; object-fit: cover;" alt="{{ $story->title }}">
                     <div class="card-img-overlay d-flex flex-column justify-content-end p-5">
                         <h3 class="fw-bold mb-3">{{ $story->title }}</h3>
@@ -154,8 +151,8 @@
         <div class="row g-3">
             @foreach($cause->photos as $photo)
             <div class="col-6 col-md-3">
-                <a href="{{ asset('storage/'.$photo->file_path) }}" data-lightbox="cause-gallery">
-                    <img src="{{ asset('storage/'.$photo->file_path) }}" class="img-fluid rounded-4 shadow-sm gallery-img" style="height: 180px; width: 100%; object-fit: cover;">
+                <a href="{{ $photo->url }}" data-lightbox="cause-gallery">
+                    <img src="{{ $photo->url }}" class="img-fluid rounded-4 shadow-sm gallery-img" style="height: 180px; width: 100%; object-fit: cover;">
                 </a>
             </div>
             @endforeach
@@ -164,13 +161,13 @@
     @endif
 </div>
 
-{{-- Dynamic CTA --}}
+{{-- CTA --}}
 <div class="container-fluid py-5 mt-5" style="background: linear-gradient(45deg, #6f42c1, #e83e8c);">
     <div class="container text-center text-white py-5">
         <h2 class="display-4 fw-bold mb-4">Make an Impact in {{ $cause->name }}</h2>
         <p class="lead mb-5 opacity-90">Your contribution directly fuels these initiatives and transforms lives in Rwanda.</p>
         <div class="d-flex justify-content-center gap-3">
-            <a href="/donate" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold text-primary">Donate Now</a>
+            <a href="/donate" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold text-primary shadow">Donate Now</a>
             <a href="/contact" class="btn btn-outline-light btn-lg rounded-pill px-5 py-3">Inquire More</a>
         </div>
     </div>

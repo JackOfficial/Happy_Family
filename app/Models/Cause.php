@@ -18,16 +18,19 @@ class Cause extends Model
         'description',
         'status' // Active, Completed, Pending, etc.
     ];
-
+    
+    // Relationship for the full gallery
     public function photos()
-{
-    return $this->morphMany(Photo::class, 'photoable');
-}
+    {
+        return $this->morphMany(Photo::class, 'imageable');
+    }
 
-public function mainPhoto()
-{
-    return $this->morphOne(Photo::class, 'photoable')->latestOfMany();
-}
+       // Relationship for the single cover image
+    public function mainPhoto()
+    {
+        return $this->morphOne(Photo::class, 'imageable')->latestOfMany();
+    }
+    
 
     /**
      * Get all events associated with this cause.
