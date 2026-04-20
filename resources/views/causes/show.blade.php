@@ -46,7 +46,8 @@
                     </div>
                     <div class="col-md-4 text-center border-start d-none d-md-block">
                         <div class="mb-4">
-                            <h1 class="text-primary fw-bold mb-0">{{ $cause->events->count() + $cause->stories->count() }}</h1>
+                            {{-- Combined total of all impact types --}}
+                            <h1 class="text-primary fw-bold mb-0">{{ $cause->events_count + $cause->stories_count + $cause->projects_count }}</h1>
                             <p class="text-uppercase tracking-widest small fw-bold text-muted">Successful Milestones</p>
                         </div>
                         <div class="bg-light p-3 rounded-4">
@@ -59,13 +60,35 @@
         </div>
     </div>
 
-    {{-- Projects / Initiatives Section --}}
+    {{-- Projects Section --}}
+    @if($cause->projects->count() > 0)
+    <div class="mt-5 pt-5">
+        <div class="mb-5">
+            <h5 class="text-primary text-uppercase fw-bold">Long-term Impact</h5>
+            <h2 class="display-5 fw-bold">Key Projects</h2>
+        </div>
+        <div class="row g-4">
+            @foreach($cause->projects as $project)
+            <div class="col-md-6">
+                <div class="d-flex align-items-center p-4 bg-white shadow-sm rounded-4 border-start border-primary border-4 h-100">
+                    <div class="flex-grow-1">
+                        <h4 class="fw-bold mb-1">{{ $project->name }}</h4>
+                        <p class="text-muted small mb-0">{{ Str::limit(strip_tags($project->description), 120) }}</p>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
+    {{-- Events Section --}}
     @if($cause->events->count() > 0)
     <div class="mt-5 pt-5">
         <div class="d-flex justify-content-between align-items-end mb-5">
             <div>
-                <h5 class="text-primary text-uppercase fw-bold">Active Initiatives</h5>
-                <h2 class="display-5 fw-bold">Ongoing Events & Projects</h2>
+                <h5 class="text-primary text-uppercase fw-bold">Community Engagement</h5>
+                <h2 class="display-5 fw-bold">Ongoing Events</h2>
             </div>
         </div>
         <div class="row g-4">
@@ -74,7 +97,7 @@
                 <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
                     <div class="position-relative" style="height: 200px;">
                         @php $eventPhoto = $event->photos->first(); @endphp
-                        <img src="{{ $eventPhoto ? asset('storage/'.$eventPhoto->file_path) : asset('frontend/img/placeholder.jpg') }}" 
+                        <img src="{{ $eventPhoto ? asset('storage/'.$eventPhoto->file_path) : asset('images/impact.jpg') }}" 
                              class="w-100 h-100" style="object-fit: cover;" alt="{{ $event->title }}">
                         <span class="position-absolute top-0 end-0 m-3 badge bg-{{ $event->status == 'ongoing' ? 'danger' : 'primary' }}">
                             {{ strtoupper($event->status) }}
@@ -101,20 +124,20 @@
         <div class="text-center mb-5">
             <h5 class="text-primary text-uppercase fw-bold">Human Impact</h5>
             <h2 class="display-5 fw-bold">Success Stories</h2>
-            <div class="mx-auto" style="width: 60px; height: 3px; background: var(--bs-primary);"></div>
+            <div class="mx-auto" style="width: 60px; height: 3px; background: #e83e8c;"></div>
         </div>
         <div class="row g-4">
             @foreach($cause->stories as $story)
             <div class="col-lg-6">
                 <div class="card border-0 bg-dark text-white rounded-5 overflow-hidden position-relative">
                     @php $storyPhoto = $story->mainPhoto ?? $story->photos->first(); @endphp
-                    <img src="{{ $storyPhoto ? asset('storage/'.$storyPhoto->file_path) : asset('frontend/img/placeholder.jpg') }}" 
+                    <img src="{{ $storyPhoto ? asset('storage/'.$storyPhoto->file_path) : asset('images/impact.jpg') }}" 
                          class="card-img opacity-50" style="height: 400px; object-fit: cover;" alt="{{ $story->title }}">
                     <div class="card-img-overlay d-flex flex-column justify-content-end p-5">
                         <h3 class="fw-bold mb-3">{{ $story->title }}</h3>
                         <p class="opacity-90 mb-4">{{ Str::limit(strip_tags($story->content), 150) }}</p>
                         <div>
-                            <a href="{{ route('stories.show', $story->slug) }}" class="btn btn-primary rounded-pill px-4">Read Full Story</a>
+                            <a href="{{ route('stories.show', $story->slug) }}" class="btn btn-primary rounded-pill px-4 shadow">Read Full Story</a>
                         </div>
                     </div>
                 </div>
@@ -124,7 +147,7 @@
     </div>
     @endif
 
-    {{-- Gallery of Cause --}}
+    {{-- Gallery --}}
     @if($cause->photos->count() > 1)
     <div class="mt-5 pt-5">
         <h4 class="fw-bold mb-4">In the Field</h4>
@@ -132,7 +155,7 @@
             @foreach($cause->photos as $photo)
             <div class="col-6 col-md-3">
                 <a href="{{ asset('storage/'.$photo->file_path) }}" data-lightbox="cause-gallery">
-                    <img src="{{ asset('storage/'.$photo->file_path) }}" class="img-fluid rounded-4 shadow-sm" style="height: 180px; width: 100%; object-fit: cover;">
+                    <img src="{{ asset('storage/'.$photo->file_path) }}" class="img-fluid rounded-4 shadow-sm gallery-img" style="height: 180px; width: 100%; object-fit: cover;">
                 </a>
             </div>
             @endforeach
@@ -145,7 +168,7 @@
 <div class="container-fluid py-5 mt-5" style="background: linear-gradient(45deg, #6f42c1, #e83e8c);">
     <div class="container text-center text-white py-5">
         <h2 class="display-4 fw-bold mb-4">Make an Impact in {{ $cause->name }}</h2>
-        <p class="lead mb-5 opacity-90">Your contribution directly fuels these initiatives and transforms lives.</p>
+        <p class="lead mb-5 opacity-90">Your contribution directly fuels these initiatives and transforms lives in Rwanda.</p>
         <div class="d-flex justify-content-center gap-3">
             <a href="/donate" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold text-primary">Donate Now</a>
             <a href="/contact" class="btn btn-outline-light btn-lg rounded-pill px-5 py-3">Inquire More</a>
@@ -156,9 +179,11 @@
 <style>
     .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .card:hover { transform: translateY(-5px); transition: 0.3s ease; }
+    .gallery-img:hover { filter: brightness(80%); transition: 0.3s ease; cursor: pointer; }
     .btn-primary { background-color: #e83e8c; border-color: #e83e8c; }
     .btn-primary:hover { background-color: #d82a7b; border-color: #d82a7b; }
     .text-primary { color: #e83e8c !important; }
     .bg-primary { background-color: #e83e8c !important; }
+    .breadcrumb-item + .breadcrumb-item::before { color: rgba(255,255,255,0.5); }
 </style>
 @endsection

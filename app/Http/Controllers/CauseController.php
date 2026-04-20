@@ -25,26 +25,18 @@ class CauseController extends Controller
     /**
      * Display the specified cause and its related impact (Events & Stories).
      */
-   public function show($slug)
+public function show($slug)
 {
     $cause = Cause::with([
         'photos', 
         'mainPhoto', 
-        'events' => function($query) {
-            // Eager load event photos so the thumbnails work efficiently
-            $query->with('photos')->whereIn('status', ['upcoming', 'ongoing'])->latest()->take(3);
-        },
-        'stories' => function($query) {
-            // Eager load story photos/mainPhoto
-            $query->with(['mainPhoto', 'photos'])->latest()->take(3);
-        }
+        'projects' => fn($q) => $q->latest(),
+        'events' => fn($q) => $q->with('photos')->latest(),
+        'stories' => fn($q) => $q->with(['mainPhoto', 'photos'])->latest()
     ])
-    /* Add this to get accurate totals for the 'Vision' card 
-       even if we only 'take(3)' for the display list 
-    */
-    ->withCount(['events', 'stories']) 
+    ->withCount(['events', 'stories', 'projects'])
     ->where('slug', $slug)
-    ->where('status', 1) // Ensure we don't show disabled causes via URL guessing
+    ->where('status', 1)
     ->firstOrFail();
 
     return view('causes.show', compact('cause'));

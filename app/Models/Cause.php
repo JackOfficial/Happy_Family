@@ -18,12 +18,16 @@ class Cause extends Model
         'description',
         'status' // Active, Completed, Pending, etc.
     ];
-    
-    // Relationship for the full gallery
+
     public function photos()
-    {
-        return $this->morphMany(Photo::class, 'imageable');
-    }
+{
+    return $this->morphMany(Photo::class, 'photoable');
+}
+
+public function mainPhoto()
+{
+    return $this->morphOne(Photo::class, 'photoable')->latestOfMany();
+}
 
     /**
      * Get all events associated with this cause.
@@ -32,12 +36,6 @@ class Cause extends Model
     {
         // This assumes your 'events' table has a 'cause_id' column
         return $this->hasMany(Event::class);
-    }
-
-    // Relationship for the single cover image
-    public function mainPhoto()
-    {
-        return $this->morphOne(Photo::class, 'imageable')->latestOfMany();
     }
     
     public function stories()
