@@ -181,14 +181,30 @@
                                 <input type="url" name="link" class="form-control" value="{{ old('link', $event->link) }}">
                             </div>
                             <div class="form-group mb-0">
-                                <label>Status</label>
-                                <select name="status" class="form-control custom-select">
-                                    <option value="active" {{ old('status', $event->status) == 'active' ? 'selected' : '' }}>Active</option>
-                                    <option value="inactive" {{ old('status', $event->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                                    <option value="completed" {{ old('status', $event->status) == 'completed' ? 'selected' : '' }}>Completed</option>
-                                    <option value="cancelled" {{ old('status', $event->status) == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                                </select>
-                            </div>
+    <label class="font-weight-bold">Status</label>
+    <select name="status" class="form-control custom-select @error('status') is-invalid @enderror">
+        {{-- Preselecting based on current event data or previous form input --}}
+        <option value="upcoming" {{ old('status', $event->status) == 'upcoming' ? 'selected' : '' }}>
+            Upcoming
+        </option>
+        
+        <option value="ongoing" {{ old('status', $event->status) == 'ongoing' ? 'selected' : '' }}>
+            Ongoing
+        </option>
+        
+        <option value="completed" {{ old('status', $event->status) == 'completed' ? 'selected' : '' }}>
+            Completed
+        </option>
+        
+        <option value="cancelled" {{ old('status', $event->status) == 'cancelled' ? 'selected' : '' }}>
+            Cancelled
+        </option>
+    </select>
+    
+    @error('status')
+        <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+</div>
                         </div>
                     </div>
 
