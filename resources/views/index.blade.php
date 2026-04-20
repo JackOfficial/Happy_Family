@@ -442,6 +442,7 @@
                     dots: true,
                     autoplay: true,
                     autoplayTimeout: 5000,
+                    navText: ['<i class=\'fas fa-chevron-left\'></i>', '<i class=\'fas fa-chevron-right\'></i>'],
                     responsive:{
                         0:{ items:1 },
                         600:{ items:2 },
@@ -451,32 +452,37 @@
             });
         " class="event-carousel owl-carousel">
             @foreach ($events as $event)
-            <div class="event-item impact-card mx-2 h-100 shadow-sm">
+            <div class="event-item impact-card mx-2 h-100 shadow-sm bg-white rounded overflow-hidden">
                 <div class="impact-img-container position-relative">
-                    {{-- Status Badge --}}
+                    {{-- Updated Status Badge Logic --}}
                     <div class="position-absolute" style="top: 15px; left: 15px; z-index: 10;">
                         @if($event->status === 'ongoing')
-                            <span class="badge badge-danger px-3 py-2 shadow-sm text-uppercase" style="letter-spacing: 1px;">
+                            <span class="badge bg-danger px-3 py-2 shadow-sm text-uppercase text-white">
                                 <i class="fas fa-circle mr-1 animate-pulse"></i> Ongoing
                             </span>
+                        @elseif($event->status === 'completed')
+                            <span class="badge bg-secondary px-3 py-2 shadow-sm text-uppercase text-white">
+                                Past Event
+                            </span>
                         @else
-                            <span class="badge badge-primary px-3 py-2 shadow-sm text-uppercase" style="letter-spacing: 1px;">
+                            <span class="badge bg-primary px-3 py-2 shadow-sm text-uppercase text-white">
                                 Upcoming
                             </span>
                         @endif
                     </div>
 
-                    {{-- Event Image --}}
+                    {{-- Optimized Event Image Logic --}}
                     @php 
-                        $firstPhoto = $event->event_photos->first(); 
+                        // Using featuredPhoto first, fallback to first_photo, then placeholder
+                        $displayPhoto = $event->featuredPhoto ?? $event->event_photos->first(); 
                     @endphp
-                    <img src="{{ $firstPhoto ? asset('storage/' . $firstPhoto->file_path) : asset('images/event-placeholder.jpg') }}" 
+                    <img src="{{ $displayPhoto ? asset('storage/' . $displayPhoto->file_path) : asset('frontend/img/placeholder.jpg') }}" 
                          alt="{{ $event->event }}" 
                          style="height: 250px; object-fit: cover; width: 100%;">
                     
-                    <div class="event-date-badge">
+                    <div class="event-date-badge shadow">
                         <span class="day">{{ \Carbon\Carbon::parse($event->date)->format('d') }}</span>
-                        <span class="month">{{ \Carbon\Carbon::parse($event->date)->format('M') }}</span>
+                        <span class="month text-uppercase">{{ \Carbon\Carbon::parse($event->date)->format('M') }}</span>
                     </div>
 
                     <div class="impact-overlay">
@@ -486,21 +492,21 @@
 
                 <div class="event-content p-4 d-flex flex-column" style="min-height: 280px;">
                     <div class="d-flex align-items-center mb-3 text-muted small font-weight-bold">
-                        <span class="mr-3"><i class="fas fa-map-marker-alt text-pink mr-1"></i> {{ Str::limit($event->location, 20) }}</span>
-                        <span><i class="fas fa-clock text-pink mr-1"></i> {{ \Carbon\Carbon::parse($event->date)->format('h:i A') }}</span>
+                        <span class="mr-3"><i class="fas fa-map-marker-alt text-primary mr-1"></i> {{ Str::limit($event->location, 20) }}</span>
+                        <span><i class="fas fa-clock text-primary mr-1"></i> {{ \Carbon\Carbon::parse($event->time)->format('h:i A') }}</span>
                     </div>
 
-                    <a href="{{ route('events.show', $event->slug ?? $event->id) }}" class="impact-card-title h4 mb-3 font-weight-bold">
+                    <a href="{{ route('events.show', $event->slug ?? $event->id) }}" class="impact-card-title h4 mb-3 font-weight-bold text-dark text-decoration-none">
                         {{ Str::limit($event->event, 45) }}
                     </a>
 
-                    <p class="impact-text mb-4 flex-grow-1">
+                    <p class="impact-text mb-4 flex-grow-1 text-muted">
                         {{ Str::limit(strip_tags($event->description), 100) }}
                     </p>
 
                     <div class="mt-auto">
-                        <a class="btn-modern-purple py-2 px-4 w-100 text-center" href="{{ route('events.show', $event->slug ?? $event->id) }}">
-                            View Details <i class="fas fa-chevron-right ml-2 small"></i>
+                        <a class="btn btn-outline-primary py-2 px-4 w-100 text-center rounded-pill font-weight-bold" href="{{ route('events.show', $event->slug ?? $event->id) }}">
+                            View Details <i class="fas fa-arrow-right ml-2 small"></i>
                         </a>
                     </div>
                 </div>
