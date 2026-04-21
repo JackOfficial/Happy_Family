@@ -577,7 +577,7 @@
         <div class="carousel-inner h-100">
             <div class="carousel-item active vh-100">
                 <div class="hero-overlay"></div>
-                <img src="{{ asset('images/banner1.png') }}" class="w-100 h-100 banner-img" alt="Building Awareness">
+                <img src="{{ asset('images/banner1.png') }}" class="w-100 h-100 banner-img" alt="Empowering Youth">
                 <div class="carousel-caption d-flex align-items-center justify-content-center">
                     <div class="p-4 p-md-5 text-center hero-content-box" 
                          x-data="{ show: false }" 
@@ -587,17 +587,17 @@
                          x-transition:enter-start="opacity-0 translate-y-10">
                         
                         <span class="badge-impact text-uppercase mb-3 d-inline-block tracking-widest animate__animated animate__fadeInDown">
-                            Break the Cycle
+                            Advocacy & Empowerment
                         </span>
                         <h1 class="display-2 text-white fw-bold mb-4 display-font">
-                            Shaping Dreams,<br><span class="text-gradient">Protecting Futures</span>
+                            Championing Dignity,<br><span class="text-gradient">Securing Futures</span>
                         </h1>
                         <p class="mb-5 mx-auto text-light lead opacity-75 hero-subtitle">
-                            Every youth, and teen mother deserves the chance to reach her full potential. Join our mission to reduce teenage pregnancy through education, community awareness, and unwavering support.
+                            HFRO is dedicated to the socio-economic inclusion of youth and teen mothers across Rwanda. Through strategic advocacy and holistic support, we transform vulnerabilities into sustainable opportunities for growth.
                         </p>
                         <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-4">
-                            <a class="btn-premium" href="#">Get Involved</a>
-                            <a class="btn-outline-glass" href="/causes">Learn More <i class="fas fa-arrow-right ms-2"></i></a>
+                            <a class="btn-premium" href="#">Partner With Us</a>
+                            <a class="btn-outline-glass" href="/causes">Our Programs <i class="fas fa-arrow-right ms-2"></i></a>
                         </div>
                     </div>
                 </div>
@@ -605,15 +605,15 @@
 
             <div class="carousel-item vh-100">
                 <div class="hero-overlay"></div>
-                <img src="{{ asset('images/banner1.png') }}" class="w-100 h-100 banner-img" alt="Education">
+                <img src="{{ asset('images/banner1.png') }}" class="w-100 h-100 banner-img" alt="Educational Reintegration">
                 <div class="carousel-caption d-flex align-items-center justify-content-center">
                     <div class="p-4 p-md-5 text-center hero-content-box">
                         <span class="badge-impact text-uppercase mb-3 d-inline-block tracking-widest">
-                            Knowledge is Power
+                            Strategic Education
                         </span>
-                        <h1 class="display-2 text-white fw-bold mb-4 display-font">Empowerment Through <span class="text-gradient">Education</span></h1>
+                        <h1 class="display-2 text-white fw-bold mb-4 display-font">Knowledge as a Catalyst for <span class="text-gradient">Change</span></h1>
                         <p class="mb-5 mx-auto text-light lead opacity-75 hero-subtitle">
-                            We provide the tools for informed choices. From reproductive health workshops to academic reintegration, we are ensuring no teen is left behind due to a lack of knowledge.
+                            From reproductive health literacy to academic reintegration, we provide evidence-based interventions that empower girls and teen mothers to make informed life choices and lead resilient lives.
                         </p>
                         <div class="d-flex justify-content-center">
                             <a class="btn-premium" href="#">Support Our Mission</a>
