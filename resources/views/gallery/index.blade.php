@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Visual Impact Gallery | HFRO')
+@section('title', 'Visual Impact Gallery | Happy Family Rwanda Organization')
 
 @section('content')
 {{-- --- MODERN DARK HERO --- --}}
