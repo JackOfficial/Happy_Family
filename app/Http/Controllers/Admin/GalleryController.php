@@ -1,112 +1,69 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Photo;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
+use App\Models\Cause;
+use App\Models\Project;
+use Illuminate\Http\Request;
 
 class GalleryController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display the main gallery grid.
      */
     public function index()
     {
-        return view('admin.manage.gallery');
+        // 1. Fetch photos and eager load the 'imageable' parent (Project or Cause)
+        // We use with('imageable') to handle the polymorphic link efficiently.
+        $photos = Photo::with('imageable')
+            ->latest()
+            ->paginate(15);
+
+        // 2. Fetch categories (Causes) to show as filter buttons
+        $categories = Cause::orderBy('name')->get();
+
+        return view('gallery.index', [
+            'photos' => $photos,
+            'categories' => $categories,
+            'activeCategory' => null
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display gallery filtered by a specific Cause.
      */
-    public function create()
+    public function filter($slug)
     {
-        return view('admin.create.gallery');
-    }
+        $category = Cause::where('slug', $slug)->firstOrFail();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-  public function store(Request $request)
-{
-    $request->validate([
-        'photo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif'],
-    ]);
+        /**
+         * 3. Polymorphic Filtering Logic:
+         * We want photos where the parent is this Cause, 
+         * OR photos where the parent is a Project belonging to this Cause.
+         */
+        $photos = Photo::where(function ($query) use ($category) {
+                // Direct Cause photos
+                $query->where(function ($q) use ($category) {
+                    $q->where('imageable_type', Cause::class)
+                      ->where('imageable_id', $category->id);
+                })
+                // OR Project photos belonging to this cause
+                ->orWhere(function ($q) use ($category) {
+                    $q->where('imageable_type', Project::class)
+                      ->whereIn('imageable_id', $category->projects->pluck('id'));
+                });
+            })
+            ->with('imageable')
+            ->latest()
+            ->paginate(15);
 
-    $image_path = null; 
-    $manager = new ImageManager(new Driver()); // GD driver
+        $categories = Cause::orderBy('name')->get();
 
-    if ($request->hasFile('photo')) {
-        // Save original image into public storage
-        $image_path = $request->file('photo')->store('images/gallery', 'public');
-
-        // Absolute path to the stored image
-        $absolutePath = storage_path('app/public/' . $image_path);
-
-        // Make sure the thumbnails directory exists
-        $thumbnailDir = storage_path('app/public/images/gallery_thumbnails');
-        if (!file_exists($thumbnailDir)) {
-            mkdir($thumbnailDir, 0777, true);
-        }
-
-        // ✅ Use read() instead of make()
-        $image = $manager->read($absolutePath)->cover(500, 400);
-
-        // Save thumbnail in thumbnails folder (keeping same filename)
-        $thumbnailPath = $thumbnailDir . '/' . basename($image_path);
-        $image->save($thumbnailPath);
-    }
-
-    $gallery = Gallery::create([
-        'photo' => $image_path,
-        'description' => $request->input('description'),
-        'category' => 1
-    ]);
-
-    if ($gallery) {
-        return redirect('/admin/gallery')->with('message', 'Photo uploaded successfully!');
-    } else {
-        return redirect()->back()->with('message', 'Photo could not be uploaded. Try again!');
-    }
-}
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        $gallery = Gallery::where('id', $id)->delete();
-        if($gallery){
-          return redirect()->back()->with('message', 'Photo has been deleted');
-        }
-        else{
-            return redirect()->back()->with('message', 'Photo could not be deleted');
-        }
+        return view('gallery.index', [
+            'photos' => $photos,
+            'categories' => $categories,
+            'activeCategory' => $category
+        ]);
     }
 }
