@@ -71,7 +71,8 @@
                                 <i class="fas fa-map-marked-alt"></i>
                             </div>
                             <h6 class="fw-black text-purple mb-2">Location</h6>
-                            <p class="small text-muted mb-0">Norrsken House,<br>Kigali, Rwanda</p>
+                            <p class="small text-muted mb-0">Kicukiro,<br>Kigali, Rwanda</p>
+
                         </div>
                     </div>
                     
