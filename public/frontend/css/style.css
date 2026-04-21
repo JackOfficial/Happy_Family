@@ -100,11 +100,12 @@ header.scrolled-nav .logo-img {
 
 .nav-donate-btn {
     background: var(--grad-premium);
-    color: #fff !important;
+    color: #ffffff !important;
     border-radius: var(--radius-pill);
     padding: 10px 25px !important;
     font-weight: 800;
-    box-shadow: 0 8px 15px rgba(236, 64, 158, 0.2);
+    margin-left: 15px;
+    box-shadow: 0 8px 15px rgba(236, 64, 158, 0.3);
     transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-transform: uppercase;
     font-size: 0.8rem;
