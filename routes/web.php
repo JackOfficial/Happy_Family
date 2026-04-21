@@ -112,6 +112,7 @@ Route::prefix('donations')->name('donations.')->group(function () {
 
 // Gallery Page
 Route::get('/gallery', [Gallery::class, 'index'])->name('gallery.index');
+Route::get('/gallery/{photo}', [Gallery::class, 'show'])->name('gallery.show');
 Route::get('/gallery/category/{slug}', [Gallery::class, 'filter'])->name('gallery.filter');
 
 Route::get('/career', [CareersController::class, 'index']);
