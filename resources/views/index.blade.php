@@ -587,13 +587,13 @@
                          x-transition:enter-start="opacity-0 translate-y-10">
                         
                         <span class="badge-impact text-uppercase mb-3 d-inline-block tracking-widest animate__animated animate__fadeInDown">
-                            Building Awareness
+                            Break the Cycle
                         </span>
                         <h1 class="display-2 text-white fw-bold mb-4 display-font">
-                            Empowering Youth,<br><span class="text-gradient">Preventing Pregnancies</span>
+                            Shaping Dreams,<br><span class="text-gradient">Protecting Futures</span>
                         </h1>
                         <p class="mb-5 mx-auto text-light lead opacity-75 hero-subtitle">
-                            Join us in spreading awareness and preventing teenage pregnancy through knowledge and empowerment. Every step counts toward a brighter future in Rwanda.
+                            Every young girl in Rwanda deserves the chance to reach her full potential. Join our mission to reduce teenage pregnancy through education, community awareness, and unwavering support.
                         </p>
                         <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-4">
                             <a class="btn-premium" href="#">Get Involved</a>
@@ -609,11 +609,11 @@
                 <div class="carousel-caption d-flex align-items-center justify-content-center">
                     <div class="p-4 p-md-5 text-center hero-content-box">
                         <span class="badge-impact text-uppercase mb-3 d-inline-block tracking-widest">
-                            Transforming Education
+                            Knowledge is Power
                         </span>
-                        <h1 class="display-2 text-white fw-bold mb-4 display-font">Education is the <span class="text-gradient">Key</span></h1>
+                        <h1 class="display-2 text-white fw-bold mb-4 display-font">Empowerment Through <span class="text-gradient">Education</span></h1>
                         <p class="mb-5 mx-auto text-light lead opacity-75 hero-subtitle">
-                            Our programs educate teens on reproductive health, making informed choices, and reclaiming their potential through academic support.
+                            We provide the tools for informed choices. From reproductive health workshops to academic reintegration, we are ensuring no teen is left behind due to a lack of knowledge.
                         </p>
                         <div class="d-flex justify-content-center">
                             <a class="btn-premium" href="#">Support Our Mission</a>
@@ -713,7 +713,7 @@
     <div class="container py-5">
         <div class="text-center mx-auto mb-5" style="max-width: 800px;">
             <span class="badge-impact text-uppercase mb-3 d-inline-block tracking-widest">Our Impacts</span>
-            <h2 class="display-5 fw-bold mb-3 display-font">Empowering Change, <span class="text-gradient">Transforming Lives</span></h2>
+            <h2 class="display-5 fw-bold mb-3 display-font">Transforming lives  <span class="text-gradient">Transforming Lives</span></h2>
             <p class="text-muted lead">Transparent, data-driven results from our frontline work in Rwanda.</p>
         </div>
 
