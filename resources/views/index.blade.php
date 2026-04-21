@@ -593,7 +593,7 @@
                             Shaping Dreams,<br><span class="text-gradient">Protecting Futures</span>
                         </h1>
                         <p class="mb-5 mx-auto text-light lead opacity-75 hero-subtitle">
-                            Every young girl in Rwanda deserves the chance to reach her full potential. Join our mission to reduce teenage pregnancy through education, community awareness, and unwavering support.
+                            Every young girl deserves the chance to reach her full potential. Join our mission to reduce teenage pregnancy through education, community awareness, and unwavering support.
                         </p>
                         <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-4">
                             <a class="btn-premium" href="#">Get Involved</a>
