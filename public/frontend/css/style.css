@@ -63,14 +63,18 @@ header.navbar.sticky-top {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Scrolled State triggered by <header :class="{ 'scrolled-nav': scrolled }"> */
+/* Scrolled State: Changes links to stay white or switch to dark if bg is white */
 header.scrolled-nav {
-    background: rgba(13, 2, 17, 0.98) !important;
+    background: var(--dark-void) !important; /* Keep it dark for consistency */
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-bottom: 1px solid rgba(236, 64, 158, 0.2);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    padding: 0.5rem 0 !important;
+    box-shadow: var(--shadow-premium);
+    padding: 0.6rem 0 !important;
+}
+
+header.scrolled-nav .nav-link {
+    text-shadow: none; /* Shadow not needed once background is solid */
 }
 
 .logo-img {
@@ -89,13 +93,17 @@ header.scrolled-nav .logo-img {
 }
 
 .nav-link {
-    color: #fff !important;
+    color: #ffffff !important; /* Forces white text */
     font-weight: 600;
+    font-size: 0.95rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Adds legibility over images */
     transition: 0.3s ease;
+    padding: 0.5rem 1rem !important;
 }
 
 .nav-link:hover, .nav-link.active {
     color: var(--accent-color) !important;
+    text-shadow: none;
 }
 
 .nav-donate-btn {
