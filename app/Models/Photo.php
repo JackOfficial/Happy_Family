@@ -1,69 +1,69 @@
 <?php
 
-namespace App\Models;
+namespace App\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Models\Photo;
+use App\Models\Cause;
+use App\Models\Project;
+use Illuminate\Http\Request;
 
-class Photo extends Model
+class GalleryController extends Controller
 {
-    use HasFactory, SoftDeletes;
-    
-    protected $fillable = [
-        'file_path', 
-        'caption', 
-        'file_size', 
-        'file_type', 
-        'is_featured',
-        'imageable_id', 
-        'imageable_type'
-    ];
-
     /**
-     * Get the parent imageable model (Cause, Project, etc.).
+     * Display the main gallery grid.
      */
-    public function imageable() 
+    public function index()
     {
-        return $this->morphTo();
+        // 1. Fetch photos and eager load the 'imageable' parent (Project or Cause)
+        // We use with('imageable') to handle the polymorphic link efficiently.
+        $photos = Photo::with('imageable')
+            ->latest()
+            ->paginate(15);
+
+        // 2. Fetch categories (Causes) to show as filter buttons
+        $categories = Cause::orderBy('name')->get();
+
+        return view('gallery.index', [
+            'photos' => $photos,
+            'categories' => $categories,
+            'activeCategory' => null
+        ]);
     }
 
     /**
-     * Accessor: Get the full URL for the photo.
-     * Usage in Blade: {{ $photo->url }}
+     * Display gallery filtered by a specific Cause.
      */
-    protected function url(): Attribute
+    public function filter($slug)
     {
-        return Attribute::get(fn () => 
-            $this->file_path 
-                ? Storage::disk('public')->url($this->file_path) 
-                : asset('images/placeholder.jpg')
-        );
-    }
+        $category = Cause::where('slug', $slug)->firstOrFail();
 
-    /**
- * Scope a query to only include featured photos.
- */
-public function scopeFeatured($query)
-{
-    return $query->where('is_featured', true);
-}
+        /**
+         * 3. Polymorphic Filtering Logic:
+         * We want photos where the parent is this Cause, 
+         * OR photos where the parent is a Project belonging to this Cause.
+         */
+        $photos = Photo::where(function ($query) use ($category) {
+                // Direct Cause photos
+                $query->where(function ($q) use ($category) {
+                    $q->where('imageable_type', Cause::class)
+                      ->where('imageable_id', $category->id);
+                })
+                // OR Project photos belonging to this cause
+                ->orWhere(function ($q) use ($category) {
+                    $q->where('imageable_type', Project::class)
+                      ->whereIn('imageable_id', $category->projects->pluck('id'));
+                });
+            })
+            ->with('imageable')
+            ->latest()
+            ->paginate(15);
 
-    /**
-     * Accessor: Get human-readable file size.
-     * Usage in Blade: {{ $photo->readable_size }}
-     */
-    protected function readableSize(): Attribute
-    {
-        return Attribute::get(function () {
-            $bytes = $this->file_size ?? 0;
-            $units = ['B', 'KB', 'MB', 'GB'];
-            for ($i = 0; $bytes > 1024 && $i < count($units) - 1; $i++) {
-                $bytes /= 1024;
-            }
-            return round($bytes, 2) . ' ' . $units[$i];
-        });
+        $categories = Cause::orderBy('name')->get();
+
+        return view('gallery.index', [
+            'photos' => $photos,
+            'categories' => $categories,
+            'activeCategory' => $category
+        ]);
     }
 }

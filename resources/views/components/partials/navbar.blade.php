@@ -52,7 +52,7 @@
                 <div class="dropdown-menu border-0 shadow-premium m-0 animated-dropdown" :class="{ 'show': open }">
                     <a href="/volunteers" class="dropdown-item py-2 px-4">Volunteers</a>
                     <a href="/careers" class="dropdown-item py-2 px-4">Careers</a>
-                    <a href="/gallery" class="dropdown-item py-2 px-4">Gallery</a>
+                    <a href="{{ route('gallery.index') }}" class="dropdown-item py-2 px-4">Gallery</a>
                 </div>
             </div>
 

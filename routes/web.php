@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\BloggersController;
 use App\Http\Controllers\Admin\BlogCategoriesController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\GalleryController as Gallery;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\VolunteersController;
@@ -108,6 +109,10 @@ Route::prefix('donations')->name('donations.')->group(function () {
     // This ensures the donation is recorded even if the user closes the browser.
     Route::post('/webhook', [DonationController::class, 'handleWebhook'])->name('webhook');
 });
+
+// Gallery Page
+Route::get('/gallery', [Gallery::class, 'index'])->name('gallery.index');
+Route::get('/gallery/category/{slug}', [Gallery::class, 'filter'])->name('gallery.filter');
 
 Route::get('/career', [CareersController::class, 'index']);
 Route::get('/job-details/{id}', [CareersController::class, 'jobDetails']);
