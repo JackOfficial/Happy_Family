@@ -21,7 +21,7 @@
             Change a <span class="brand-text">Life</span> Today
         </h1>
         <p class="lead text-white opacity-75 mx-auto mb-5 fs-4" style="max-width: 800px;">
-            At HFRO, we don't just give charity; we build self-reliance. Choose a specific project below to see exactly how your contribution creates a future.
+            At Happy Family, we don't just give charity; we build self-reliance. Choose a specific project below to see exactly how your contribution creates a future.
         </p>
         <a href="#projects" class="btn btn-purple-gradient btn-lg rounded-pill px-5 shadow-lg">View Our Projects</a>
     </div>
