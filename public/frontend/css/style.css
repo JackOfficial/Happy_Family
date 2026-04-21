@@ -8,41 +8,53 @@
     /* Branding: Compassion meets Authority */
     --primary-color: #631084;      
     --accent-color: #ec409e;       
-    --success-green: #00c897;      /* Added for "Goal Reached" or "Impact" metrics */
+    --success-green: #00c897;
     --dark-void: #0d0211;
     --light-bg: #fcfaff;
     
     /* Luxury NGO Gradients */
-    --grad-premium: linear-gradient(135deg, #631084 0%, #ec409e 100%);
-    --grad-impact: linear-gradient(90deg, #631084 0%, #00c897 100%);
+    --grad-premium: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    --grad-impact: linear-gradient(90deg, var(--primary-color) 0%, var(--success-green) 100%);
     
     /* UI Specs */
     --glass-white: rgba(255, 255, 255, 0.85);
     --shadow-premium: 0 20px 40px -10px rgba(99, 16, 132, 0.12);
     --radius-pill: 50px;
     --radius-bento: 24px;
+    
+    /* Animation Timing */
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* --- 1. CORE OPTIMIZATION --- */
+/* --- 1. CORE & TYPOGRAPHY --- */
 body { 
     font-family: 'Inter', sans-serif;
     background-color: var(--light-bg);
     color: #2d1a35;
     line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Typography for storytelling */
 .text-gradient {
     background: var(--grad-premium);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 800;
+    display: inline-block;
 }
 
-/* --- 2. NGO NAVIGATION (High-Visibility CTA) --- */
+.brand-text {
+    background: linear-gradient(to right, #ffffff, var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    font-weight: 700;
+}
+
+/* --- 2. NAVIGATION (Logo & Navbar) --- */
 .navbar {
     padding: 1rem 0;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: var(--transition-smooth);
 }
 
 .navbar.scrolled-nav {
@@ -53,7 +65,20 @@ body {
     box-shadow: var(--shadow-premium);
 }
 
-/* Specific "Donate Now" Highlight in Nav */
+.logo-img {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+    transition: var(--transition-smooth);
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    will-change: height, filter;
+}
+
+.scrolled-nav .logo-img {
+    height: 40px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
 .nav-donate-btn {
     background: var(--grad-premium);
     color: #fff !important;
@@ -70,14 +95,14 @@ body {
     box-shadow: 0 12px 20px rgba(236, 64, 158, 0.4);
 }
 
-/* --- 3. IMPACT BENTO COMPONENTS --- */
+/* --- 3. IMPACT COMPONENTS (Bento & Progress) --- */
 .impact-card {
     background: #ffffff;
     border-radius: var(--radius-bento);
     border: 1px solid rgba(99, 16, 132, 0.05);
     padding: 1.5rem;
     height: 100%;
-    transition: all 0.4s ease;
+    transition: var(--transition-smooth);
     box-shadow: var(--shadow-premium);
     display: flex;
     flex-direction: column;
@@ -88,7 +113,6 @@ body {
     transform: translateY(-8px);
 }
 
-/* High-End Progress Bar for Crowdfunding/Impact */
 .impact-progress {
     height: 8px;
     background: #f0e6f5;
@@ -111,7 +135,16 @@ body {
     color: var(--primary-color);
 }
 
-/* --- 4. CALL TO ACTION (CTA) PREMIUM --- */
+.badge-impact {
+    background: rgba(0, 200, 151, 0.1);
+    color: var(--success-green);
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+}
+
+/* --- 4. BUTTONS & ACTIONS --- */
 .btn-premium {
     background: var(--grad-premium);
     color: white !important;
@@ -129,161 +162,6 @@ body {
     transform: translateY(-4px);
     box-shadow: 0 15px 30px rgba(236, 64, 158, 0.3);
     filter: brightness(1.1);
-}
-
-/* --- 5. TRUST & TRANSPARENCY (Glassmorphism) --- */
-.transparency-seal {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-bento);
-    padding: 2rem;
-    text-align: center;
-}
-
-/* --- 6. FOOTER (NGO Optimized) --- */
-.main-footer {
-    background: var(--dark-void);
-    color: rgba(255,255,255,0.8);
-    padding: 80px 0 30px;
-    border-top: 1px solid rgba(236, 64, 158, 0.2);
-}
-
-.footer-newsletter {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 16px;
-    padding: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.footer-link {
-    color: rgba(255,255,255,0.7);
-    transition: 0.3s;
-    display: inline-block;
-    margin-bottom: 10px;
-}
-
-.footer-link:hover {
-    color: var(--accent-color);
-    transform: translateX(5px);
-}
-
-/* --- 7. NGO UTILITIES --- */
-.badge-impact {
-    background: rgba(0, 200, 151, 0.1);
-    color: var(--success-green);
-    font-weight: 700;
-    padding: 5px 12px;
-    border-radius: 8px;
-    font-size: 0.8rem;
-}
-
-.volunteer-overlay {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    background: var(--glass-white);
-    backdrop-filter: blur(10px);
-    padding: 15px;
-    border-radius: 16px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-/* --- 8. ANIMATIONS --- */
-@keyframes pulse-soft {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.05); opacity: 0.8; }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-.urgent-cause-pulse {
-    animation: pulse-soft 2s infinite ease-in-out;
-}
-
-/* --- LOGO & BRANDING --- */
-.logo-img {
-    height: 60px; /* Default height for top-of-page */
-    width: auto;
-    object-fit: contain;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
-    will-change: height, filter;
-}
-
-/* This class is triggered when the user scrolls */
-.scrolled-nav .logo-img {
-    height: 40px;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-}
-
-/* --- FOOTER SPECIFIC ENHANCEMENTS --- */
-.footer-bottom-border {
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.footer-gallery-thumb {
-    position: relative;
-    overflow: hidden;
-    aspect-ratio: 1 / 1;
-}
-
-.footer-gallery-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.gallery-overlay {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(99, 16, 132, 0.8); /* Primary color overlay */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    z-index: 2;
-    transition: 0.3s ease;
-}
-
-.footer-gallery-thumb:hover .gallery-overlay {
-    opacity: 1;
-}
-
-.footer-gallery-thumb:hover img {
-    transform: scale(1.15);
-}
-
-/* Custom spacing for the newsletter box in the footer */
-.footer-newsletter {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 20px;
-    padding: 25px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* --- NEWSLETTER COMPONENT --- */
-.newsletter-form {
-    max-width: 450px;
-}
-
-.footer-glass-input {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 50px 0 0 50px !important;
-    color: white !important;
-    padding: 14px 25px !important;
-    transition: all 0.3s ease;
-}
-
-.footer-glass-input:focus {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-color: var(--accent-color) !important;
-}
-
-.footer-glass-input::placeholder {
-    color: rgba(255, 255, 255, 0.4);
 }
 
 .btn-premium-sm {
@@ -304,6 +182,106 @@ body {
     box-shadow: 0 5px 15px rgba(236, 64, 158, 0.3);
 }
 
+/* --- 5. FOOTER & NEWSLETTER --- */
+.main-footer {
+    background: var(--dark-void);
+    color: rgba(255,255,255,0.8);
+    padding: 80px 0 30px;
+    border-top: 1px solid rgba(236, 64, 158, 0.2);
+}
+
+.footer-newsletter {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer-link {
+    color: rgba(255,255,255,0.7);
+    transition: 0.3s;
+    display: inline-block;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+
+.footer-link:hover {
+    color: var(--accent-color);
+    transform: translateX(5px);
+}
+
+.footer-bottom-border {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-glass-input {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 50px 0 0 50px !important;
+    color: white !important;
+    padding: 14px 25px !important;
+    transition: 0.3s ease;
+}
+
+.footer-glass-input:focus {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: var(--accent-color) !important;
+}
+
+.footer-glass-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* --- 6. GALLERY & OVERLAYS --- */
+.footer-gallery-thumb {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+}
+
+.footer-gallery-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.gallery-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(99, 16, 132, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    z-index: 2;
+    transition: 0.3s ease;
+}
+
+.footer-gallery-thumb:hover .gallery-overlay { opacity: 1; }
+.footer-gallery-thumb:hover img { transform: scale(1.15); }
+
+.volunteer-overlay {
+    position: absolute;
+    bottom: 20px; left: 20px; right: 20px;
+    background: var(--glass-white);
+    backdrop-filter: blur(10px);
+    padding: 15px;
+    border-radius: 16px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.transparency-seal {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-bento);
+    padding: 2rem;
+    text-align: center;
+}
+
+/* --- 7. NOTIFICATIONS & FEEDBACK --- */
 .alert-success-footer {
     background: rgba(0, 200, 151, 0.1);
     color: #fff;
@@ -313,22 +291,24 @@ body {
     border-left: 3px solid var(--success-green);
 }
 
-/* --- COPYRIGHT STYLES --- */
 .copyright-text {
     font-size: 0.9rem;
     letter-spacing: 0.02em;
     color: rgba(255, 255, 255, 0.6);
 }
 
-.brand-text {
-    /* Subtle gradient effect on the brand name in the footer */
-    background: linear-gradient(to right, #ffffff, var(--accent-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: inline-block;
-}
-
 .copyright-text .fw-light {
     border-left: 1px solid rgba(255, 255, 255, 0.2);
     padding-left: 12px;
+}
+
+/* --- 8. ANIMATIONS --- */
+@keyframes pulse-soft {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.urgent-cause-pulse {
+    animation: pulse-soft 2s infinite ease-in-out;
 }
