@@ -1,5 +1,21 @@
 @extends('layouts.app')
-
+@section('title', 'Impacts | Happy Family Rwanda Organization')
+@push('styles')
+    <style>
+    .impact-card:hover { transform: translateY(-10px); }
+    .impact-card:hover img { transform: scale(1.1); }
+    .impact-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.4);
+        opacity: 0;
+        transition: 0.3s;
+    }
+    .impact-card:hover .impact-overlay { opacity: 1; }
+    .hover-primary:hover { color: var(--bs-primary) !important; }
+    .rounded-custom { border-radius: 30px; }
+</style>
+@endpush
 @section('content')
 <div class="container-fluid position-relative overflow-hidden" style="background: #000; padding: 120px 0 80px 0;">
     {{-- Banner logic: Use a high-quality impact image or a specific asset --}}
@@ -108,19 +124,4 @@
         </div>
     </div>
 </div>
-
-<style>
-    .impact-card:hover { transform: translateY(-10px); }
-    .impact-card:hover img { transform: scale(1.1); }
-    .impact-overlay {
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.4);
-        opacity: 0;
-        transition: 0.3s;
-    }
-    .impact-card:hover .impact-overlay { opacity: 1; }
-    .hover-primary:hover { color: var(--bs-primary) !important; }
-    .rounded-custom { border-radius: 30px; }
-</style>
 @endsection

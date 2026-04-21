@@ -84,11 +84,13 @@
     </div>
 </div>
 
-<style>
+@push('styles')
+    <style>
     .story-item { transition: 0.3s; border: 1px solid #eee; }
     .story-item:hover { transform: translateY(-10px); border-color: var(--bs-primary); }
     .story-img img { transition: 0.5s; }
     .story-item:hover .story-img img { scale: 1.1; }
     .rounded-right { border-top-right-radius: 20px; border-bottom-right-radius: 20px; }
-</style>
+    </style>
+@endpush
 @endsection

@@ -1,7 +1,4 @@
 @extends('layouts.app')
-@section('styles')
-
-@endsection
 @section('content')
 
 <div class="container-fluid carousel-header vh-100 px-0">
@@ -778,7 +775,8 @@
     </div>
 </div>
       
-<script>
+  @push('scripts')
+  <script>
     document.addEventListener('alpine:init', () => {
     Alpine.data('impactSlider', () => ({
         init() {
@@ -804,6 +802,7 @@
             }
         }
     }));
-});
-</script>
+    });
+  </script>
+  @endpush
 @endsection

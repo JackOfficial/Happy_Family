@@ -1,4 +1,20 @@
 @extends('layouts.app')
+@section('title', 'events | Happy Family Rwanda Organization')
+    @push('styles')
+        <style>
+        .grayscale img { filter: grayscale(100%); transition: 0.4s; opacity: 0.8; }
+        .event-item:hover img { filter: grayscale(0%); opacity: 1; }
+        .event-item { border-radius: 12px; overflow: hidden; background: #fff; transition: all 0.3s ease; }
+        .event-item:hover { transform: translateY(-8px); border-color: var(--bs-primary); }
+        .animate-pulse { animation: pulse-red 2s infinite; }
+        @keyframes pulse-red {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+        }
+        .owl-nav button { background: var(--bs-primary) !important; color: #fff !important; width: 40px; height: 40px; border-radius: 50% !important; }
+       </style>
+    @endpush
 @section('content')
     <div class="container-fluid bg-breadcrumb" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url({{ asset('frontend/img/breadcrumb-bg.jpg') }});
     background-position: center center;
@@ -135,18 +151,4 @@
         });
     </script>
     @endpush
-
-    <style>
-        .grayscale img { filter: grayscale(100%); transition: 0.4s; opacity: 0.8; }
-        .event-item:hover img { filter: grayscale(0%); opacity: 1; }
-        .event-item { border-radius: 12px; overflow: hidden; background: #fff; transition: all 0.3s ease; }
-        .event-item:hover { transform: translateY(-8px); border-color: var(--bs-primary); }
-        .animate-pulse { animation: pulse-red 2s infinite; }
-        @keyframes pulse-red {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
-        }
-        .owl-nav button { background: var(--bs-primary) !important; color: #fff !important; width: 40px; height: 40px; border-radius: 50% !important; }
-    </style>
 @endsection

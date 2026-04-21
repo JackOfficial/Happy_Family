@@ -1,4 +1,20 @@
 @extends('layouts.app')
+@section('title')
+ <title>{{ $cause->name }} | Happy Family Rwanda Organization</title>
+@endsection
+
+@push('styles')
+    <style>
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card:hover { transform: translateY(-5px); transition: 0.3s ease; }
+    .gallery-img:hover { filter: brightness(80%); transition: 0.3s ease; cursor: pointer; }
+    .btn-primary { background-color: #e83e8c; border-color: #e83e8c; }
+    .btn-primary:hover { background-color: #d82a7b; border-color: #d82a7b; }
+    .text-primary { color: #e83e8c !important; }
+    .bg-primary { background-color: #e83e8c !important; }
+    .breadcrumb-item + .breadcrumb-item::before { color: rgba(255,255,255,0.5); }
+</style>
+@endpush
 
 @section('content')
 {{-- Hero Section --}}
@@ -178,15 +194,4 @@
         </div>
     </div>
 </div>
-
-<style>
-    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .card:hover { transform: translateY(-5px); transition: 0.3s ease; }
-    .gallery-img:hover { filter: brightness(80%); transition: 0.3s ease; cursor: pointer; }
-    .btn-primary { background-color: #e83e8c; border-color: #e83e8c; }
-    .btn-primary:hover { background-color: #d82a7b; border-color: #d82a7b; }
-    .text-primary { color: #e83e8c !important; }
-    .bg-primary { background-color: #e83e8c !important; }
-    .breadcrumb-item + .breadcrumb-item::before { color: rgba(255,255,255,0.5); }
-</style>
 @endsection

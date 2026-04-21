@@ -133,7 +133,8 @@
     </div> 
 </div>
 
-<style>
+@push('styles')
+    <style>
     .gallery-hover { position: relative; transition: all 0.3s ease; }
     .gallery-hover:hover { transform: scale(1.05); cursor: pointer; }
     .story-mini-card:hover { transform: translateY(-5px); transition: 0.3s; }
@@ -141,5 +142,6 @@
     .btn-twitter { background: #1da1f2; color: white; }
     .btn-whatsapp { background: #25d366; color: white; }
     .story-body img { border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: 20px 0; }
-</style>
+    </style>
+@endpush
 @endsection

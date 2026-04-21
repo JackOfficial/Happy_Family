@@ -358,13 +358,210 @@
     @media (max-width: 768px) {
         .display-3 { font-size: 2.5rem; }
     }
+
+           /* CSS Variables for local context */
+        :root {
+            --primary-color: #631084;
+            --accent-color: #ec409e;
+            --light-bg: #fcfaff;
+        }
+
+        /* Glassmorphism Base */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.5s ease;
+        }
+
+        .scrolled-nav {
+            background: rgba(255, 255, 255, 0.95) !important;
+            padding-top: 5px !important;
+            padding-bottom: 5px !important;
+        }
+
+        /* Spacing Fixes */
+        .top-info-bar {
+            background-color: var(--primary-color);
+            color: rgba(255,255,255,0.9);
+        }
+
+        .btn-donate-nav {
+            background: var(--accent-color);
+            color: white !important;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .btn-donate-nav:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 16, 132, 0.3);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 1199.98px) {
+            .navbar-collapse {
+                background: white;
+                margin-top: 1rem;
+                padding: 2rem;
+                border-radius: 20px;
+                border: 1px solid rgba(0,0,0,0.05);
+            }
+        }
+
+                :root {
+            --primary-purple: #631084;
+            --accent-pink: #ec409e;
+            --footer-dark: #14031a;
+        }
+
+        .main-footer {
+            background-color: var(--footer-dark);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .footer-title {
+            font-family: 'Jost', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            padding-bottom: 12px;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 35px;
+            height: 3px;
+            background: var(--accent-pink);
+            border-radius: 2px;
+        }
+
+        /* Newsletter Interaction */
+        .newsletter-form {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: border-color 0.3s ease;
+        }
+
+        .newsletter-form:focus-within {
+            border-color: var(--accent-pink);
+        }
+
+        .footer-input {
+            background: transparent !important;
+            border: none !important;
+            color: white !important;
+            padding: 12px 15px !important;
+        }
+
+        .btn-subscribe {
+            background: var(--primary-purple);
+            color: white;
+            border-radius: 8px !important;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-subscribe:hover {
+            background: var(--accent-pink);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        /* Gallery Hover Effects */
+        .footer-gallery-thumb {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            aspect-ratio: 1/1;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(99, 16, 132, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: 0.3s;
+            z-index: 2;
+        }
+
+        .footer-gallery-thumb:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .footer-gallery-thumb img {
+            transition: 0.5s ease;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .footer-gallery-thumb:hover img {
+            transform: scale(1.15);
+        }
+
+        /* Footer Links */
+        .footer-links li a {
+            color: rgba(255, 255, 255, 0.75);
+            text-decoration: none;
+            transition: 0.3s;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .footer-links li a:hover {
+            color: var(--accent-pink);
+            transform: translateX(5px);
+        }
+
+        .social-icon {
+            width: 38px;
+            height: 38px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-left: 12px;
+            transition: 0.3s;
+        }
+
+        .social-icon:hover {
+            background: var(--accent-pink);
+            transform: translateY(-5px);
+            color: white;
+        }
+
+        .footer-bottom-border {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .text-accent-pink { color: var(--accent-pink); }
     </style>
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    @yield('styles')
+    @stack('styles')
     @livewireStyles
 </head>
 
@@ -372,15 +569,14 @@
 
     <header :class="{ 'scrolled-nav': scrolled }" class="glass-nav sticky-top">
         <div class="container">
-            <livewire:navbar-component />
+    <x-partials.navbar />
         </div>
     </header>
 
     <main>
         @yield('content')
     </main>
-
-   <livewire:footer-component />
+   <x-partials.footer />
 
     <button 
         x-cloak
@@ -427,7 +623,7 @@
             });
         });
     </script>
-    
+    @stack('scripts')
     @livewireScripts
 </body>
 </html>

@@ -1,4 +1,24 @@
 @extends('layouts.app')
+@section('title')
+ <title>{{ $event->title }} | | Happy Family Rwanda Organization</title>
+@endsection
+
+@push('styles')
+    <style>
+    .bg-primary-soft { background-color: rgba(var(--bs-primary-rgb), 0.1); }
+    .bg-info-soft { background-color: rgba(var(--bs-info-rgb), 0.1); }
+    .icon-box { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
+    .pulse { animation: pulse-opacity 2s infinite; }
+    @keyframes pulse-opacity { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+    
+    .gallery-img { transition: transform 0.5s ease; cursor: pointer; }
+    .gallery-item:hover .gallery-img { transform: scale(1.1); }
+    
+    .event-description img { max-width: 100%; height: auto; border-radius: 12px; margin: 20px 0; shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    
+    .list-group-item-action:hover { background-color: transparent; color: var(--bs-primary) !important; }
+</style>
+@endpush
 
 @section('content')
 {{-- Logic: Featured Photo -> First Photo -> Default BG --}}
@@ -142,19 +162,4 @@
         </div>
     </div>
 </div>
-
-<style>
-    .bg-primary-soft { background-color: rgba(var(--bs-primary-rgb), 0.1); }
-    .bg-info-soft { background-color: rgba(var(--bs-info-rgb), 0.1); }
-    .icon-box { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
-    .pulse { animation: pulse-opacity 2s infinite; }
-    @keyframes pulse-opacity { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-    
-    .gallery-img { transition: transform 0.5s ease; cursor: pointer; }
-    .gallery-item:hover .gallery-img { transform: scale(1.1); }
-    
-    .event-description img { max-width: 100%; height: auto; border-radius: 12px; margin: 20px 0; shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    
-    .list-group-item-action:hover { background-color: transparent; color: var(--bs-primary) !important; }
-</style>
 @endsection
