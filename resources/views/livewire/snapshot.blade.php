@@ -4,14 +4,14 @@
         @forelse($photos as $photo)
             <div class="col-4">
                 <div class="footer-gallery-thumb">
-                    <a href="{{ asset('storage/' . $photo->path) }}" data-lightbox="footer-gallery">
+                    <a href="{{ asset('storage/' . $photo->file_path) }}" data-lightbox="footer-gallery">
                         <div class="gallery-overlay">
                             <i class="fas fa-expand-alt text-white"></i>
                         </div>
-                        <img src="{{ asset('storage/' . $photo->path) }}" 
+                        <img src="{{ asset('storage/' . $photo->file_path) }}" 
                              class="img-fluid rounded-3" 
                              style="height: 70px; width: 100%; object-fit: cover;"
-                             alt="{{ $photo->imageable->title ?? 'HFRO Impact' }}">
+                             alt="{{ $photo->imageable->caption ?? 'Photo' }}">
                     </a>
                 </div>
             </div>
