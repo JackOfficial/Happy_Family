@@ -51,80 +51,48 @@ body {
     font-weight: 700;
 }
 
-/* --- HAPPY FAMILY BRAND NAV --- */
-.transition-all-500 {
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+/* --- 2. NAVIGATION (Logo & Navbar) --- */
+.navbar {
+    padding: 1rem 0;
+    transition: var(--transition-smooth);
 }
 
-/* State 1: At the Top */
-.navbar-top {
-    background: transparent;
+.navbar.scrolled-nav {
+    background: var(--glass-white) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(99, 16, 132, 0.1);
+    box-shadow: var(--shadow-premium);
 }
 
-.navbar-top .nav-link-impact {
-    color: white !important;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+.logo-img {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+    transition: var(--transition-smooth);
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    will-change: height, filter;
 }
 
-/* State 2: Scrolled */
-.navbar-scrolled {
-    background: rgba(13, 2, 17, 0.98); /* Your Deep Brand Purple */
-    backdrop-filter: blur(20px);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+.scrolled-nav .logo-img {
+    height: 40px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
-.navbar-scrolled .nav-link-impact {
-    color: rgba(255, 255, 255, 0.8) !important;
-}
-
-/* Hover & Active Indicator */
-.nav-link-impact {
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    position: relative;
-    padding: 0.5rem 1rem !important;
-}
-
-.nav-link-impact::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 3px;
-    background: var(--grad-premium); /* Your pink/purple gradient */
-    transition: 0.3s ease;
-    transform: translateX(-50%);
-    border-radius: 10px;
-}
-
-.nav-link-impact:hover::before,
-.nav-link-impact.active::before {
-    width: 20px; /* Modern "dot-line" indicator */
-}
-
-.nav-link-impact:hover {
-    color: #fff !important;
-}
-
-/* The "Impact" Donate Button */
-.btn-nav-donate {
+.nav-donate-btn {
     background: var(--grad-premium);
-    color: white !important;
-    padding: 12px 28px;
-    border-radius: 100px;
+    color: #fff !important;
+    border-radius: var(--radius-pill);
+    padding: 10px 25px !important;
     font-weight: 700;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-    box-shadow: 0 8px 20px rgba(236, 64, 158, 0.3);
-    transition: 0.3s;
+    margin-left: 15px;
+    box-shadow: 0 8px 15px rgba(236, 64, 158, 0.2);
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.btn-nav-donate:hover {
-    transform: translateY(-3px) scale(1.03);
-    box-shadow: 0 12px 25px rgba(236, 64, 158, 0.5);
+.nav-donate-btn:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 12px 20px rgba(236, 64, 158, 0.4);
 }
 
 /* --- 3. IMPACT COMPONENTS (Bento & Progress) --- */
@@ -174,45 +142,6 @@ body {
     padding: 5px 12px;
     border-radius: 8px;
     font-size: 0.8rem;
-}
-
-.modern-hamburger {
-    width: 30px;
-    height: 20px;
-    position: relative;
-    cursor: pointer;
-}
-
-.modern-hamburger span {
-    display: block;
-    position: absolute;
-    height: 3px;
-    width: 100%;
-    background: #fff;
-    border-radius: 9px;
-    opacity: 1;
-    left: 0;
-    transform: rotate(0deg);
-    transition: .25s ease-in-out;
-}
-
-.modern-hamburger span:nth-child(1) { top: 0px; }
-.modern-hamburger span:nth-child(2) { top: 8px; }
-.modern-hamburger span:nth-child(3) { top: 16px; }
-
-.modern-hamburger.open span:nth-child(1) {
-    top: 8px;
-    transform: rotate(135deg);
-}
-
-.modern-hamburger.open span:nth-child(2) {
-    opacity: 0;
-    left: -60px;
-}
-
-.modern-hamburger.open span:nth-child(3) {
-    top: 8px;
-    transform: rotate(-135deg);
 }
 
 /* --- 4. BUTTONS & ACTIONS --- */
