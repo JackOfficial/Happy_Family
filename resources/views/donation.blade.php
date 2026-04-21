@@ -1,124 +1,168 @@
 @extends('layouts.app')
 
+@section('title', 'Support Our Mission | Happy Family Rwanda Organization')
+
 @section('content')
-<div class="container-fluid position-relative overflow-hidden" style="background: #000; padding: 120px 0 80px 0;">
-    <img src="{{ asset('frontend/img/breadcrumb-bg.jpg') }}" class="banner-img position-absolute top-0 start-0 w-100 h-100" style="object-fit: cover; z-index: 1; opacity: 0.5;" alt="Donation Header">
-    <div class="overlay" style="z-index: 2;"></div>
+<div class="container-fluid position-relative overflow-hidden vh-60 d-flex align-items-center" style="background: var(--dark-void);">
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="position-absolute top-0 start-0 w-100 h-100" 
+             style="background: linear-gradient(to right, rgba(45, 13, 82, 0.9) 0%, rgba(214, 51, 132, 0.4) 100%); z-index: 2;"></div>
+        <img src="{{ asset('storage/headers/donation-hero.jpg') }}" 
+             class="w-100 h-100 animate-slow-zoom" 
+             style="object-fit: cover; opacity: 0.5;" 
+             alt="Support HFRO">
+    </div>
     
-    <div class="container text-center position-relative" style="z-index: 3;">
-        <h5 class="text-white tracking-widest text-uppercase mb-3 opacity-90">Make a Difference</h5>
-        <h1 class="text-white display-3 mb-4 fw-bold">Every Franc Counts</h1>
-        <p class="lead text-white opacity-90 mx-auto mb-4" style="max-width: 700px;">
-            Your generosity fuels our mission to build a healthy, educated, and self-reliant Rwanda. Help today for a better tomorrow.
+    <div class="container position-relative text-center py-5" style="z-index: 10;">
+        <h5 class="text-accent-pink fw-bold text-uppercase tracking-widest mb-3 animate__animated animate__fadeInDown">Make a Change</h5>
+        <h1 class="text-white display-3 fw-black mb-4 animate__animated animate__fadeInUp">Your Kindness, <span class="brand-text">Their Future</span></h1>
+        <p class="lead text-white-50 mx-auto mb-5 fs-5" style="max-width: 800px;">
+            100% of your donation goes directly to our community programs in Rwanda. From education to healthcare, your support builds a lasting legacy.
         </p>
-        
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="/" class="text-white opacity-75 text-decoration-none">Home</a></li>
-                <li class="breadcrumb-item active text-pink fw-bold" aria-current="page">Donation</li>
-            </ol>
-        </nav>
     </div>
 </div>
-<div class="container-fluid py-5 bg-light">
-    <div class="container py-5">
-        <div class="text-center mx-auto pb-5" style="max-width: 800px;">
-            <h5 class="brand-subtitle-centered mb-2">Support Our Cause</h5>
-            <h2 class="brand-title-dark display-5 mb-3">Your Kindness Saves Lives</h2>
-            <div class="title-line-center mx-auto mb-4"></div>
-            <p class="text-muted">Choose a cause to support. 100% of your donation goes directly to community programs in Rwanda.</p>
+
+<div class="container-fluid bg-light py-100">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-black text-purple">Choose Your Impact</h2>
+            <p class="text-muted">Select an amount that resonates with your heart.</p>
         </div>
 
-        <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-                <div class="donation-card shadow-premium h-100">
-                    <div class="donation-img-wrapper position-relative overflow-hidden">
-                        <img src="{{ asset('frontend/img/donation-1.jpg') }}" class="img-fluid w-100" alt="Education">
-                        <div class="donation-category-badge">Education</div>
+        <div class="row g-4 mb-5">
+            {{-- Option 1 --}}
+            <div class="col-md-4">
+                <div class="bg-white p-5 rounded-bento shadow-premium text-center h-100 border-0 hover-up">
+                    <div class="icon-box-premium bg-light text-primary mx-auto mb-4">
+                        <i class="fas fa-apple-alt"></i>
                     </div>
-                    <div class="p-4 bg-white text-center">
-                        <h4 class="brand-title-dark mb-3">School Supplies</h4>
-                        <p class="text-muted mb-4 small">Empower a student in Kigali with the essential tools they need to succeed in their studies this year.</p>
-                        
-                        <div class="donation-goal-mini mb-4">
-                            <div class="d-flex justify-content-between mb-1 small">
-                                <span>Impact: 50 Students</span>
-                                <span class="text-pink">80% Funded</span>
-                            </div>
-                            <div class="progress" style="height: 5px;">
-                                <div class="progress-bar bg-pink-gradient" style="width: 80%"></div>
-                            </div>
-                        </div>
-
-                        <a href="#" class="btn-modern-accent w-100 py-2">Donate Now</a>
-                    </div>
+                    <h3 class="fw-black text-dark mb-2">$25</h3>
+                    <p class="text-muted small mb-4">Provide nutrition and school meals for one child for an entire month.</p>
+                    <a href="#" class="btn btn-outline-primary rounded-pill px-4 fw-bold">Select</a>
                 </div>
             </div>
 
-            <div class="col-lg-4 col-md-6">
-                <div class="donation-card shadow-premium h-100 border-brand-accent">
-                    <div class="donation-img-wrapper position-relative overflow-hidden">
-                        <img src="{{ asset('frontend/img/service-2.jpg') }}" class="img-fluid w-100" alt="Health">
-                        <div class="donation-category-badge">Health</div>
+            {{-- Option 2 (Featured) --}}
+            <div class="col-md-4">
+                <div class="p-5 rounded-bento shadow-lg text-center h-100 border-0 position-relative text-white overflow-hidden" style="background: var(--grad-premium);">
+                    <span class="position-absolute top-0 end-0 bg-accent-pink px-3 py-1 fw-bold small" style="border-radius: 0 0 0 15px;">MOST POPULAR</span>
+                    <div class="icon-box-premium bg-white text-purple mx-auto mb-4">
+                        <i class="fas fa-book-reader"></i>
                     </div>
-                    <div class="p-4 bg-white text-center">
-                        <h4 class="brand-title-dark mb-3">Medical Assistance</h4>
-                        <p class="text-muted mb-4 small">Providing essential healthcare services and checkups for families in underserved rural areas.</p>
-                        
-                        <div class="donation-goal-mini mb-4">
-                            <div class="d-flex justify-content-between mb-1 small">
-                                <span>Impact: 100 Families</span>
-                                <span class="text-pink">45% Funded</span>
-                            </div>
-                            <div class="progress" style="height: 5px;">
-                                <div class="progress-bar bg-pink-gradient" style="width: 45%"></div>
-                            </div>
-                        </div>
-
-                        <a href="#" class="btn-modern-accent w-100 py-2">Donate Now</a>
-                    </div>
+                    <h3 class="fw-black mb-2 text-white">$100</h3>
+                    <p class="text-white-50 small mb-4">Sponsor a student's full vocational training module and equipment.</p>
+                    <a href="#" class="btn btn-light text-purple rounded-pill px-5 fw-black">Select</a>
                 </div>
             </div>
 
-            <div class="col-lg-4 col-md-6 mx-auto">
-                <div class="donation-card shadow-premium h-100">
-                    <div class="donation-img-wrapper position-relative overflow-hidden">
-                        <img src="{{ asset('frontend/img/donation-3.jpg') }}" class="img-fluid w-100" alt="Economic">
-                        <div class="donation-category-badge">Self-Reliance</div>
+            {{-- Option 3 --}}
+            <div class="col-md-4">
+                <div class="bg-white p-5 rounded-bento shadow-premium text-center h-100 border-0 hover-up">
+                    <div class="icon-box-premium bg-light text-primary mx-auto mb-4">
+                        <i class="fas fa-hand-holding-heart"></i>
                     </div>
-                    <div class="p-4 bg-white text-center">
-                        <h4 class="brand-title-dark mb-3">Job Training</h4>
-                        <p class="text-muted mb-4 small">Supporting vocational training centers that teach youth valuable skills for future employment.</p>
-                        
-                        <div class="donation-goal-mini mb-4">
-                            <div class="d-flex justify-content-between mb-1 small">
-                                <span>Impact: 20 Trainees</span>
-                                <span class="text-pink">60% Funded</span>
-                            </div>
-                            <div class="progress" style="height: 5px;">
-                                <div class="progress-bar bg-pink-gradient" style="width: 60%"></div>
-                            </div>
-                        </div>
-
-                        <a href="#" class="btn-modern-accent w-100 py-2">Donate Now</a>
-                    </div>
+                    <h3 class="fw-black text-dark mb-2">$500+</h3>
+                    <p class="text-muted small mb-4">Major contribution to community infrastructure and clean water projects.</p>
+                    <a href="#" class="btn btn-outline-primary rounded-pill px-4 fw-bold">Select</a>
                 </div>
             </div>
         </div>
 
-        <div class="mt-5 p-5 glass-morphism rounded-custom text-center shadow-lg" style="background: white;">
-            <h3 class="brand-title-dark mb-4">General Fund Contribution</h3>
-            <p class="mb-4 text-muted">Don't have a specific project in mind? Your contribution to our general fund allows us to respond where the need is greatest.</p>
-            <div class="d-flex flex-wrap justify-content-center gap-3">
-                <button class="btn-outline-brand rounded-pill px-4 py-2">RWF 5,000</button>
-                <button class="btn-outline-brand rounded-pill px-4 py-2">RWF 15,000</button>
-                <button class="btn-outline-brand rounded-pill px-4 py-2">RWF 50,000</button>
-                <button class="btn-outline-brand rounded-pill px-4 py-2">Other Amount</button>
+        <div class="row mt-5 pt-5 align-items-center g-5">
+            <div class="col-lg-6">
+                <div class="bg-white p-5 rounded-bento shadow-premium border-0">
+                    <h4 class="fw-black text-purple mb-4">How to Give</h4>
+                    
+                    <div class="d-flex align-items-center mb-4 p-3 rounded-4 bg-light border-0">
+                        <div class="bg-white p-3 rounded-3 shadow-sm me-3">
+                            <i class="fas fa-university text-primary fs-4"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Bank Transfer</h6>
+                            <p class="text-muted small mb-0">I&M Bank Rwanda | Acc: 000123456789</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-4 p-3 rounded-4 bg-light border-0">
+                        <div class="bg-white p-3 rounded-3 shadow-sm me-3">
+                            <i class="fas fa-mobile-alt text-success fs-4"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Mobile Money (Momo)</h6>
+                            <p class="text-muted small mb-0">Dial *182*8*1*123456# (HFRO)</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center p-3 rounded-4 bg-light border-0">
+                        <div class="bg-white p-3 rounded-3 shadow-sm me-3">
+                            <i class="fab fa-paypal text-info fs-4"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Online Payment</h6>
+                            <p class="text-muted small mb-0">Donate securely via PayPal or Credit Card</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="mt-4">
-                <a href="#" class="btn-modern-accent px-5">Proceed to Secure Payment</a>
+
+            <div class="col-lg-6">
+                <div class="ps-lg-5">
+                    <h2 class="fw-black text-purple mb-4">Where does your money go?</h2>
+                    <p class="text-muted leading-relaxed mb-4">
+                        Transparency is our core value. Every contribution is tracked and reported back to our donors. We ensure that 100% of public donations reach the final beneficiaries.
+                    </p>
+                    <ul class="list-unstyled">
+                        <li class="mb-3 d-flex align-items-center">
+                            <i class="fas fa-check-circle text-accent-pink me-3"></i>
+                            <span class="fw-bold text-dark">Verified Project Allocation</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-center">
+                            <i class="fas fa-check-circle text-accent-pink me-3"></i>
+                            <span class="fw-bold text-dark">Quarterly Impact Reports</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-center">
+                            <i class="fas fa-check-circle text-accent-pink me-3"></i>
+                            <span class="fw-bold text-dark">Direct Beneficiary Connection</span>
+                        </li>
+                    </ul>
+                    <div class="mt-5 p-4 rounded-bento bg-white shadow-sm border-start border-primary border-5">
+                        <p class="fst-italic text-muted mb-0">
+                            "Supporting HFRO isn't just giving money; it's investing in the dignity of a family."
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+@push('styles')
+<style>
+    .vh-60 { height: 60vh; }
+    .py-100 { padding: 100px 0; }
+    .rounded-bento { border-radius: 24px; }
+    .fw-black { font-weight: 900; }
+    .text-purple { color: var(--primary-color); }
+    .leading-relaxed { line-height: 1.8; }
+    
+    .icon-box-premium {
+        width: 70px;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 20px;
+        font-size: 1.8rem;
+        transition: 0.3s;
+    }
+
+    .hover-up {
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    .hover-up:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 25px 50px rgba(45, 13, 82, 0.1) !important;
+    }
+</style>
+@endpush
 @endsection
