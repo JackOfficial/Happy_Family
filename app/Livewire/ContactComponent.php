@@ -12,6 +12,7 @@ class ContactComponent extends Component
     public $name, $email, $subject, $message;
 
     public function contact(){
+        dd("Hello");
         $contact = $this->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email',
