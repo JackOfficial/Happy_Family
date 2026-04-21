@@ -1,232 +1,334 @@
-/* Happy Family Rwanda - Master Consolidated Stylesheet 2026
-    Branding: Deep Purple (#631084) & Vibrant Pink (#ec409e)
-    Note: All custom logic for Carousels, Impact Cards, and Footers preserved.
+/* Happy Family Rwanda - 2026 NGO Premium Global Stylesheet 
+    Focus: Transparency, Impact Storytelling, & Conversion-Focused Luxury
 */
 
-/* --- 1. UNIFIED VARIABLES --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Jost:wght@700;800;900&display=swap');
+
 :root {
-    --primary-color: #631084;      /* Deep Purple */
-    --accent-color: #ec409e;       /* Vibrant Pink */
-    --primary-purple: #631084;
-    --accent-pink: #ec409e;
-    --footer-dark: #14031a;
+    /* Branding: Compassion meets Authority */
+    --primary-color: #631084;      
+    --accent-color: #ec409e;       
+    --success-green: #00c897;      /* Added for "Goal Reached" or "Impact" metrics */
+    --dark-void: #0d0211;
     --light-bg: #fcfaff;
     
-    /* Helper Variables */
-    --bs-primary: var(--primary-color);
-    --bs-secondary: #fdf2f8;
-    --bs-dark: #1a1a1a;
-    --bs-white: #ffffff;
-    --bs-body: #333333;
+    /* Luxury NGO Gradients */
+    --grad-premium: linear-gradient(135deg, #631084 0%, #ec409e 100%);
+    --grad-impact: linear-gradient(90deg, #631084 0%, #00c897 100%);
     
-    /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* UI Specs */
+    --glass-white: rgba(255, 255, 255, 0.85);
+    --shadow-premium: 0 20px 40px -10px rgba(99, 16, 132, 0.12);
+    --radius-pill: 50px;
+    --radius-bento: 24px;
 }
 
-/* --- 2. GLOBAL RESET & BASE ELEMENTS --- */
-html { scroll-behavior: smooth; }
+/* --- 1. CORE OPTIMIZATION --- */
 body { 
-    margin: 0; padding: 0;
-    font-family: 'Inter', sans-serif; 
-    overflow-x: hidden; 
-    color: var(--bs-body);
+    font-family: 'Inter', sans-serif;
     background-color: var(--light-bg);
-    -webkit-font-smoothing: antialiased; 
-    -moz-osx-font-smoothing: grayscale; 
+    color: #2d1a35;
+    line-height: 1.7;
 }
 
-h1, h2, h3, h4, h5, h6, .nav-link { 
-    font-family: 'Jost', sans-serif; 
-    font-weight: 700; 
+/* Typography for storytelling */
+.text-gradient {
+    background: var(--grad-premium);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+/* --- 2. NGO NAVIGATION (High-Visibility CTA) --- */
+.navbar {
+    padding: 1rem 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar.scrolled-nav {
+    background: var(--glass-white) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(99, 16, 132, 0.1);
+    box-shadow: var(--shadow-premium);
+}
+
+/* Specific "Donate Now" Highlight in Nav */
+.nav-donate-btn {
+    background: var(--grad-premium);
+    color: #fff !important;
+    border-radius: var(--radius-pill);
+    padding: 10px 25px !important;
+    font-weight: 700;
+    margin-left: 15px;
+    box-shadow: 0 8px 15px rgba(236, 64, 158, 0.2);
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.nav-donate-btn:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 12px 20px rgba(236, 64, 158, 0.4);
+}
+
+/* --- 3. IMPACT BENTO COMPONENTS --- */
+.impact-card {
+    background: #ffffff;
+    border-radius: var(--radius-bento);
+    border: 1px solid rgba(99, 16, 132, 0.05);
+    padding: 1.5rem;
+    height: 100%;
+    transition: all 0.4s ease;
+    box-shadow: var(--shadow-premium);
+    display: flex;
+    flex-direction: column;
+}
+
+.impact-card:hover {
+    border-color: var(--accent-color);
+    transform: translateY(-8px);
+}
+
+/* High-End Progress Bar for Crowdfunding/Impact */
+.impact-progress {
+    height: 8px;
+    background: #f0e6f5;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+.impact-progress-bar {
+    height: 100%;
+    background: var(--grad-impact);
+    border-radius: 10px;
+    transition: width 1.5s ease-in-out;
+}
+
+.impact-stat {
+    font-family: 'Jost', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
     color: var(--primary-color);
 }
 
-a { text-decoration: none !important; color: inherit; }
-::selection { background-color: var(--accent-color); color: var(--bs-white); }
-[x-cloak] { display: none !important; }
-.lh-lg { line-height: 1.8; }
-.opacity-90 { opacity: 0.9; }
-.opacity-70 { opacity: 0.7; }
-.rounded-custom { border-radius: 12px; }
-
-/* --- 3. NAVIGATION & TOPBAR --- */
-.topbar, .top-info-bar { 
-    padding: 2px 10px 2px 20px;
-    background: var(--primary-color) !important;
-    color: rgba(255,255,255,0.9);
-}
-.topbar a { color: var(--bs-white) !important; transition: var(--transition-smooth); }
-.topbar a:hover { color: var(--accent-color) !important; }
-
-.navbar { padding: 0; transition: var(--transition-smooth); }
-
-.glass-nav {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(99, 16, 132, 0.1);
-}
-
-.scrolled-nav {
-    padding: 5px 0 !important;
-    background: rgba(255, 255, 255, 0.98) !important;
-    box-shadow: 0 10px 30px rgba(99, 16, 132, 0.1);
-}
-
-.nav-link {
-    font-weight: 600;
-    color: var(--primary-color) !important;
-    position: relative;
-    padding: 10px 15px;
-    transition: var(--transition-smooth);
-}
-
-.nav-link:after {
-    content: ''; position: absolute; width: 0; height: 3px; 
-    bottom: 0; left: 50%; background: var(--accent-color);
-    transition: var(--transition-smooth); border-radius: 10px;
-}
-.nav-link:hover:after, .nav-link.active:after { width: 60%; left: 20%; }
-
-.btn-donate-nav {
-    background: var(--accent-color);
-    color: white !important;
-    padding: 12px 28px;
-    border-radius: 10px;
-    font-weight: 700;
-    display: inline-flex;
-    align-items: center;
-    transition: 0.3s;
-}
-.btn-donate-nav:hover { background: var(--primary-color); transform: translateY(-2px); }
-
-/* --- 4. HERO & CAROUSEL DESIGN --- */
-.carousel-item { background: #000; position: relative; min-height: 100vh; }
-.banner-img { 
-    object-fit: cover; width: 100%; height: 100%;
-    filter: brightness(0.6); 
-}
-.carousel-caption { z-index: 10; bottom: 0; left: 0; right: 0; top: 0; }
-.hero-glass-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
-    max-width: 900px;
-}
-
-/* Indicators Fix */
-.custom-indicators li, .custom-indicators [data-bs-target] {
-    width: 12px; height: 12px; border-radius: 50%; margin: 0 8px;
-    background-color: rgba(255,255,255,0.5); border: none;
-}
-.custom-indicators li.active, .custom-indicators .active {
-    background-color: var(--accent-pink); width: 30px; border-radius: 10px;
-}
-
-/* --- 5. IMPACT & PROJECT CARDS --- */
-.project-card, .impact-card {
-    background: #fff; border-radius: 15px; overflow: hidden; height: 100%;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    border: 1px solid rgba(0,0,0,0.05); display: flex; flex-direction: column;
-}
-.project-card:hover, .impact-card:hover { 
-    transform: translateY(-10px); 
-    box-shadow: 0 20px 40px rgba(99, 16, 132, 0.12); 
-}
-
-.impact-img-container { position: relative; overflow: hidden; height: 220px; }
-.impact-img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
-.impact-card:hover .impact-img-container img { transform: scale(1.1); }
-
-.impact-tag {
-    position: absolute; top: 15px; right: 15px;
-    background: var(--accent-pink); color: white;
-    font-size: 0.7rem; padding: 4px 12px; border-radius: 50px;
-    font-weight: 700; text-transform: uppercase; z-index: 3;
-}
-
-/* --- 6. PROFESSIONAL BUTTON UI --- */
-.btn-modern {
-    border-radius: 50px;
-    padding: 15px 40px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    background: var(--primary-color);
+/* --- 4. CALL TO ACTION (CTA) PREMIUM --- */
+.btn-premium {
+    background: var(--grad-premium);
     color: white !important;
     border: none;
-    transition: var(--transition-smooth);
-}
-.btn-modern:hover { 
-    background: var(--accent-color);
-    transform: translateY(-3px); 
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2); 
-}
-
-.btn-modern-accent {
-    background: var(--accent-pink); color: white;
-    padding: 10px 25px; border-radius: 6px; font-weight: 600; transition: 0.3s;
-}
-.btn-modern-purple {
-    background: var(--primary-purple); color: #ffffff !important;
-    border-radius: 8px; padding: 12px 25px; font-weight: 700;
-    border: 2px solid var(--primary-purple); transition: 0.3s;
+    border-radius: var(--radius-pill);
+    padding: 16px 40px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: 0.4s;
+    box-shadow: 0 10px 20px rgba(99, 16, 132, 0.2);
 }
 
-/* --- 7. PARTNERS & OWL CAROUSEL --- */
-.partner-logo-wrap {
-    background: #fff; height: 120px; display: flex; align-items: center; justify-content: center;
-    padding: 20px; border-radius: 15px; transition: all 0.4s ease; border: 1px solid #eee;
-}
-.partner-logo { max-height: 80px; filter: grayscale(100%); opacity: 0.7; transition: 0.4s; }
-.partner-item:hover .partner-logo-wrap { border-color: var(--accent-pink); transform: translateY(-5px); }
-.partner-item:hover .partner-logo { filter: grayscale(0%); opacity: 1; }
-
-.owl-nav .owl-prev, .owl-nav .owl-next {
-    background: var(--primary-color) !important; color: white !important;
-    border-radius: 8px !important; transition: var(--transition-smooth);
+.btn-premium:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(236, 64, 158, 0.3);
+    filter: brightness(1.1);
 }
 
-/* --- 8. THE MAIN FOOTER (Preserved Brand Styling) --- */
+/* --- 5. TRUST & TRANSPARENCY (Glassmorphism) --- */
+.transparency-seal {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-bento);
+    padding: 2rem;
+    text-align: center;
+}
+
+/* --- 6. FOOTER (NGO Optimized) --- */
 .main-footer {
-    background-color: var(--footer-dark);
-    color: #ffffff;
-    padding: 60px 0 20px;
+    background: var(--dark-void);
+    color: rgba(255,255,255,0.8);
+    padding: 80px 0 30px;
+    border-top: 1px solid rgba(236, 64, 158, 0.2);
 }
-.footer-title {
-    font-family: 'Jost', sans-serif; font-weight: 700; font-size: 1.2rem;
-    text-transform: uppercase; letter-spacing: 1px; position: relative; padding-bottom: 12px;
-}
-.footer-title::after {
-    content: ''; position: absolute; left: 0; bottom: 0; width: 35px; height: 3px;
-    background: var(--accent-pink); border-radius: 2px;
-}
-.social-icon {
-    width: 38px; height: 38px; background: rgba(255, 255, 255, 0.08);
-    border-radius: 10px; display: inline-flex; align-items: center; justify-content: center;
-    color: white; margin-left: 12px; transition: 0.3s;
-}
-.social-icon:hover { background: var(--accent-pink); transform: translateY(-5px); }
 
-/* --- 9. MISC & UTILITIES --- */
-.back-to-top {
-    position: fixed; right: 30px; bottom: 30px; width: 45px; height: 45px;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--accent-color) !important; color: white !important;
-    border-radius: 50%; z-index: 99; transition: var(--transition-smooth);
+.footer-newsletter {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-.animate-bounce { animation: bounce 3s infinite ease-in-out; }
 
-/* Mobile Adjustments */
-@media (max-width: 1199.98px) {
-    .navbar-collapse {
-        background: white; margin-top: 1rem; padding: 2rem;
-        border-radius: 20px; border: 1px solid rgba(0,0,0,0.05);
-    }
+.footer-link {
+    color: rgba(255,255,255,0.7);
+    transition: 0.3s;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.footer-link:hover {
+    color: var(--accent-color);
+    transform: translateX(5px);
+}
+
+/* --- 7. NGO UTILITIES --- */
+.badge-impact {
+    background: rgba(0, 200, 151, 0.1);
+    color: var(--success-green);
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+}
+
+.volunteer-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: var(--glass-white);
+    backdrop-filter: blur(10px);
+    padding: 15px;
+    border-radius: 16px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* --- 8. ANIMATIONS --- */
+@keyframes pulse-soft {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.urgent-cause-pulse {
+    animation: pulse-soft 2s infinite ease-in-out;
+}
+
+/* --- LOGO & BRANDING --- */
+.logo-img {
+    height: 60px; /* Default height for top-of-page */
+    width: auto;
+    object-fit: contain;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    will-change: height, filter;
+}
+
+/* This class is triggered when the user scrolls */
+.scrolled-nav .logo-img {
+    height: 40px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+/* --- FOOTER SPECIFIC ENHANCEMENTS --- */
+.footer-bottom-border {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-gallery-thumb {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+}
+
+.footer-gallery-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.gallery-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(99, 16, 132, 0.8); /* Primary color overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    z-index: 2;
+    transition: 0.3s ease;
+}
+
+.footer-gallery-thumb:hover .gallery-overlay {
+    opacity: 1;
+}
+
+.footer-gallery-thumb:hover img {
+    transform: scale(1.15);
+}
+
+/* Custom spacing for the newsletter box in the footer */
+.footer-newsletter {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* --- NEWSLETTER COMPONENT --- */
+.newsletter-form {
+    max-width: 450px;
+}
+
+.footer-glass-input {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 50px 0 0 50px !important;
+    color: white !important;
+    padding: 14px 25px !important;
+    transition: all 0.3s ease;
+}
+
+.footer-glass-input:focus {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: var(--accent-color) !important;
+}
+
+.footer-glass-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-premium-sm {
+    background: var(--grad-premium);
+    color: white;
+    border: none;
+    border-radius: 0 50px 50px 0 !important;
+    padding: 0 30px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-premium-sm:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 5px 15px rgba(236, 64, 158, 0.3);
+}
+
+.alert-success-footer {
+    background: rgba(0, 200, 151, 0.1);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    border-left: 3px solid var(--success-green);
+}
+
+/* --- COPYRIGHT STYLES --- */
+.copyright-text {
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.brand-text {
+    /* Subtle gradient effect on the brand name in the footer */
+    background: linear-gradient(to right, #ffffff, var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.copyright-text .fw-light {
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    padding-left: 12px;
 }
