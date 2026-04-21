@@ -40,83 +40,64 @@
         </div>
 
         <div class="row g-4">
-            {{-- Project 1: Education --}}
-            <div class="col-lg-4 col-md-6">
-                <div class="project-card shadow-premium rounded-bento overflow-hidden h-100 border-0 bg-white">
-                    <div class="position-relative overflow-hidden" style="height: 240px;">
-                        <img src="{{ asset('storage/projects/school.jpg') }}" class="w-100 h-100 img-zoom" style="object-fit: cover;">
-                        <div class="project-tag">Education</div>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="fw-black text-purple mb-3">Vocational Toolkits for Youth</h4>
-                        <p class="text-muted small mb-4">Help 50 Level 5 students acquire the networking tools and laptops needed for their final certification exams.</p>
-                        
-                        <div class="progress-wrapper mb-3">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="small fw-bold text-dark">$3,400 <small class="text-muted">Raised</small></span>
-                                <span class="small fw-bold text-accent-pink">75%</span>
-                            </div>
-                            <div class="progress rounded-pill" style="height: 8px;">
-                                <div class="progress-bar bg-accent-pink" style="width: 75%"></div>
-                            </div>
-                        </div>
-                        
-                        <a href="/projects/vocational-kits" class="btn btn-outline-purple w-100 rounded-pill fw-bold">Read Story & Donate</a>
-                    </div>
-                </div>
-            </div>
+            @forelse($projects as $project)
+                @php 
+                    // Dynamic Progress Calculation
+                    $percent = $project->goal_amount > 0 
+                        ? min(round(($project->raised_amount / $project->goal_amount) * 100), 100) 
+                        : 0;
+                    
+                    // Image Logic
+                    $photo = $project->project_photos->first();
+                    $imagePath = $photo ? asset('storage/' . $photo->path) : asset('images/default-project.jpg');
+                @endphp
 
-            {{-- Project 2: Health/Nutrition --}}
-            <div class="col-lg-4 col-md-6">
-                <div class="project-card shadow-premium rounded-bento overflow-hidden h-100 border-0 bg-white">
-                    <div class="position-relative overflow-hidden" style="height: 240px;">
-                        <img src="{{ asset('storage/projects/nutrition.jpg') }}" class="w-100 h-100 img-zoom" style="object-fit: cover;">
-                        <div class="project-tag bg-success">Nutrition</div>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="fw-black text-purple mb-3">Community Feeding Program</h4>
-                        <p class="text-muted small mb-4">Ensuring consistent school meals for 200 children in rural Kigali to improve concentration and attendance.</p>
-                        
-                        <div class="progress-wrapper mb-3">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="small fw-bold text-dark">$1,200 <small class="text-muted">Raised</small></span>
-                                <span class="small fw-bold text-accent-pink">40%</span>
-                            </div>
-                            <div class="progress rounded-pill" style="height: 8px;">
-                                <div class="progress-bar bg-accent-pink" style="width: 40%"></div>
-                            </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="project-card shadow-premium rounded-bento overflow-hidden h-100 border-0 bg-white">
+                        <div class="position-relative overflow-hidden" style="height: 240px;">
+                            <img src="{{ $imagePath }}" class="w-100 h-100 img-zoom" style="object-fit: cover;" alt="{{ $project->title }}">
+                            
+                            {{-- Dynamic Tags from Causes relationship --}}
+                            @if($project->causes->isNotEmpty())
+                                <div class="project-tag">
+                                    {{ $project->causes->first()->name }}
+                                </div>
+                            @endif
                         </div>
-                        
-                        <a href="/projects/nutrition" class="btn btn-outline-purple w-100 rounded-pill fw-bold">Read Story & Donate</a>
+                        <div class="p-4">
+                            <h4 class="fw-black text-purple mb-3 text-truncate-2">{{ $project->title }}</h4>
+                            <p class="text-muted small mb-4">
+                                {{ $project->summary ?? Str::limit(strip_tags($project->description), 110) }}
+                            </p>
+                            
+                            <div class="progress-wrapper mb-3">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="small fw-bold text-dark">
+                                        ${{ number_format($project->raised_amount) }} 
+                                        <small class="text-muted">of ${{ number_format($project->goal_amount) }}</small>
+                                    </span>
+                                    <span class="small fw-bold text-accent-pink">{{ $percent }}%</span>
+                                </div>
+                                <div class="progress rounded-pill" style="height: 8px;">
+                                    <div class="progress-bar bg-accent-pink" style="width: {{ $percent }}%"></div>
+                                </div>
+                            </div>
+                            
+                            <a href="{{ route('projects.show', $project->slug) }}" class="btn btn-outline-purple w-100 rounded-pill fw-bold">Read Story & Donate</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            {{-- Project 3: Water --}}
-            <div class="col-lg-4 col-md-12">
-                <div class="project-card shadow-premium rounded-bento overflow-hidden h-100 border-0 bg-white">
-                    <div class="position-relative overflow-hidden" style="height: 240px;">
-                        <img src="{{ asset('storage/projects/water.jpg') }}" class="w-100 h-100 img-zoom" style="object-fit: cover;">
-                        <div class="project-tag bg-info">Clean Water</div>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="fw-black text-purple mb-3">Clean Water Borehole</h4>
-                        <p class="text-muted small mb-4">Constructing a solar-powered water point for a community of 1,200 people currently walking 5km for water.</p>
-                        
-                        <div class="progress-wrapper mb-3">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="small fw-bold text-dark">$8,900 <small class="text-muted">Raised</small></span>
-                                <span class="small fw-bold text-accent-pink">89%</span>
-                            </div>
-                            <div class="progress rounded-pill" style="height: 8px;">
-                                <div class="progress-bar bg-accent-pink" style="width: 89%"></div>
-                            </div>
-                        </div>
-                        
-                        <a href="/projects/water-mission" class="btn btn-outline-purple w-100 rounded-pill fw-bold">Read Story & Donate</a>
-                    </div>
+            @empty
+                <div class="col-12 text-center py-5">
+                    <i class="fas fa-folder-open text-muted display-4 mb-3"></i>
+                    <p class="text-muted">No projects currently seeking funding. Check back soon!</p>
                 </div>
-            </div>
+            @endforelse
+        </div>
+        
+        {{-- Pagination --}}
+        <div class="mt-5 d-flex justify-content-center">
+            {{ $projects->links() }}
         </div>
     </div>
 </div>
@@ -135,36 +116,41 @@
                         <div class="bg-light p-2 rounded-3 me-3 text-primary"><i class="fas fa-shield-alt"></i></div>
                         <h6 class="fw-bold mb-0 text-dark">Secure Transaction</h6>
                     </div>
-                    <p class="small text-muted mb-0">Your payment is encrypted and processed via world-class gateways (PayPal/Paystack).</p>
+                    <p class="small text-muted mb-0">Your payment is encrypted and processed via Paystack (Mobile Money & Cards).</p>
                 </div>
             </div>
             
             <div class="col-lg-7">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <div class="bg-white p-4 rounded-bento text-center shadow-sm hover-up border-0 h-100 d-flex flex-column justify-content-center">
-                            <h3 class="fw-black text-purple mb-1">$25</h3>
-                            <p class="text-muted x-small mb-3">Impact Partner</p>
-                            <button class="btn btn-sm btn-purple-gradient rounded-pill">Select</button>
-                        </div>
+                        <a href="{{ route('donations.checkout') }}?amount=25" class="text-decoration-none">
+                            <div class="bg-white p-4 rounded-bento text-center shadow-sm hover-up border-0 h-100 d-flex flex-column justify-content-center">
+                                <h3 class="fw-black text-purple mb-1">$25</h3>
+                                <p class="text-muted x-small mb-3">Impact Partner</p>
+                                <span class="btn btn-sm btn-purple-gradient rounded-pill">Select</span>
+                            </div>
+                        </a>
                     </div>
                     <div class="col-md-4">
-                        <div class="bg-white p-4 rounded-bento text-center shadow-premium hover-up border-0 h-100 d-flex flex-column justify-content-center border-accent">
-                            <h3 class="fw-black text-purple mb-1">$100</h3>
-                            <p class="text-muted x-small mb-3">Change Maker</p>
-                            <button class="btn btn-sm btn-purple-gradient rounded-pill shadow">Select</button>
-                        </div>
+                        <a href="{{ route('donations.checkout') }}?amount=100" class="text-decoration-none">
+                            <div class="bg-white p-4 rounded-bento text-center shadow-premium hover-up border-0 h-100 d-flex flex-column justify-content-center border-accent">
+                                <h3 class="fw-black text-purple mb-1">$100</h3>
+                                <p class="text-muted x-small mb-3">Change Maker</p>
+                                <span class="btn btn-sm btn-purple-gradient rounded-pill shadow">Select</span>
+                            </div>
+                        </a>
                     </div>
                     <div class="col-md-4">
-                        <div class="bg-white p-4 rounded-bento text-center shadow-sm hover-up border-0 h-100 d-flex flex-column justify-content-center">
-                            <h3 class="fw-black text-purple mb-1">$Custom</h3>
-                            <p class="text-muted x-small mb-3">Own Amount</p>
-                            <button class="btn btn-sm btn-outline-purple rounded-pill">Type</button>
-                        </div>
+                        <a href="{{ route('donations.checkout') }}" class="text-decoration-none">
+                            <div class="bg-white p-4 rounded-bento text-center shadow-sm hover-up border-0 h-100 d-flex flex-column justify-content-center">
+                                <h3 class="fw-black text-purple mb-1">$Custom</h3>
+                                <p class="text-muted x-small mb-3">Own Amount</p>
+                                <span class="btn btn-sm btn-outline-purple rounded-pill">Type</span>
+                            </div>
+                        </a>
                     </div>
                 </div>
 
-                {{-- Payment Methods Summary --}}
                 <div class="mt-5 d-flex flex-wrap gap-4 justify-content-center opacity-75">
                     <div class="d-flex align-items-center"><i class="fas fa-university me-2"></i> Bank</div>
                     <div class="d-flex align-items-center"><i class="fas fa-mobile-alt me-2"></i> Momo</div>
@@ -184,19 +170,20 @@
     .fw-black { font-weight: 900; }
     .leading-relaxed { line-height: 1.8; }
     .x-small { font-size: 0.75rem; }
+    .text-truncate-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;  
+        overflow: hidden;
+    }
 
-    /* Project Cards */
-    .project-card {
-        transition: all 0.4s ease;
-    }
-    .project-card:hover {
-        transform: translateY(-10px);
-    }
+    .project-card { transition: all 0.4s ease; }
+    .project-card:hover { transform: translateY(-10px); }
     .project-tag {
         position: absolute;
         bottom: 15px;
         left: 15px;
-        background: var(--grad-premium);
+        background: linear-gradient(135deg, #631084 0%, #ec409e 100%);
         color: white;
         padding: 5px 15px;
         border-radius: 50px;
@@ -205,26 +192,15 @@
         text-transform: uppercase;
         z-index: 5;
     }
-    .img-zoom {
-        transition: transform 0.6s ease;
-    }
-    .project-card:hover .img-zoom {
-        transform: scale(1.1);
-    }
+    .img-zoom { transition: transform 0.6s ease; }
+    .project-card:hover .img-zoom { transform: scale(1.1); }
     .progress-bar {
         border-radius: 50px;
-        background: var(--grad-premium) !important;
+        background: linear-gradient(135deg, #631084 0%, #ec409e 100%) !important;
     }
-    .border-accent { border: 2px solid var(--accent-pink) !important; }
-
-    .btn-outline-purple {
-        border: 2px solid var(--primary-color);
-        color: var(--primary-color);
-    }
-    .btn-outline-purple:hover {
-        background: var(--primary-color);
-        color: white;
-    }
+    .border-accent { border: 2px solid #ec409e !important; }
+    .hover-up { transition: 0.3s; }
+    .hover-up:hover { transform: translateY(-5px); }
 </style>
 @endpush
 @endsection
