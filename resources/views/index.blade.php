@@ -743,16 +743,6 @@
                         <p class="text-muted small mb-4 flex-grow-1">
                             {!! Str::limit(strip_tags($cause->description), 85) !!}
                         </p>
-                        
-                        <div class="impact-progress-wrapper mb-4">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="small fw-bold text-muted">Goal Status</span>
-                                <span class="impact-stat small">75%</span>
-                            </div>
-                            <div class="impact-progress">
-                                <div class="impact-progress-bar" style="width: 75%;"></div>
-                            </div>
-                        </div>
 
                         <div class="d-flex align-items-center justify-content-between mt-auto pt-3 border-top border-light">
                             <a href="{{ route('causes.show', $cause->slug) }}" class="text-gradient text-decoration-none fw-bold small">
@@ -868,7 +858,7 @@
                     </div>
                     <h5 class="text-white opacity-50 small text-uppercase tracking-widest mb-2">Projects</h5>
                     <div class="d-flex justify-content-center align-items-baseline">
-                        <span class="display-4 fw-bold text-white counter-value" data-toggle="counter-up">360</span>
+                        <span class="display-4 fw-bold text-white counter-value" data-toggle="counter-up">100</span>
                         <span class="h2 fw-bold text-accent-pink ms-1">+</span>
                     </div>
                 </div>
@@ -882,7 +872,7 @@
                     <h5 class="text-white opacity-50 small text-uppercase tracking-widest mb-2">Funds Raised</h5>
                     <div class="d-flex justify-content-center align-items-baseline">
                         <span class="h4 fw-bold text-accent-pink me-1">$</span>
-                        <span class="display-4 fw-bold text-white counter-value" data-toggle="counter-up">100</span>
+                        <span class="display-4 fw-bold text-white counter-value" data-toggle="counter-up">500</span>
                         <span class="display-4 fw-bold text-white">K</span>
                     </div>
                 </div>
@@ -895,7 +885,7 @@
                     </div>
                     <h5 class="text-white opacity-50 small text-uppercase tracking-widest mb-2">Volunteers</h5>
                     <div class="d-flex justify-content-center align-items-baseline">
-                        <span class="display-4 fw-bold text-white counter-value" data-toggle="counter-up">50</span>
+                        <span class="display-4 fw-bold text-white counter-value" data-toggle="counter-up">416</span>
                         <span class="h2 fw-bold text-accent-pink ms-1">+</span>
                     </div>
                 </div>
