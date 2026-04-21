@@ -29,6 +29,17 @@
             @csrf
             @method('PUT')
 
+            {{-- Hidden inputs to track IDs marked for deletion --}}
+            <template x-for="id in deletedPhotoIds">
+                <input type="hidden" name="delete_photos[]" :value="id">
+            </template>
+            <template x-for="id in deletedDocIds">
+                <input type="hidden" name="delete_documents[]" :value="id">
+            </template>
+            {{-- Tracks which photo ID is featured (either existing or new index) --}}
+            <input type="hidden" name="featured_photo_id" :value="featuredPhotoId">
+            <input type="hidden" name="featured_index" :value="featuredIndex">
+
             <div class="row">
                 <div class="col-lg-8">
                     <div class="card shadow-sm border-0 mb-4">
@@ -89,27 +100,37 @@
                             <input type="file" name="photos[]" x-ref="photoInput" class="d-none" multiple accept="image/*" @change="addPhotos">
                         </div>
                         <div class="card-body">
-                            <p class="small text-muted mb-3"><i class="fas fa-info-circle mr-1"></i> New uploads will be added to the existing gallery.</p>
+                            <p class="small text-muted mb-3"><i class="fas fa-info-circle mr-1"></i> Click the star to set a photo as featured.</p>
                             
                             <div class="row">
+                                {{-- Existing Photos from DB --}}
                                 @foreach($project->project_photos as $photo)
-                                    <div class="col-md-4 mb-3" id="existing-photo-{{ $photo->id }}">
-                                        <div class="position-relative border rounded p-1 {{ $photo->is_featured ? 'border-primary shadow-sm' : '' }}">
+                                    <div class="col-md-4 mb-3" x-show="!deletedPhotoIds.includes({{ $photo->id }})">
+                                        <div class="position-relative border rounded p-1" 
+                                             :class="featuredPhotoId == {{ $photo->id }} ? 'border-primary shadow-sm' : ''">
                                             <img src="{{ asset('storage/' . $photo->file_path) }}" class="img-fluid rounded" style="height: 150px; width: 100%; object-fit: cover;">
-                                            @if($photo->is_featured)
-                                                <span class="badge badge-warning position-absolute" style="top: 10px; left: 10px;"><i class="fas fa-star"></i> Featured</span>
-                                            @endif
-                                            {{-- Add logic here if you want to allow deleting existing photos via AJAX --}}
+                                            
+                                            <button type="button" @click="setExistingFeatured({{ $photo->id }})"
+                                                    class="btn btn-sm position-absolute" style="top: 10px; left: 10px;"
+                                                    :class="featuredPhotoId == {{ $photo->id }} ? 'btn-warning' : 'btn-light opacity-75'">
+                                                <i class="fas fa-star"></i>
+                                            </button>
+
+                                            <button type="button" @click="removeExistingPhoto({{ $photo->id }})" 
+                                                    class="btn btn-danger btn-sm position-absolute" style="top: 10px; right: 10px;">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 @endforeach
 
+                                {{-- New Upload Previews --}}
                                 <template x-for="(photo, index) in photos" :key="index">
                                     <div class="col-md-4 mb-3">
                                         <div class="position-relative border rounded p-1" :class="photo.is_featured ? 'border-primary shadow-sm' : ''">
                                             <img :src="photo.preview" class="img-fluid rounded" style="height: 150px; width: 100%; object-fit: cover;">
                                             
-                                            <button type="button" @click="setFeatured(index)"
+                                            <button type="button" @click="setNewFeatured(index)"
                                                     class="btn btn-sm position-absolute" style="top: 10px; left: 10px;"
                                                     :class="photo.is_featured ? 'btn-warning' : 'btn-light opacity-75'">
                                                 <i class="fas fa-star"></i>
@@ -118,7 +139,6 @@
                                             <button type="button" @click="removePhoto(index)" class="btn btn-danger btn-sm position-absolute" style="top: 10px; right: 10px;">
                                                 <i class="fas fa-trash"></i>
                                             </button>
-                                            <input type="hidden" name="featured_index" :value="featuredIndex">
                                         </div>
                                     </div>
                                 </template>
@@ -135,9 +155,13 @@
                                 <label class="small font-weight-bold text-muted">Current Documents</label>
                                 <ul class="list-group mb-4">
                                     @foreach($project->documents as $doc)
-                                        <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center bg-light" 
+                                            x-show="!deletedDocIds.includes({{ $doc->id }})">
                                             <span><i class="far fa-file-pdf mr-2 text-danger"></i> {{ $doc->title }}</span>
-                                            <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="btn btn-sm btn-link"><i class="fas fa-download"></i></a>
+                                            <div>
+                                                <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="btn btn-sm btn-link"><i class="fas fa-download"></i></a>
+                                                <button type="button" @click="removeExistingDoc({{ $doc->id }})" class="btn btn-sm btn-link text-danger"><i class="fas fa-trash"></i></button>
+                                            </div>
                                         </li>
                                     @endforeach
                                 </ul>
@@ -223,7 +247,11 @@ function projectUploadHandler() {
     return {
         photos: [],
         documents: [],
-        featuredIndex: -1, // -1 means we aren't changing the featured image unless new ones are uploaded
+        deletedPhotoIds: [],
+        deletedDocIds: [],
+        featuredIndex: -1,
+        // Set the initial featured ID from the existing database record
+        featuredPhotoId: {{ $project->project_photos()->where('is_featured', true)->first()->id ?? 'null' }},
 
         addPhotos(e) {
             const files = Array.from(e.target.files);
@@ -238,12 +266,28 @@ function projectUploadHandler() {
 
         removePhoto(index) {
             this.photos.splice(index, 1);
-            if (this.featuredIndex === index) this.featuredIndex = -1;
+            if (this.featuredIndex === index) {
+                this.featuredIndex = -1;
+            }
             this.syncFeatured();
         },
 
-        setFeatured(index) {
+        removeExistingPhoto(id) {
+            if(confirm('Are you sure you want to delete this photo from the gallery?')) {
+                this.deletedPhotoIds.push(id);
+                if (this.featuredPhotoId === id) this.featuredPhotoId = null;
+            }
+        },
+
+        setExistingFeatured(id) {
+            this.featuredPhotoId = id;
+            this.featuredIndex = -1; // Reset new uploads featured status
+            this.syncFeatured();
+        },
+
+        setNewFeatured(index) {
             this.featuredIndex = index;
+            this.featuredPhotoId = null; // Reset existing featured ID
             this.syncFeatured();
         },
 
@@ -252,11 +296,23 @@ function projectUploadHandler() {
         },
 
         addDocuments(e) {
-            this.documents.push(...Array.from(e.target.files));
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
+                this.documents.push({
+                    name: file.name,
+                    file: file
+                });
+            });
         },
 
         removeDoc(index) {
             this.documents.splice(index, 1);
+        },
+
+        removeExistingDoc(id) {
+            if(confirm('Delete this document?')) {
+                this.deletedDocIds.push(id);
+            }
         }
     }
 }
