@@ -8,27 +8,7 @@
                         Join the Happy Family community to receive the latest updates and inspiring stories from our work in Rwanda.
                     </p>
                     
-                    <div class="newsletter-wrapper">
-                        <form wire:submit.prevent="subscribe" class="input-group newsletter-form">
-                            <input type="email" 
-                                   wire:model="email" 
-                                   class="form-control footer-input shadow-none" 
-                                   placeholder="Your email address">
-                            <button class="btn btn-subscribe" type="submit">
-                                <span wire:loading.remove wire:target="subscribe">
-                                    Join Us <i class="fas fa-paper-plane ms-2 small"></i>
-                                </span>
-                                <span wire:loading wire:target="subscribe" class="spinner-border spinner-border-sm"></span>
-                            </button>
-                        </form>
-
-                        @error('email') <small class="text-accent-pink mt-2 d-block">{{ $message }}</small> @enderror
-                        @if(session('subscribeSuccess'))
-                            <div class="alert-success-footer mt-3">
-                                <i class="fas fa-check-circle me-2"></i> {{ session('subscribeSuccess') }}
-                            </div>
-                        @endif
-                    </div>
+                    <livewire:subscribe-component/>
                 </div>
             </div>
 
@@ -72,10 +52,7 @@
     <div class="container footer-bottom-border pt-4">
         <div class="row align-items-center">
             <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                <p class="mb-0 copyright-text">
-                    &copy; {{ date('Y') }} <span class="brand-text">{{ $organization->name }}</span>. 
-                    <span class="d-none d-sm-inline">Empowering Families across Rwanda.</span>
-                </p>
+                <livewire:organization.copyright/>
             </div>
             <div class="col-md-6">
                 <div class="d-flex justify-content-center justify-content-md-end social-links-footer">

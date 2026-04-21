@@ -8,13 +8,13 @@ use Livewire\Component;
 class SubscribeComponent extends Component
 {
     public $email = '';
-
-    public function subscribe(){
+    
+     public function subscribe(){
         $this->validate([
          'email' => 'required|email|unique:subscriptions,email'
         ]);
 
-        $subscribe = Subscriptions::create([
+        $subscribe = Subscription::create([
             'email' => $this->email
         ]);
 
