@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProjectPhoto;
+use App\Models\Photo;
 use App\Models\Cause;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class GalleryController extends Controller
@@ -13,15 +14,14 @@ class GalleryController extends Controller
      */
     public function index()
     {
-        // 1. Fetch photos with their associated projects 
-        // We use with('project') to prevent N+1 query issues
-        $photos = ProjectPhoto::with(['project.causes'])
+        // 1. Fetch photos and eager load the 'imageable' parent (Project or Cause)
+        // We use with('imageable') to handle the polymorphic link efficiently.
+        $photos = Photo::with('imageable')
             ->latest()
             ->paginate(15);
 
-        // 2. Fetch categories (Causes) that actually have photos
-        // This ensures your filter buttons don't lead to empty pages
-        $categories = Cause::whereHas('projects.project_photos')->get();
+        // 2. Fetch categories (Causes) to show as filter buttons
+        $categories = Cause::orderBy('name')->get();
 
         return view('gallery.index', [
             'photos' => $photos,
@@ -31,21 +31,34 @@ class GalleryController extends Controller
     }
 
     /**
-     * Display gallery filtered by a specific category (Cause).
+     * Display gallery filtered by a specific Cause.
      */
     public function filter($slug)
     {
         $category = Cause::where('slug', $slug)->firstOrFail();
 
-        // Fetch photos belonging to projects under this specific cause
-        $photos = ProjectPhoto::whereHas('project.causes', function ($query) use ($slug) {
-            $query->where('slug', $slug);
-        })
-        ->with('project')
-        ->latest()
-        ->paginate(15);
+        /**
+         * 3. Polymorphic Filtering Logic:
+         * We want photos where the parent is this Cause, 
+         * OR photos where the parent is a Project belonging to this Cause.
+         */
+        $photos = Photo::where(function ($query) use ($category) {
+                // Direct Cause photos
+                $query->where(function ($q) use ($category) {
+                    $q->where('imageable_type', Cause::class)
+                      ->where('imageable_id', $category->id);
+                })
+                // OR Project photos belonging to this cause
+                ->orWhere(function ($q) use ($category) {
+                    $q->where('imageable_type', Project::class)
+                      ->whereIn('imageable_id', $category->projects->pluck('id'));
+                });
+            })
+            ->with('imageable')
+            ->latest()
+            ->paginate(15);
 
-        $categories = Cause::whereHas('projects.project_photos')->get();
+        $categories = Cause::orderBy('name')->get();
 
         return view('gallery.index', [
             'photos' => $photos,
