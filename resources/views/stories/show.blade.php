@@ -2,59 +2,81 @@
 
 @section('content')
 @php
-    // Use featured photo for background, fallback to default breadcrumb
     $bgImage = $story->featuredPhoto 
         ? asset('storage/' . $story->featuredPhoto->file_path) 
         : asset('frontend/img/breadcrumb-bg.jpg');
 @endphp
 
-<div class="container-fluid bg-breadcrumb" style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url({{ $bgImage }});
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    padding: 120px 0 60px 0;">
-    <div class="container text-center py-5" style="max-width: 900px;">
-        <span class="badge bg-primary text-uppercase px-3 py-2 mb-3 shadow-sm">{{ $story->cause->name ?? 'Impact Story' }}</span>
-        <h1 class="text-white display-4 mb-4 font-weight-bold">{{ $story->title }}</h1>
-        <div class="d-flex justify-content-center align-items-center text-white mb-4">
-            <div class="me-3 px-3 border-end border-white-50"><i class="fas fa-user me-2 text-primary"></i>By {{ $story->user->name ?? 'HFRO Team' }}</div>
-            <div class="ms-3"><i class="fas fa-calendar-alt me-2 text-primary"></i>{{ $story->created_at->format('M d, Y') }}</div>
+<div class="container-fluid position-relative overflow-hidden vh-75 d-flex align-items-center" style="background: var(--dark-void);">
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="position-absolute top-0 start-0 w-100 h-100" 
+             style="background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(13, 13, 13, 0.9) 100%); z-index: 2;"></div>
+        <img src="{{ $bgImage }}" 
+             class="w-100 h-100 animate-slow-zoom" 
+             style="object-fit: cover;" 
+             alt="{{ $story->title }}">
+    </div>
+
+    <div class="container position-relative text-center py-5" style="z-index: 10;">
+        <div class="animate__animated animate__fadeInDown mb-4">
+            <span class="badge-impact bg-accent-pink shadow-sm text-uppercase tracking-wider">
+                {{ $story->cause->name ?? 'Impact Narrative' }}
+            </span>
         </div>
-        <ol class="breadcrumb justify-content-center mb-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="/" class="text-white-50 text-decoration-none">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('stories.index') }}" class="text-white-50 text-decoration-none">Stories</a></li>
-            <li class="breadcrumb-item active text-white">View Details</li>
-        </ol>    
+
+        <h1 class="text-white display-3 fw-black mb-4 mx-auto animate__animated animate__fadeInUp" style="max-width: 900px; text-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            {{ $story->title }}
+        </h1>
+
+        <div class="d-flex justify-content-center align-items-center text-white-50 mb-5 animate__animated animate__fadeInUp">
+            <div class="px-4 border-end border-white-25"><i class="far fa-user text-accent-pink me-2"></i>By HFRO Editorial</div>
+            <div class="px-4"><i class="far fa-calendar-alt text-accent-pink me-2"></i>{{ $story->created_at->format('M d, Y') }}</div>
+        </div>
+
+        <nav aria-label="breadcrumb" class="animate__animated animate__fadeInUp">
+            <ol class="breadcrumb justify-content-center mb-0 bg-transparent">
+                <li class="breadcrumb-item"><a href="/" class="text-white-50 text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('stories.index') }}" class="text-white-50 text-decoration-none">Stories</a></li>
+                <li class="breadcrumb-item active text-accent-pink fw-bold" aria-current="page text-uppercase">Full Story</li>
+            </ol>
+        </nav>
     </div>
 </div>
+
 <div class="container-fluid py-5 bg-light">
     <div class="container py-5">
         <div class="row g-5">
-            {{-- Main Content --}}
+            {{-- --- MAIN NARRATIVE COLUMN --- --}}
             <div class="col-lg-8">
-                <div class="bg-white p-4 p-md-5 rounded shadow-sm overflow-hidden">
+                <div class="bg-white p-4 p-md-5 rounded-bento shadow-premium border-0 overflow-hidden">
                     @if($story->summary)
-                        <div class="lead text-primary font-italic mb-5 border-start border-4 border-primary ps-4 py-2" style="background: rgba(var(--bs-primary-rgb), 0.03);">
-                            "{{ $story->summary }}"
+                        <div class="quote-card mb-5">
+                            <i class="fas fa-quote-left text-accent-pink opacity-25 display-4 d-block mb-3"></i>
+                            <p class="fs-4 fw-bold text-purple lh-base">
+                                {{ $story->summary }}
+                            </p>
                         </div>
                     @endif
 
-                    <div class="story-body text-dark lh-lg mb-5" style="font-size: 1.1rem;">
+                    <div class="story-content brand-rich-text fs-5 text-muted mb-5 leading-relaxed">
                         {!! $story->content !!}
                     </div>
 
-                    {{-- Gallery Section --}}
+                    {{-- PHOTO JOURNEY --}}
                     @if($story->photos->count() > 1)
-                        <div class="mt-5 pt-4 border-top">
-                            <h4 class="mb-4 font-weight-bold"><i class="fas fa-images text-primary me-2"></i>Photo Gallery</h4>
+                        <div class="mt-5 pt-5 border-top">
+                            <h4 class="fw-black text-purple mb-4">Captured Moments</h4>
                             <div class="row g-3">
                                 @foreach($story->photos as $photo)
                                     <div class="col-md-4 col-6">
-                                        <a href="{{ asset('storage/' . $photo->file_path) }}" data-lightbox="story-gallery" data-title="{{ $photo->caption }}">
-                                            <div class="gallery-hover rounded overflow-hidden shadow-sm">
+                                        <a href="{{ asset('storage/' . $photo->file_path) }}" 
+                                           data-lightbox="story-gallery" 
+                                           data-title="{{ $photo->caption }}" 
+                                           class="gallery-link">
+                                            <div class="rounded-bento overflow-hidden shadow-sm hover-up">
                                                 <img src="{{ asset('storage/' . $photo->file_path) }}" 
-                                                     class="img-fluid" 
-                                                     style="height: 180px; width: 100%; object-fit: cover;" 
+                                                     class="img-fluid w-100 h-100" 
+                                                     style="height: 180px; object-fit: cover;" 
                                                      alt="{{ $photo->caption }}">
                                             </div>
                                         </a>
@@ -65,18 +87,19 @@
                     @endif
                 </div>
 
-                {{-- Related Stories Section --}}
+                {{-- RELATED NARRATIVES --}}
                 @if(isset($relatedStories) && $relatedStories->count() > 0)
-                <div class="mt-5">
-                    <h3 class="mb-4 font-weight-bold">Other Stories You Might Like</h3>
+                <div class="mt-5 pt-4">
+                    <h4 class="fw-black text-purple mb-4">More from this Cause</h4>
                     <div class="row g-4">
                         @foreach($relatedStories as $related)
                         <div class="col-md-6">
-                            <a href="{{ route('stories.show', $related->slug ?? $related->id) }}" class="text-decoration-none text-dark">
-                                <div class="card border-0 shadow-sm h-100 story-mini-card">
-                                    <img src="{{ $related->featuredPhoto ? asset('storage/' . $related->featuredPhoto->file_path) : asset('frontend/img/placeholder.jpg') }}" class="card-img-top" style="height: 150px; object-fit: cover;">
-                                    <div class="card-body">
-                                        <h6 class="font-weight-bold mb-0 text-truncate">{{ $related->title }}</h6>
+                            <a href="{{ route('stories.show', $related->slug ?? $related->id) }}" class="text-decoration-none">
+                                <div class="card border-0 rounded-bento shadow-premium overflow-hidden h-100 transition-up">
+                                    <img src="{{ $related->featuredPhoto ? asset('storage/' . $related->featuredPhoto->file_path) : asset('frontend/img/placeholder.jpg') }}" 
+                                         class="card-img-top" style="height: 160px; object-fit: cover;">
+                                    <div class="card-body p-3">
+                                        <h6 class="fw-black text-purple mb-0 text-truncate">{{ $related->title }}</h6>
                                     </div>
                                 </div>
                             </a>
@@ -87,46 +110,48 @@
                 @endif
             </div>
 
-            {{-- Sidebar --}}
+            {{-- --- INTERACTIVE SIDEBAR --- --}}
             <div class="col-lg-4">
-                {{-- Social Share --}}
-                <div class="bg-white p-4 rounded shadow-sm mb-4 border-top border-primary border-4">
-                    <h5 class="mb-3 font-weight-bold">Share this Impact</h5>
-                    <div class="d-flex gap-2">
-                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" class="btn btn-facebook btn-sm flex-fill"><i class="fab fa-facebook-f me-2"></i>FB</a>
-                        <a href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}" target="_blank" class="btn btn-twitter btn-sm flex-fill"><i class="fab fa-twitter me-2"></i>X</a>
-                        <a href="whatsapp://send?text={{ urlencode(url()->current()) }}" class="btn btn-whatsapp btn-sm flex-fill"><i class="fab fa-whatsapp me-2"></i>WA</a>
+                <div class="sticky-top" style="top: 100px;">
+                    {{-- SHARE CARD --}}
+                    <div class="bg-white p-4 rounded-bento shadow-premium mb-4 border-start border-accent-pink border-5">
+                        <h6 class="text-uppercase fw-black text-muted small mb-3">Share the Impact</h6>
+                        <div class="d-flex flex-column gap-2">
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" class="btn btn-facebook-premium"><i class="fab fa-facebook-f me-2"></i>Facebook</a>
+                            <a href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}" target="_blank" class="btn btn-x-premium"><i class="fab fa-x-twitter me-2"></i>Share on X</a>
+                            <a href="whatsapp://send?text={{ urlencode(url()->current()) }}" class="btn btn-whatsapp-premium"><i class="fab fa-whatsapp me-2"></i>WhatsApp</a>
+                        </div>
                     </div>
-                </div>
 
-                {{-- Documents Section --}}
-                @if($story->documents->count() > 0)
-                <div class="bg-white p-4 rounded shadow-sm mb-4">
-                    <h5 class="mb-3 font-weight-bold border-bottom pb-2">Resources</h5>
-                    <div class="list-group list-group-flush">
-                        @foreach($story->documents as $doc)
-                            <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center px-0 bg-transparent">
-                                <div class="bg-light p-2 rounded me-3 text-danger">
-                                    <i class="fas fa-file-pdf fa-lg"></i>
-                                </div>
-                                <div class="overflow-hidden">
-                                    <div class="small fw-bold text-dark text-truncate">{{ $doc->title }}</div>
-                                    <div class="text-muted" style="font-size: 11px;">{{ strtoupper($doc->file_type) }} • {{ number_format($doc->file_size / 1024, 1) }} KB</div>
-                                </div>
-                            </a>
-                        @endforeach
+                    {{-- ATTACHMENTS --}}
+                    @if($story->documents->count() > 0)
+                    <div class="bg-white p-4 rounded-bento shadow-premium mb-4">
+                        <h6 class="text-uppercase fw-black text-purple small mb-3 border-bottom pb-2">Technical Reports</h6>
+                        <div class="list-group list-group-flush">
+                            @foreach($story->documents as $doc)
+                                <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center px-0 bg-transparent border-0 mb-2">
+                                    <div class="bg-light p-2 rounded-circle me-3 text-accent-pink">
+                                        <i class="fas fa-file-download fa-lg"></i>
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <div class="small fw-black text-dark text-truncate">{{ $doc->title }}</div>
+                                        <div class="text-muted" style="font-size: 11px;">{{ strtoupper($doc->file_type) }} • PDF Document</div>
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
                     </div>
-                </div>
-                @endif
+                    @endif
 
-                {{-- CTA Box --}}
-                <div class="bg-primary p-4 rounded shadow text-white text-center position-relative overflow-hidden">
-                    <div class="position-absolute" style="top:-10px; right:-10px; opacity:0.1">
-                        <i class="fas fa-heart fa-6x"></i>
+                    {{-- IMPACT CTA --}}
+                    <div class="p-4 rounded-bento shadow-lg text-white text-center position-relative overflow-hidden" style="background: var(--grad-premium);">
+                        <div class="position-absolute top-0 end-0 p-3 opacity-10">
+                            <i class="fas fa-heart fa-6x"></i>
+                        </div>
+                        <h5 class="fw-black position-relative mb-2">Change Lives Today</h5>
+                        <p class="small opacity-75 mb-4">Your support helps us scale our operations and reach more families in need.</p>
+                        <a href="{{ url('/donate') }}" class="btn btn-light btn-lg text-purple fw-black w-100 rounded-pill shadow-sm">DONATE NOW</a>
                     </div>
-                    <h5 class="font-weight-bold position-relative">Support Our Mission</h5>
-                    <p class="small position-relative">Your contribution helps us create more stories like this one.</p>
-                    <a href="{{ url('/donate') }}" class="btn btn-light text-primary fw-bold w-100 rounded-pill mt-2">DONATE NOW</a>
                 </div>
             </div>
         </div> 
@@ -135,13 +160,27 @@
 
 @push('styles')
     <style>
-    .gallery-hover { position: relative; transition: all 0.3s ease; }
-    .gallery-hover:hover { transform: scale(1.05); cursor: pointer; }
-    .story-mini-card:hover { transform: translateY(-5px); transition: 0.3s; }
-    .btn-facebook { background: #3b5998; color: white; }
-    .btn-twitter { background: #1da1f2; color: white; }
-    .btn-whatsapp { background: #25d366; color: white; }
-    .story-body img { border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: 20px 0; }
-    </style>
+    .vh-75 { height: 75vh; }
+    .rounded-bento { border-radius: 24px; }
+    .fw-black { font-weight: 900; }
+    .text-purple { color: var(--primary-color); }
+    .leading-relaxed { line-height: 1.9; }
+
+    .quote-card {
+        padding: 2rem;
+        background: rgba(var(--bs-primary-rgb), 0.04);
+        border-radius: 20px;
+        border-left: 8px solid var(--accent-pink);
+    }
+
+    .btn-facebook-premium { background: #1877F2; color: white; border-radius: 50px; font-weight: 800; padding: 10px; transition: 0.3s; }
+    .btn-x-premium { background: #000000; color: white; border-radius: 50px; font-weight: 800; padding: 10px; transition: 0.3s; }
+    .btn-whatsapp-premium { background: #25D366; color: white; border-radius: 50px; font-weight: 800; padding: 10px; transition: 0.3s; }
+    
+    .btn-facebook-premium:hover, .btn-x-premium:hover, .btn-whatsapp-premium:hover { opacity: 0.9; transform: scale(1.02); color: white; }
+
+    .story-content p { margin-bottom: 1.5rem; }
+    .story-content img { border-radius: 24px; margin: 30px 0; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 100%; height: auto; }
+</style>
 @endpush
 @endsection
