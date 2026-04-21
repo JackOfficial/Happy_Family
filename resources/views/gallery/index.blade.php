@@ -84,7 +84,9 @@
                                         <div class="avatar-sm bg-accent-pink rounded-circle d-flex align-items-center justify-content-center text-white me-2" style="width: 24px; height: 24px; font-size: 10px;">
                                             <i class="fas fa-map-marker-alt"></i>
                                         </div>
-                                        <span class="x-small text-white-50 fw-bold">{{ $photo->imageable->title ?? $photo->imageable->name }}</span>
+                                        <span class="x-small text-white-50 fw-bold">
+    {{ $photo->imageable?->title ?? $photo->imageable?->name ?? 'HFRO Mission' }}
+</span>
                                     </div>
                                     <span class="x-small text-white-50"><i class="far fa-clock me-1"></i> {{ $photo->created_at->diffForHumans() }}</span>
                                 </div>
