@@ -27,7 +27,7 @@
     @endif
 
     {{-- --- CONTACT FORM --- --}}
-    <form wire:submit.prevent="contact" class="position-relative">
+    <form class="position-relative">
         {{-- Loading Overlay for a premium feel during submission --}}
         <div wire:loading.flex wire:target="contact" class="form-loading-overlay">
             <div class="spinner-premium"></div>
