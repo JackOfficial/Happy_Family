@@ -24,6 +24,25 @@
 
 <section class="content pb-5">
     <div class="container-fluid">
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle mr-3 fa-2x"></i>
+                    <div>
+                        <h6 class="font-weight-bold mb-1">Please correct the following errors:</h6>
+                        <ul class="mb-0 pl-3">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
         <form action="{{ route('admin.projects.store') }}" method="POST" enctype="multipart/form-data" 
               x-data="projectUploadHandler()">
             @csrf
@@ -38,13 +57,13 @@
                             <div class="form-group mb-4">
                                 <label for="title" class="font-weight-bold">Project Title <span class="text-danger">*</span></label>
                                 <input type="text" name="title" id="title" class="form-control form-control-lg border-2 @error('title') is-invalid @enderror" value="{{ old('title') }}" required>
-                                @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                @error('title')<div class="invalid-feedback font-weight-bold">{{ $message }}</div>@enderror
                             </div>
 
                             <div class="row">
                                 <div class="col-md-12 form-group mb-4">
                                     <label class="font-weight-bold small text-muted text-uppercase d-block">Mission Categories <span class="text-danger">*</span></label>
-                                    <div class="p-3 border rounded bg-light">
+                                    <div class="p-3 border rounded bg-light @error('cause_ids') border-danger @enderror">
                                         <div class="row">
                                             @foreach($causes as $cause)
                                                 <div class="col-md-4 mb-2">
@@ -55,14 +74,17 @@
                                                 </div>
                                             @endforeach
                                         </div>
-                                        @error('cause_ids')<small class="text-danger d-block mt-2">{{ $message }}</small>@enderror
+                                        @error('cause_ids')<small class="text-danger font-weight-bold d-block mt-2"><i class="fas fa-exclamation-circle mr-1"></i> {{ $message }}</small>@enderror
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="font-weight-bold small text-muted text-uppercase">Full Description</label>
-                                <textarea name="description" id="myeditorinstance" rows="8" class="form-control"></textarea>
+                                <div class="@error('description') border border-danger rounded @enderror">
+                                    <textarea name="description" id="myeditorinstance" rows="8" class="form-control">{{ old('description') }}</textarea>
+                                </div>
+                                @error('description')<small class="text-danger font-weight-bold d-block mt-1">{{ $message }}</small>@enderror
                             </div>
                         </div>
                     </div>
@@ -76,6 +98,9 @@
                             <input type="file" name="photos[]" x-ref="photoInput" class="d-none" multiple accept="image/*" @change="addPhotos">
                         </div>
                         <div class="card-body">
+                            @error('photos')<div class="alert alert-danger py-2 small mb-3">{{ $message }}</div>@enderror
+                            @error('photos.*')<div class="alert alert-danger py-2 small mb-3">{{ $message }}</div>@enderror
+                            
                             <p class="small text-muted mb-3"><i class="fas fa-info-circle mr-1"></i> Click the <i class="fas fa-star text-warning"></i> to set the main featured image.</p>
                             
                             <input type="hidden" name="featured_index" :value="featuredIndex">
@@ -110,6 +135,9 @@
                             <h5 class="card-title font-weight-bold mb-0 text-secondary text-uppercase small">Reports & Documents</h5>
                         </div>
                         <div class="card-body">
+                            @error('documents')<div class="alert alert-danger py-2 small mb-3">{{ $message }}</div>@enderror
+                            @error('documents.*')<div class="alert alert-danger py-2 small mb-3">{{ $message }}</div>@enderror
+
                             <div class="upload-zone p-4 mb-3" @click="$refs.docInput.click()" style="cursor: pointer;">
                                 <i class="fas fa-file-upload fa-2x text-muted mb-2"></i>
                                 <p class="mb-0">Click to upload PDFs, Reports, or Spreadsheets</p>
@@ -136,11 +164,12 @@
                         <div class="card-body" x-data="{ progress: {{ old('progress', 0) }} }">
                             <div class="form-group mb-3">
                                 <label class="small font-weight-bold">Status</label>
-                                <select name="status" class="form-control">
+                                <select name="status" class="form-control @error('status') is-invalid @enderror">
                                     <option value="Upcoming" {{ old('status') == 'Upcoming' ? 'selected' : '' }}>Upcoming</option>
                                     <option value="Ongoing" {{ old('status') == 'Ongoing' ? 'selected' : '' }}>Ongoing</option>
                                     <option value="Completed" {{ old('status') == 'Completed' ? 'selected' : '' }}>Completed</option>
                                 </select>
+                                @error('status')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
                             <div class="form-group mb-4">
@@ -149,24 +178,28 @@
                                     <span class="badge badge-primary rounded-pill px-2" x-text="progress + '%'"></span>
                                 </div>
                                 <input type="range" name="progress" class="custom-range" min="0" max="100" step="5" x-model="progress">
+                                @error('progress')<small class="text-danger font-weight-bold">{{ $message }}</small>@enderror
                             </div>
 
                             <div class="form-group mb-3">
                                 <label class="small font-weight-bold">Target Budget (RWF)</label>
-                                <input type="number" name="budget" class="form-control" value="{{ old('budget') }}" placeholder="0.00">
+                                <input type="number" name="budget" class="form-control @error('budget') is-invalid @enderror" value="{{ old('budget') }}" placeholder="0.00">
+                                @error('budget')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label class="small font-weight-bold">Start Date</label>
-                                        <input type="date" name="start_date" class="form-control" value="{{ old('start_date') }}">
+                                        <input type="date" name="start_date" class="form-control @error('start_date') is-invalid @enderror" value="{{ old('start_date') }}">
+                                        @error('start_date')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label class="small font-weight-bold">Est. Duration</label>
-                                        <input type="text" name="duration" class="form-control" value="{{ old('duration') }}" placeholder="e.g. 6 Months">
+                                        <input type="text" name="duration" class="form-control @error('duration') is-invalid @enderror" value="{{ old('duration') }}" placeholder="e.g. 6 Months">
+                                        @error('duration')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
                                 </div>
                             </div>
@@ -190,14 +223,11 @@ function projectUploadHandler() {
         documents: [],
         featuredIndex: 0,
 
-        // CRITICAL: Synchronize the visual list with the actual file input
         updateFileInputs() {
-            // Update Photos Input
             const photoDt = new DataTransfer();
             this.photos.forEach(p => photoDt.items.add(p.file));
             this.$refs.photoInput.files = photoDt.files;
 
-            // Update Documents Input
             const docDt = new DataTransfer();
             this.documents.forEach(d => docDt.items.add(d.file));
             this.$refs.docInput.files = docDt.files;
@@ -218,7 +248,6 @@ function projectUploadHandler() {
 
         removePhoto(index) {
             this.photos.splice(index, 1);
-            // Re-adjust featured index if we removed the featured photo or one before it
             if (this.featuredIndex === index) {
                 this.featuredIndex = 0;
             } else if (this.featuredIndex > index) {
@@ -261,5 +290,6 @@ function projectUploadHandler() {
     .upload-zone { border: 2px dashed #007bff; background: #f8fbff; border-radius: 8px; text-align: center; transition: 0.3s; }
     .upload-zone:hover { background: #eef5ff; border-color: #0056b3; }
     .opacity-75 { opacity: 0.75; }
+    .invalid-feedback { display: block; } /* Ensures Bootstrap feedback shows even if not directly after input */
 </style>
 @endsection
