@@ -82,7 +82,7 @@
                                 <i class="fas fa-envelope-open-text"></i>
                             </div>
                             <h6 class="fw-black text-purple mb-2">Email</h6>
-                            <p class="small text-muted mb-0">info@hfro.org<br>support@hfro.org</p>
+                            <p class="small text-muted mb-0">info@happyfamilyrwanda.org</p>
                         </div>
                     </div>
 
