@@ -807,14 +807,14 @@
                         </div>
 
                         <div class="gallery-overlay">
-                            <a href="{{ url('story/' . $story->slug) }}" class="btn-outline-glass border-white py-2 px-4">
+                            <a href="{{ route('stories.show', $story->slug) }}" class="btn-outline-glass border-white py-2 px-4">
                                 Read Impact
                             </a>
                         </div>
                     </div>
                     
                     <div class="p-4 d-flex flex-column flex-grow-1 bg-white">
-                        <a href="{{ url('story/' . $story->slug) }}" class="text-decoration-none">
+                        <a href="{{ route('stories.show', $story->slug) }}" class="text-decoration-none">
                             <h4 class="fw-bold text-dark mb-3 display-font hover-accent-color" style="line-height: 1.3;">
                                 {{ Str::limit($story->title, 50) }}
                             </h4>
@@ -825,7 +825,7 @@
                         </p>
                         
                         <div class="mt-auto pt-3 border-top border-light d-flex justify-content-between align-items-center">
-                            <a href="{{ url('story/' . $story->slug) }}" class="text-gradient text-uppercase fw-bold small text-decoration-none tracking-widest">
+                            <a href="{{ route('stories.show', $story->slug) }}" class="text-gradient text-uppercase fw-bold small text-decoration-none tracking-widest">
                                 Full Story <i class="fas fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                             </a>
                             <span class="text-muted" style="font-size: 0.7rem;">
