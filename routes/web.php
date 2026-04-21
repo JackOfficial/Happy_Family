@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\ApplicationsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\CauseController as Causes;
+use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EventController as Events;
 use App\Http\Controllers\ProjectController as Projects;
 use App\Http\Controllers\StoryController as Stories;
@@ -46,6 +47,7 @@ Route::get('/gallery', [PageController::class, 'gallery']);
 Route::get('/blogs', [PageController::class, 'blogs']);
 Route::get('/blog/{title}', [PageController::class, 'blog']);
 Route::get('/blogs/{id}', [PageController::class, 'blog_category']);
+
 
 Route::controller(Causes::class)->group(function () {
     Route::get('/causes', 'index')->name('causes.index');
@@ -79,6 +81,34 @@ Route::get('/volunteer', [VolunteerController::class, 'index'])->name('volunteer
 Route::post('/volunteer', [VolunteerController::class, 'store']);
 Route::get('/donate', [DonateController::class, 'index']);
 Route::post('/donate', [DonateController::class, 'store'])->name('donation.store');
+
+// --- DONATION ECOSYSTEM ---
+
+Route::prefix('donations')->name('donations.')->group(function () {
+    
+    // 1. The Project Hub (Gallery of all causes)
+    Route::get('/', [DonationController::class, 'index'])->name('index');
+
+    // 2. Project Detail (The "Convincing" Story Page)
+    // We use a slug (e.g., /donations/project/clean-water) for SEO and professionalism
+    Route::get('/project/{slug}', [DonationController::class, 'show'])->name('show');
+
+    // 3. Checkout Page (The Secure Payment Form)
+    Route::get('/checkout/{project_id?}', [DonationController::class, 'checkout'])->name('checkout');
+
+    // 4. Payment Verification (The one we discussed)
+    Route::get('/success', [DonationController::class, 'handleSuccess'])->name('success');
+
+    // 5. Success/Thank You Page (The Emotional Landing)
+    // Usually triggered after handleSuccess verifies the payment
+    Route::get('/thank-you', [DonationController::class, 'thankYou'])->name('thank_you');
+
+    // 6. Webhook (CRITICAL for Production)
+    // Paystack sends a POST here if the user's internet cuts out but the Momo went through.
+    // This ensures the donation is recorded even if the user closes the browser.
+    Route::post('/webhook', [DonationController::class, 'handleWebhook'])->name('webhook');
+});
+
 Route::get('/career', [CareersController::class, 'index']);
 Route::get('/job-details/{id}', [CareersController::class, 'jobDetails']);
 Route::get('/apply/{id}', [CareersController::class, 'apply'])->name('apply');

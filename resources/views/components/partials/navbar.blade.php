@@ -59,7 +59,7 @@
             <a href="/contact" class="nav-link mx-2 {{ Request::is('contact*') ? 'active' : '' }}">Contact</a>
 
             <div class="ms-xl-4 mt-4 mt-xl-0">
-                <a href="/donate" class="nav-donate-btn shadow-sm d-flex align-items-center">
+                <a href="{{ route('donations.index') }}" class="nav-donate-btn shadow-sm d-flex align-items-center">
                     <span>Donate Now</span>
                     <i class="fas fa-heart ms-2"></i>
                 </a>
