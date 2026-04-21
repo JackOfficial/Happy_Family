@@ -81,7 +81,7 @@
             {{-- Submit Button --}}
             <div class="col-12 mt-4">
                 <button class="btn btn-purple-gradient w-100 py-3 rounded-pill fw-black shadow-lg d-flex align-items-center justify-content-center" 
-                        type="submit" 
+                        type="button"  wire:click="contact"
                         wire:loading.attr="disabled">
                     <span wire:loading.remove wire:target="contact">
                         Send Message <i class="fas fa-paper-plane ms-2 small"></i>
