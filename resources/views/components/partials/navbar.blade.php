@@ -8,14 +8,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <div class="d-flex small">
-                        <a href="mailto:{{ $organization->email }}" class="contact-link me-4">
-                            <i class="fas fa-envelope me-2"></i>{{ $organization->email }}
-                        </a>
-                        <a href="tel:{{ $organization->phone }}" class="contact-link">
-                            <i class="fas fa-phone-alt me-2"></i>{{ $organization->phone }}
-                        </a>
-                    </div>
+                    <livewire:organization.contact-address/>
                 </div>
                 <div class="col-md-4 text-end">
                     <div class="social-links-header">
@@ -31,12 +24,7 @@
 
     <div class="container px-3 px-lg-0">
         <nav class="navbar navbar-expand-xl navbar-light bg-transparent px-0">
-            <a href="/" class="navbar-brand">
-                <img src="{{ asset('storage/' . $organization->logo) }}" 
-                     alt="logo" 
-                     class="transition-all logo-img"
-                     :style="scrolled ? 'height: 45px;' : 'height: 65px;'" />
-            </a>
+            <livewire:organization.logo/>
 
             <button class="navbar-toggler border-0 shadow-none" type="button" @click="mobileMenuOpen = !mobileMenuOpen">
                 <div class="hamburger-icon" :class="mobileMenuOpen ? 'open' : ''">
