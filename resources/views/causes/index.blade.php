@@ -107,7 +107,7 @@
             </div>
         </div>
         <div class="col-lg-4 d-none d-lg-block">
-            <div class="h-100 w-100" style="background: url('{{ asset('frontend/img/breadcrumb-bg.jpg') }}') center/cover;"></div>
+            <div class="h-100 w-100" style="background: url('{{ asset('images/volunteer.jpg') }}') center/cover;"></div>
         </div>
     </div>
 </div>
