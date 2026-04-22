@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container-fluid position-relative overflow-hidden vh-75 d-flex align-items-center" style="background: var(--dark-void);">
-    <img src="{{ asset('frontend/img/breadcrumb-bg.jpg') }}" class="position-absolute top-0 start-0 w-100 h-100" style="object-fit: cover; opacity: 0.5; z-index: 1;" alt="Impact Header">
+    <img src="{{ asset('images/family.png') }}" class="position-absolute top-0 start-0 w-100 h-100" style="object-fit: cover; opacity: 0.5; z-index: 1;" alt="Impact Header">
     <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to bottom, transparent, var(--dark-void)); z-index: 2;"></div>
     
     <div class="container text-center position-relative" style="z-index: 3;">
