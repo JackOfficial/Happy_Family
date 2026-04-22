@@ -658,7 +658,7 @@
                     </h2>
                     
                     <p class="lead mb-5 text-muted opacity-90">
-                        <span class="text-gradient">Happy Family Rwanda Organization</span> is more than an NGO; we are a movement dedicated to rewriting the stories of vulnerable communities. Through sustainable education, health advocacy, and social equity, we turn compassion into measurable progress.
+                        <span class="text-gradient">Happy Family Rwanda Organization</span> is more than an NGO; we are a movement dedicated to rewriting the stories of vulnerable communities. Through sustainable education, advocacy, and social equity, we turn compassion into measurable progress.
                     </p>
 
                     <div class="d-flex flex-wrap align-items-center gap-4">
