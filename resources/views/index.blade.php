@@ -738,7 +738,6 @@
     
     <div class="container py-5">
         <div class="text-center mx-auto mb-5" style="max-width: 800px;">
-            <span class="badge-impact text-uppercase mb-3 d-inline-block tracking-widest">Our Impact</span>
             <h2 class="display-5 fw-bold mb-3 display-font">Stories of <span class="text-gradient">Change</span></h2>
             <p class="text-muted lead">Discover how Happy Family is fostering resilience and making a real impact in local communities across Rwanda.</p>
         </div>
