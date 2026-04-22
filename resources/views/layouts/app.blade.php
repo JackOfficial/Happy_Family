@@ -34,7 +34,7 @@
 
 <body>
 
-   <header :class="{ 'scrolled-nav': scrolled }" class="sticky-top mt-0">
+   <header :class="{ 'scrolled-nav': scrolled }" class="sticky-top mt-0 navbar-dark bg-dark">
     <x-partials.navbar />
 </header>
 
