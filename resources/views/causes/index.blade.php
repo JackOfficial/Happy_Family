@@ -72,10 +72,6 @@
                             {!! Str::limit(strip_tags($cause->description), 110) !!}
                         </div>
 
-                        <div class="impact-progress">
-                            <div class="impact-progress-bar" style="width: 75%;"></div>
-                        </div>
-
                         <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
                             <a href="{{ route('causes.show', $cause->slug) }}" class="text-accent-pink text-uppercase fw-bold text-decoration-none" style="font-size: 0.75rem; letter-spacing: 1px;">
                                 Learn More <i class="fas fa-chevron-right ms-1"></i>
