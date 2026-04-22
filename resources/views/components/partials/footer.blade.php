@@ -40,10 +40,11 @@
                 </div>
                 <div class="col-md-6">
     <div class="d-flex justify-content-center justify-content-md-end social-links-footer mt-3 mt-md-0">
-        <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="social-icon" title="Twitter"><i class="fab fa-x-twitter"></i></a>
-        <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="https://twitter.com/HFRwOrg" class="social-icon" title="Twitter"><i class="fab fa-x-twitter"></i></a>
+        <a href="https://www.instagram.com/hf.r.o" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/company/happy-family-rwanda" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-icon" title="YouTube"><i class="fab fa-youtube"></i></a>
     </div>
 </div>
             </div>
