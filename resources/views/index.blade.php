@@ -680,7 +680,6 @@
  <div class="container-fluid impact-section py-5 {{ $causes->count() > 0 ? '' : 'd-none' }}">
     <div class="container py-5">
         <div class="text-center mx-auto mb-5" style="max-width: 800px;">
-            <div class="badge-impact text-uppercase mb-3 tracking-widest">Our Impacts</div>
             <h2 class="display-5 fw-bold mb-3 display-font text-gradient">Transforming Lives</h2>
             <p class="text-muted lead">Transparent, data-driven results from our frontline work in Rwanda.</p>
         </div>
