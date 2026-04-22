@@ -593,7 +593,7 @@
                             Championing Dignity,<br><span class="text-gradient">Securing Futures</span>
                         </h1>
                         <p class="mb-5 mx-auto text-light lead opacity-75 hero-subtitle">
-                            HFRO is dedicated to the socio-economic inclusion of youth and teen mothers across Rwanda. Through strategic advocacy and holistic support, we transform vulnerabilities into sustainable opportunities for growth.
+                            We are dedicated to the socio-economic inclusion of youth and teen mothers across Rwanda. Through strategic advocacy and holistic support, we transform vulnerabilities into sustainable opportunities for growth.
                         </p>
                         <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-4">
                             <a class="btn-premium" href="#">Partner With Us</a>
