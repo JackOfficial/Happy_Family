@@ -13,12 +13,20 @@
                     <livewire:organization.contact-address/>
                 </div>
                 <div class="col-md-4 text-end">
-                    <div class="social-links-header">
-                        <a href="https://twitter.com/HFRwOrg" class="social-icon-sm ms-3"><i class="fab fa-x-twitter"></i></a>
-                        <a href="https://www.instagram.com/hf.r.o" class="social-icon-sm ms-3"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.youtube.com/channel/..." class="social-icon-sm ms-3"><i class="fab fa-youtube"></i></a>
-                        <a href="https://www.linkedin.com/company/happy-family-rwanda" class="social-icon-sm ms-3"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
+                   <div class="social-links-header">
+    <a href="https://twitter.com/HFRwOrg" class="social-icon-sm ms-3" title="Follow us on X">
+        <i class="fab fa-x-twitter"></i>
+    </a>
+    <a href="https://www.instagram.com/hf.r.o" class="social-icon-sm ms-3" title="Follow us on Instagram">
+        <i class="fab fa-instagram"></i>
+    </a>
+    <a href="https://www.youtube.com/channel/..." class="social-icon-sm ms-3" title="Subscribe on YouTube">
+        <i class="fab fa-youtube"></i>
+    </a>
+    <a href="https://www.linkedin.com/company/happy-family-rwanda" class="social-icon-sm ms-3" title="Connect on LinkedIn">
+        <i class="fab fa-linkedin-in"></i>
+    </a>
+</div>
                 </div>
             </div>
         </div>
