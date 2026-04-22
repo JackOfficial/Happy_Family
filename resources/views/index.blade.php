@@ -644,8 +644,7 @@
                     
                     <div class="experience-badge-premium d-none d-sm-block animate__animated animate__pulse animate__infinite">
                         <div class="badge-inner">
-                            <span class="h2 d-block mb-0 fw-bold">100%</span>
-                            <small class="text-uppercase tracking-widest fw-bold">Compassion</small>
+                            <span class="h2 d-block mb-0 fw-bold">10%</span> <small class="text-uppercase tracking-widest fw-bold">Impact Focus</small>
                         </div>
                     </div>
                 </div>
@@ -653,56 +652,33 @@
 
             <div class="col-xl-7">
                 <div class="content-box ps-xl-5">
-                    <span class="badge-impact text-uppercase mb-3 d-inline-block tracking-widest">About Our Organization</span>
+                    <span class="badge-impact text-uppercase mb-3 d-inline-block tracking-widest">Our Heritage of Compassion</span>
                     <h2 class="display-5 mb-4 display-font fw-bold">
-                        Empowering Communities in <span class="text-gradient">Rwanda</span>
+                        Restoring Hope, Transforming <span class="text-gradient">Futures</span>
                     </h2>
                     
                     <p class="lead mb-4 text-muted opacity-90">
-                        Happy Family Rwanda Organization (HFRO) is a compassionate NGO dedicated to creating positive change through collective action and empowerment.
+                        Happy Family Rwanda Organization (HFRO) is more than an NGO; we are a movement dedicated to rewriting the stories of vulnerable communities. Through sustainable education, health advocacy, and social equity, we turn compassion into measurable progress.
                     </p>
 
-                    <div class="custom-tabs-container">
-                        <ul class="nav nav-pills modern-glass-pills mb-4" id="pills-tab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-1" type="button">Our Story</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-2" type="button">Mission</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-3" type="button">Vision</button>
-                            </li>
-                        </ul>
-
-                        <div class="tab-content impact-tab-content p-4 rounded-bento shadow-premium bg-white" id="pills-tabContent">
-                            <div class="tab-pane fade show active" id="tab-1" role="tabpanel">
-                                <h5 class="mb-3 display-font fw-bold"><i class="fas fa-history me-2 text-accent-pink"></i>Who We Are</h5>
-                                <div class="tab-description mb-4 text-muted">
-                                    {!! $organization->about !!}
-                                </div>
-                                <a href="/about" class="btn-premium-sm text-decoration-none">
-                                    Read Full Story <i class="fas fa-arrow-right ms-2"></i>
-                                </a>
+                    <div class="row g-4 mb-5">
+                        <div class="col-sm-6">
+                            <div class="mission-vision-box">
+                                <h5 class="fw-bold text-primary-color"><i class="fas fa-bullseye me-2"></i> Our Mission</h5>
+                                <p class="small text-muted mb-0">To empower Rwandan families through holistic support systems that break the cycle of poverty and nurture self-reliance.</p>
                             </div>
-
-                            <div class="tab-pane fade" id="tab-2" role="tabpanel">
-                                <h5 class="mb-3 display-font fw-bold"><i class="fas fa-bullseye me-2 text-accent-pink"></i>Our Purpose</h5>
-                                <div class="tab-description mb-4 text-muted">
-                                    {!! $organization->mission !!}
-                                </div>
-                                <a href="/contact" class="btn-premium-sm text-decoration-none">Learn More</a>
-                            </div>
-
-                            <div class="tab-pane fade" id="tab-3" role="tabpanel">
-                                <h5 class="mb-3 display-font fw-bold"><i class="fas fa-eye me-2 text-accent-pink"></i>Our Dream</h5>
-                                <div class="tab-description mb-4 text-muted">
-                                    {!! $organization->vision !!}
-                                </div>
-                                <a href="/donate" class="btn-premium-sm text-decoration-none">Get Involved Today</a>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="mission-vision-box">
+                                <h5 class="fw-bold text-accent-pink"><i class="fas fa-eye me-2"></i> Our Vision</h5>
+                                <p class="small text-muted mb-0">A thriving Rwanda where every child and family lives with dignity, health, and equal opportunity to succeed.</p>
                             </div>
                         </div>
                     </div>
+
+                    <a class="btn-premium-lg shadow-premium text-decoration-none" href="/about">
+                        DISCOVER OUR JOURNEY <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
                 </div>
             </div>
         </div>
