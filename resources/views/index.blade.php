@@ -644,7 +644,8 @@
                     
                     <div class="experience-badge-premium d-none d-sm-block animate__animated animate__pulse animate__infinite">
                         <div class="badge-inner">
-                            <span class="h2 d-block mb-0 fw-bold">10%</span> <small class="text-uppercase tracking-widest fw-bold">Impact Focus</small>
+                            <span class="h2 d-block mb-0 fw-bold">100%</span>
+                            <small class="text-uppercase tracking-widest fw-bold">Compassion</small>
                         </div>
                     </div>
                 </div>
@@ -657,28 +658,20 @@
                         Restoring Hope, Transforming <span class="text-gradient">Futures</span>
                     </h2>
                     
-                    <p class="lead mb-4 text-muted opacity-90">
+                    <p class="lead mb-5 text-muted opacity-90">
                         Happy Family Rwanda Organization (HFRO) is more than an NGO; we are a movement dedicated to rewriting the stories of vulnerable communities. Through sustainable education, health advocacy, and social equity, we turn compassion into measurable progress.
                     </p>
 
-                    <div class="row g-4 mb-5">
-                        <div class="col-sm-6">
-                            <div class="mission-vision-box">
-                                <h5 class="fw-bold text-primary-color"><i class="fas fa-bullseye me-2"></i> Our Mission</h5>
-                                <p class="small text-muted mb-0">To empower Rwandan families through holistic support systems that break the cycle of poverty and nurture self-reliance.</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="mission-vision-box">
-                                <h5 class="fw-bold text-accent-pink"><i class="fas fa-eye me-2"></i> Our Vision</h5>
-                                <p class="small text-muted mb-0">A thriving Rwanda where every child and family lives with dignity, health, and equal opportunity to succeed.</p>
-                            </div>
+                    <div class="d-flex flex-wrap align-items-center gap-4">
+                        <a class="btn-premium-lg shadow-premium text-decoration-none" href="/about">
+                            DISCOVER OUR JOURNEY <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                        
+                        <div class="ps-3 border-start border-2 border-primary-light">
+                            <p class="small fw-bold text-uppercase mb-0 tracking-wider">Join 500+</p>
+                            <p class="small text-muted mb-0">Impacted Families</p>
                         </div>
                     </div>
-
-                    <a class="btn-premium-lg shadow-premium text-decoration-none" href="/about">
-                        DISCOVER OUR JOURNEY <i class="fas fa-arrow-right ms-2"></i>
-                    </a>
                 </div>
             </div>
         </div>
