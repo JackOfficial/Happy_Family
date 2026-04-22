@@ -34,11 +34,9 @@
 
 <body>
 
-    <header :class="{ 'scrolled-nav': scrolled }" class="navbar sticky-top">
-        <div class="container">
-            <x-partials.navbar />
-        </div>
-    </header>
+   <header :class="{ 'scrolled-nav': scrolled }" class="sticky-top mt-0">
+    <x-partials.navbar />
+</header>
 
     <main id="main-content">
         @yield('content')

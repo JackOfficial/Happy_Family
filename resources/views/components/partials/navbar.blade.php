@@ -2,7 +2,7 @@
     x-data="{ mobileMenuOpen: false, scrolled: false }" 
     @scroll.window="scrolled = (window.pageYOffset > 50)"
     :class="scrolled ? 'scrolled-nav py-2' : 'py-3'"
-    class="container-fluid fixed-top px-0 transition-all duration-500 glass-nav"
+    class="container-fluid px-0 transition-all duration-500 glass-nav"
 >
     <div x-show="!scrolled" 
          x-collapse.duration.500ms 
@@ -69,4 +69,3 @@
 </nav>
     </div>
 </div>
-

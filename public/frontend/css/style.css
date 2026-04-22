@@ -29,11 +29,22 @@
 
 /* --- 1. CORE & TYPOGRAPHY --- */
 body { 
+    padding-top: 0 !important;
+    margin-top: 0 !important;
     font-family: 'Inter', sans-serif;
     background-color: var(--light-bg);
     color: #2d1a35;
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
+}
+
+header.sticky-top {
+    top: 0 !important;
+    z-index: 1030; /* Ensure it stays above other content */
+}
+
+.navbar {
+    margin-top: 0 !important;
 }
 
 [x-cloak] { display: none !important; }
