@@ -267,17 +267,48 @@ header.scrolled-nav .logo-img {
 }
 
 /* --- 4. BUTTONS & ACTIONS --- */
+/* --- 4. BUTTONS & ACTIONS --- */
+
+/* Base Premium Style (Used by all) */
+.btn-premium, .btn-premium-sm, .btn-premium-lg {
+    position: relative;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    z-index: 1;
+}
+
+/* Shimmer Effect for all Premium Buttons */
+.btn-premium::before, .btn-premium-sm::before, .btn-premium-lg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    transition: 0.6s;
+    z-index: -1;
+}
+
+.btn-premium:hover::before, .btn-premium-sm:hover::before, .btn-premium-lg:hover::before {
+    left: 100%;
+}
+
+/* Standard Premium Button */
 .btn-premium {
     background: var(--grad-premium);
     color: white !important;
-    border: none;
     border-radius: var(--radius-pill);
     padding: 16px 40px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 1px;
-    transition: 0.4s;
     box-shadow: 0 10px 20px rgba(99, 16, 132, 0.2);
+    text-decoration: none !important;
 }
 
 .btn-premium:hover {
@@ -286,22 +317,52 @@ header.scrolled-nav .logo-img {
     filter: brightness(1.1);
 }
 
+/* Small Premium Button (Newsletter/Search style) */
 .btn-premium-sm {
     background: var(--grad-premium);
     color: white !important;
-    border: none;
     border-radius: 0 50px 50px 0 !important;
     padding: 0 30px;
     font-weight: 700;
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .btn-premium-sm:hover {
     filter: brightness(1.1);
     box-shadow: 0 5px 15px rgba(236, 64, 158, 0.3);
+}
+
+/* Large Hero/CTA Button (The "Join Our Family" Style) */
+.btn-premium-lg {
+    background: var(--grad-premium);
+    color: white !important;
+    border-radius: var(--radius-pill);
+    padding: 18px 45px;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    box-shadow: var(--shadow-premium);
+    text-decoration: none !important;
+}
+
+.btn-premium-lg:hover {
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 0 20px 40px rgba(236, 64, 158, 0.4);
+}
+
+/* Heartbeat Animation for Icons */
+.btn-premium-lg:hover i, .btn-premium:hover i {
+    animation: heartbeat 1s infinite;
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    15% { transform: scale(1.3); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.3); }
+    70% { transform: scale(1); }
 }
 
 /* --- 5. FOOTER & NEWSLETTER --- */
