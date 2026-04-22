@@ -653,8 +653,7 @@
 
             <div class="col-xl-7">
                 <div class="content-box ps-xl-5">
-                    <span class="badge-impact text-uppercase mb-3 d-inline-block tracking-widest">Our Heritage of Compassion</span>
-                    <h2 class="display-5 mb-4 display-font fw-bold">
+                   <h2 class="display-5 mb-4 display-font fw-bold">
                         Restoring Hope, Transforming <span class="text-gradient">Futures</span>
                     </h2>
                     
