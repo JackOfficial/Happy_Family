@@ -116,7 +116,9 @@ Route::get('/gallery', [Gallery::class, 'index'])->name('gallery.index');
 Route::get('/gallery/{photo}', [Gallery::class, 'show'])->name('gallery.show');
 Route::get('/gallery/category/{slug}', [Gallery::class, 'filter'])->name('gallery.filter');
 
-Route::get('/careers', [CareerController::class, 'index']);
+Route::get('/careers', [CareerController::class, 'index'])->name('careers.index');
+Route::get('/careers/{slug}', [CareerController::class, 'show'])->name('careers.show');
+
 Route::get('/job-details/{id}', [CareersController::class, 'jobDetails']);
 Route::get('/apply/{id}', [CareersController::class, 'apply'])->name('apply');
 Route::post('/apply', [CareersController::class, 'store']);
@@ -183,3 +185,4 @@ Route::get('/test-admin', function () {
 Route::get('/checkifemailisverified', function () {
     return "You have verified";
 })->middleware(['verified']);
+
