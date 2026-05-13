@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -62,6 +63,14 @@ class Application extends Model
     {
         return $this->belongsTo(Country::class);
     }
+
+//     // You can add this inside your model if you want perfect formatting:
+// protected function firstName(): Attribute
+// {
+//     return Attribute::make(
+//         set: fn (string $value) => ucfirst(strtolower($value)),
+//     );
+// }
 
     /**
      * Polymorphic Relationship: Get all files (CV, IDs, etc.)
