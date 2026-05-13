@@ -116,11 +116,11 @@ Route::get('/gallery', [Gallery::class, 'index'])->name('gallery.index');
 Route::get('/gallery/{photo}', [Gallery::class, 'show'])->name('gallery.show');
 Route::get('/gallery/category/{slug}', [Gallery::class, 'filter'])->name('gallery.filter');
 
-Route::get('/career', [CareerController::class, 'index']);
+Route::get('/careers', [CareerController::class, 'index']);
 Route::get('/job-details/{id}', [CareersController::class, 'jobDetails']);
 Route::get('/apply/{id}', [CareersController::class, 'apply'])->name('apply');
 Route::post('/apply', [CareersController::class, 'store']);
-Route::resource('careers', Careers::class);
+// Route::resource('careers', Careers::class);
 Route::resource('applications', ApplicationsController::class);
 Route::get('/export-excel', [ExportsController::class, 'exportAll']);
 Route::get('/export-excel/{id}', [ExportsController::class, 'exportSelected']);
