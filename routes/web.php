@@ -140,7 +140,7 @@ Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
 
 //Admin and super admin Routes
 Route::middleware(['auth', 'role:admin|super-admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/admin/dashboard', fn() => 'Admin Dashboard')->name('admin.dashboard');
+   // Route::get('/admin/dashboard', fn() => 'Admin Dashboard')->name('admin.dashboard');
 
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
     Route::post('/add-task', [AdminController::class, 'addTask'])->name('addTask');
