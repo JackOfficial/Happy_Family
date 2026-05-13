@@ -14,7 +14,7 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right font-inter">
-                    <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/admin">Home</a></li>
                     <li class="breadcrumb-item active">Applications</li>
                 </ol>
             </div>
