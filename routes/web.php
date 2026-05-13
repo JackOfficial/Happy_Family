@@ -31,6 +31,7 @@ use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\Admin\ApplicationsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Admin\OrganizationController;
+use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CauseController as Causes;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EventController as Events;
@@ -115,7 +116,7 @@ Route::get('/gallery', [Gallery::class, 'index'])->name('gallery.index');
 Route::get('/gallery/{photo}', [Gallery::class, 'show'])->name('gallery.show');
 Route::get('/gallery/category/{slug}', [Gallery::class, 'filter'])->name('gallery.filter');
 
-Route::get('/career', [CareersController::class, 'index']);
+Route::get('/career', [CareerController::class, 'index']);
 Route::get('/job-details/{id}', [CareersController::class, 'jobDetails']);
 Route::get('/apply/{id}', [CareersController::class, 'apply'])->name('apply');
 Route::post('/apply', [CareersController::class, 'store']);
