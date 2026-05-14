@@ -25,7 +25,7 @@
             </div>
 
             <div class="col-md-6 col-lg-5 col-xl-4 ms-auto">
-                <livewire:snapshot/>
+                {{-- <livewire:snapshot/> --}}
             </div>
         </div>
     </div>
