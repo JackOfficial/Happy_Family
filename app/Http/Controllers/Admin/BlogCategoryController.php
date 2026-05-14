@@ -3,118 +3,105 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\BlogCategory;
 use Illuminate\Http\Request;
-use App\Models\Blog_categories;
-use Inertia\Inertia;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class BlogCategoryController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the categories.
      */
     public function index()
     {
-        $blogCategories = Blog_categories::all();
-        return view('admin.manage.blog-categories', compact('blogCategories'));
+        $categories = BlogCategory::with('categoryPhoto')->latest()->paginate(15);
+        return view('admin.blog_categories.index', compact('categories'));
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('admin.create.blog-category');
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Store a newly created category in storage.
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'category' => 'required|string|max:255',
-            'photo' => 'nullable'
+        $validated = $request->validate([
+            'name'  => 'required|string|max:255|unique:blog_categories,name',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
-        
-        $image_path = null; 
 
-        if ($request->hasFile('photo')) {
-            $image_path = $request->file('photo')->store('images/blog categories', 'public');
-             }
-             
-             $blogCategory = Blog_categories::create([
-                'blog_category' => $request->input('category'),
-                'photo' => $image_path,
-            ]);
+        return DB::transaction(function () use ($request, $validated) {
+            $validated['slug'] = Str::slug($validated['name']);
+            
+            // Create the category (the 'photo' column in migration will remain null/empty)
+            $category = BlogCategory::create($validated);
 
-        if($blogCategory){
-            return redirect('/admin/blogCategories')->with('message', 'Blog category saved successfully!');
-        }
-        else{
-            return redirect()->back()->with('message', 'Blog category could not be saved. Try again!');
-          }
+            // Handle the Polymorphic Photo
+            if ($request->hasFile('photo')) {
+                $path = $request->file('photo')->store('uploads/categories', 'public');
+                $category->categoryPhoto()->create([
+                    'file_path' => $path
+                ]);
+            }
+
+            return redirect()->route('admin.blog-categories.index')
+                ->with('success', 'Category created successfully.');
+        });
     }
 
     /**
-     * Display the specified resource.
+     * Show the form for editing.
      */
-    public function show(string $id)
+    public function edit(BlogCategory $blogCategory)
     {
-        //
+        $blogCategory->load('categoryPhoto');
+        return view('admin.blog_categories.edit', compact('blogCategory'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update the specified category.
      */
-    public function edit(string $id)
+    public function update(Request $request, BlogCategory $blogCategory)
     {
-        $category = Blog_categories::where('id', $id)
-        ->first();
-        return view('admin.edit.blog-category', compact('category'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $request->validate([
-            'category' => 'required|string|max:255',
+        $validated = $request->validate([
+            'name'  => 'required|string|max:255|unique:blog_categories,name,' . $blogCategory->id,
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
-       
-        $image_path = null; 
 
-        if ($request->hasFile('photo')) {
-            $request->validate([
-                'photo' => 'required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048',
-            ]);
-            $image_path = $request->file('photo')->store('images/blog categories', 'public');
-             }
+        return DB::transaction(function () use ($request, $blogCategory, $validated) {
+            $validated['slug'] = Str::slug($validated['name']);
+            $blogCategory->update($validated);
 
-             $blogCategory = Blog_categories::where('id', $id)->update([
-                'blog_category' => $request->input('category'),
-                'photo' => $image_path,
-            ]);
+            if ($request->hasFile('photo')) {
+                // Remove old polymorphic photo if it exists
+                if ($blogCategory->categoryPhoto) {
+                    Storage::disk('public')->delete($blogCategory->categoryPhoto->file_path);
+                    $blogCategory->categoryPhoto()->delete();
+                }
 
-        if($blogCategory){
-            return redirect('/admin/blogCategories')->with('message', 'Blog category updated successfully!');
-        }
-        else{
-            return redirect()->back()->with('message', 'Blog category could not be updated. Try again!');
-          }
+                $path = $request->file('photo')->store('uploads/categories', 'public');
+                $blogCategory->categoryPhoto()->create([
+                    'file_path' => $path
+                ]);
+            }
+
+            return redirect()->route('admin.blog-categories.index')
+                ->with('success', 'Category updated successfully.');
+        });
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified category (Soft Delete).
      */
-    public function destroy(string $id)
+    public function destroy(BlogCategory $blogCategory)
     {
-        $blogCategory = Blog_categories::where('id', $id)->delete();
-        if($blogCategory){
-          return redirect()->back()->with('message', 'Blog category deleted successfully');
-        }
-        else{
-            return redirect()->back()->with('message', 'Blog category could not be deleted');
-        }
+        return DB::transaction(function () use ($blogCategory) {
+            // We usually keep the photo file on SoftDelete, 
+            // but if you want to purge it, do it here.
+            $blogCategory->delete();
+
+            return redirect()->route('admin.blog-categories.index')
+                ->with('success', 'Category moved to trash.');
+        });
     }
 }

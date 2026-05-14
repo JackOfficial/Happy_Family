@@ -29,6 +29,7 @@ use App\Http\Controllers\VolunteerController;
 use App\Http\Controllers\SampleController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\Admin\ApplicationsController;
+use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\JobCategoryController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\PageController;
@@ -156,7 +157,7 @@ Route::middleware(['auth', 'role:admin|super-admin'])->prefix('admin')->name('ad
     Route::resource('jobs', JobController::class);
     Route::resource('job-categories', JobCategoryController::class);
 
-    Route::resource('blogCategories', BlogCategoriesController::class);
+    Route::resource('blog-categories', BlogCategoryController::class);
     Route::resource('blogs', BlogController::class);
     Route::resource('gallery', GalleryController::class);
     Route::resource('projects', ProjectController::class);
