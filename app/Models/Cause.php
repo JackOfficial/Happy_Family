@@ -45,6 +45,12 @@ class Cause extends Model
     {
         return $this->hasMany(Story::class);
     }
+
+    public function blogs(): HasMany
+    {
+        // Ensure 'cause_id' matches the foreign key column in your blogs table
+        return $this->hasMany(Blog::class, 'cause_id');
+    }
     
     public function projects()
     {
