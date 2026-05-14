@@ -21,6 +21,14 @@ class BlogCategoryController extends Controller
     }
 
     /**
+     * Show the form for creating a new category.
+     */
+    public function create()
+    {
+        return view('admin.blog_categories.create');
+    }
+
+    /**
      * Store a newly created category in storage.
      */
     public function store(Request $request)
@@ -33,7 +41,7 @@ class BlogCategoryController extends Controller
         return DB::transaction(function () use ($request, $validated) {
             $validated['slug'] = Str::slug($validated['name']);
             
-            // Create the category (the 'photo' column in migration will remain null/empty)
+            // Create the category
             $category = BlogCategory::create($validated);
 
             // Handle the Polymorphic Photo
@@ -50,7 +58,7 @@ class BlogCategoryController extends Controller
     }
 
     /**
-     * Show the form for editing.
+     * Show the form for editing the specified category.
      */
     public function edit(BlogCategory $blogCategory)
     {
@@ -59,7 +67,7 @@ class BlogCategoryController extends Controller
     }
 
     /**
-     * Update the specified category.
+     * Update the specified category in storage.
      */
     public function update(Request $request, BlogCategory $blogCategory)
     {
@@ -91,13 +99,11 @@ class BlogCategoryController extends Controller
     }
 
     /**
-     * Remove the specified category (Soft Delete).
+     * Remove the specified category from storage (Soft Delete).
      */
     public function destroy(BlogCategory $blogCategory)
     {
         return DB::transaction(function () use ($blogCategory) {
-            // We usually keep the photo file on SoftDelete, 
-            // but if you want to purge it, do it here.
             $blogCategory->delete();
 
             return redirect()->route('admin.blog-categories.index')
