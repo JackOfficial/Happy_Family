@@ -108,13 +108,6 @@ public function index()
         ->paginate(6);
         return Inertia::render('Blogs', compact('blogs', 'keyword')); 
     }
-    function blogs(){
-        $blogs = Blogs::join('blog_categories', 'blogs.blog_category_id', 'blog_categories.id')
-        ->join('bloggers', 'blogs.blogger_id', 'bloggers.id')
-        ->select('blogs.*', 'blog_categories.blog_category', 'bloggers.first_name', 'bloggers.last_name')
-        ->paginate(6);
-        return view('blogs', compact('blogs')); 
-    }
 
     function blog_category($id){
         $blogs = Blogs::join('blog_categories', 'blogs.blog_category_id', 'blog_categories.id')

@@ -34,6 +34,7 @@ use App\Http\Controllers\Admin\JobCategoryController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Admin\OrganizationController;
+use App\Http\Controllers\BlogController as Blogs;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CauseController as Causes;
 use App\Http\Controllers\DonationController;
@@ -50,10 +51,10 @@ use App\Models\JobCategory;
 Route::get('/', [PageController::class, 'index']);
 Route::get('/about', [PageController::class, 'about']);
 Route::get('/gallery', [PageController::class, 'gallery']);
-Route::get('/blogs', [PageController::class, 'blogs']);
-Route::get('/blog/{title}', [PageController::class, 'blog']);
-Route::get('/blogs/{id}', [PageController::class, 'blog_category']);
 
+Route::get('/blogs', [Blogs::class, 'index'])->name('blogs.index');
+Route::get('/blog/{slug}', [Blogs::class, 'show'])->name('blogs.show');
+Route::get('/blogs/category/{cause:slug}', [Blogs::class, 'category'])->name('blogs.category');
 
 Route::controller(Causes::class)->group(function () {
     Route::get('/causes', 'index')->name('causes.index');
