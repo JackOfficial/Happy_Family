@@ -15,10 +15,11 @@ class Blog extends Model
 
     protected $fillable = [
         'user_id',
-        'cause_id',
+        'cause_id', // This acts as your category_id
         'title',
         'slug',
-        'content', // Removed 'photo' as you are using the morph relationship
+        'content',
+        'status', // Added this in case you want 'draft' vs 'published'
     ];
 
     /**
@@ -30,15 +31,16 @@ class Blog extends Model
     }
 
     /**
-     * Get the cause associated with the blog.
+     * Get the cause (Category) associated with the blog.
      */
     public function cause(): BelongsTo
     {
-        return $this->belongsTo(Cause::class);
+        // Ensure your 'Cause' model is also set up correctly
+        return $this->belongsTo(Cause::class, 'cause_id');
     }
 
     /**
-     * Get the blog's photo (Polymorphic).
+     * Get the blog's polymorphic photo.
      */
     public function blogPhoto(): MorphOne
     {

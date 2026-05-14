@@ -228,19 +228,7 @@
 
         <!-- Content Management -->
         <li class="nav-header">CONTENT MANAGEMENT</li>
-
-        <!-- Blogs -->
-        <li class="nav-item has-treeview">
-          <a href="#" class="nav-link">
-            <i class="nav-icon fas fa-newspaper"></i>
-            <p>Blogs <i class="right fas fa-angle-left"></i></p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item"><a href="{{ route('admin.blogs.index') }}" class="nav-link"><i class="fa-solid fa-newspaper nav-icon"></i><p>All Blogs</p></a></li>
-            <li class="nav-item"><a href="{{ route('admin.blog-categories.index') }}" class="nav-link"><i class="fas fa-tags nav-icon"></i><p>Blog Categories</p></a></li>
-          </ul>
-        </li>
-
+        <li class="nav-item"><a href="{{ route('admin.blogs.index') }}" class="nav-link"><i class="nav-icon fas fa-book-open"></i><p>Blogs</p></a></li>
         <li class="nav-item"><a href="/admin/stories" class="nav-link"><i class="nav-icon fas fa-book-open"></i><p>Stories</p></a></li>
         <li class="nav-item"><a href="/admin/causes" class="nav-link"><i class="nav-icon fas fa-hand-holding-heart"></i><p>Causes</p></a></li>
         <li class="nav-item"><a href="/admin/projects" class="nav-link"><i class="nav-icon fas fa-calendar-alt"></i><p>Projects</p></a></li>
