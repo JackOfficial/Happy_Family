@@ -11,6 +11,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-wx3ZPVD6pK+... (truncated) ..." crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
   <!-- Tempusdominus Bootstrap 4 -->
   <link rel="stylesheet" href="{{ asset('back/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
   <!-- iCheck -->
@@ -24,7 +26,7 @@
   <!-- Daterange picker -->
   <link rel="stylesheet" href="{{ asset('back/plugins/daterangepicker/daterangepicker.css') }}">
   <!-- summernote -->
-  <link rel="stylesheet" href="{{ asset('back/plugins/summernote/summernote-bs4.min.css') }}">
+  {{-- <link rel="stylesheet" href="{{ asset('back/plugins/summernote/summernote-bs4.min.css') }}"> --}}
  <!-- DataTables -->
  <link rel="stylesheet" href="{{ asset('back/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
  <link rel="stylesheet" href="{{ asset('back/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
@@ -356,7 +358,7 @@
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{{ asset('back/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 <!-- Summernote -->
-<script src="{{ asset('back/plugins/summernote/summernote-bs4.min.js') }}"></script>
+{{-- <script src="{{ asset('back/plugins/summernote/summernote-bs4.min.js') }}"></script> --}}
 <!-- overlayScrollbars -->
 <script src="{{ asset('back/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 <!-- AdminLTE App -->
@@ -378,6 +380,7 @@
 <script src="{{ asset('back/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('back/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('back/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>

@@ -38,24 +38,21 @@
 
                             <div class="form-group">
                                 <label for="description">Job Description <span class="text-danger">*</span></label>
-                                <textarea name="description" rows="10" class="form-control @error('description') is-invalid @enderror" 
-                                          placeholder="Describe the role and responsibilities...">{{ old('description') }}</textarea>
-                                @error('description') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                                <textarea name="description" id="summernote_description" class="summernote @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+                                @error('description') <span class="text-danger small">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="requirements">Requirements</label>
-                                        <textarea name="requirements" rows="5" class="form-control" 
-                                                  placeholder="Qualifications, skills, experience...">{{ old('requirements') }}</textarea>
+                                        <textarea name="requirements" id="summernote_requirements" class="summernote">{{ old('requirements') }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="benefits">Benefits</label>
-                                        <textarea name="benefits" rows="5" class="form-control" 
-                                                  placeholder="Insurance, transport, stipends...">{{ old('benefits') }}</textarea>
+                                        <textarea name="benefits" id="summernote_benefits" class="summernote">{{ old('benefits') }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -104,7 +101,6 @@
 
                             <hr>
 
-                            <!-- Alpine.js Toggle for Status -->
                             <div class="form-group d-flex align-items-center" x-data="{ active: true }">
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" name="is_active" class="custom-control-input" id="isActive" x-model="active" checked>
@@ -113,7 +109,7 @@
                                 <span class="ml-auto badge" :class="active ? 'badge-success' : 'badge-secondary'" x-text="active ? 'Visible' : 'Draft'"></span>
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-block font-jost py-2 mt-3">
+                            <button type="submit" class="btn btn-primary btn-block font-jost py-2 mt-3 shadow-sm">
                                 <i class="fas fa-paper-plane mr-1"></i> Publish Vacancy
                             </button>
                         </div>
@@ -133,9 +129,35 @@
 @endsection
 
 @push('styles')
+<!-- Summernote CSS -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
 <style>
     .font-jost { font-family: 'Jost', sans-serif; }
     .font-inter { font-family: 'Inter', sans-serif; }
     .card-header { border-bottom: 1px solid #f4f4f4; }
+    .note-editor.note-frame { border: 1px solid #ced4da; box-shadow: none; border-radius: 0.25rem; }
 </style>
+@endpush
+
+@push('scripts')
+<!-- Summernote JS -->
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.summernote').summernote({
+            placeholder: 'Enter detailed information here...',
+            tabsize: 2,
+            height: 200,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+    });
+</script>
 @endpush
