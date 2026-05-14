@@ -253,7 +253,19 @@
 
         <li class="nav-item"><a href="/admin/careers" class="nav-link"><i class="nav-icon fas fa-briefcase"></i><p>Careers</p></a></li>
         <li class="nav-item"><a href="/admin/volunteers" class="nav-link"><i class="nav-icon fas fa-hand-paper"></i><p>Volunteers</p></a></li>
-        <li class="nav-item"><a href="/admin/applications" class="nav-link"><i class="nav-icon fas fa-gear"></i><p>Applications</p></a></li>
+        
+        <!-- Jobs -->
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Jobs <i class="fas fa-angle-left right"></i></p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item"><a href="/admin/applications" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Applications</p></a></li>
+            <li class="nav-item"><a href="{{ route('admin.jobs.index') }}" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Job</p></a></li>
+            <li class="nav-item"><a href="{{ route('admin.job-categories.index') }}" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Job Categories</p></a></li>
+           </ul>
+        </li>
 
         <!-- Mailbox -->
         <li class="nav-item has-treeview">

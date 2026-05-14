@@ -15,7 +15,7 @@ class CareersController extends Controller
      */
     public function index()
     {
-        $careers = Careers::join('jobtypes', 'careers.jobtype_id', 'jobtypes.id')
+        $careers = Career::join('jobtypes', 'careers.jobtype_id', 'jobtypes.id')
         ->select('careers.*', 'jobtypes.jobtype')
         ->get();
         return Inertia::render('Admin/Manage/Careers', compact('careers')); 
