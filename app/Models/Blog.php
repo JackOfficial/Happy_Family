@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Blog extends Model
 {
@@ -15,29 +18,46 @@ class Blog extends Model
         'cause_id',
         'title',
         'slug',
-        'photo',
-        'content',
+        'content', // Removed 'photo' as you are using the morph relationship
     ];
-    
-    public function user(){
+
+    /**
+     * Get the user that authored the blog.
+     */
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
-    
-    public function cause(){
+
+    /**
+     * Get the cause associated with the blog.
+     */
+    public function cause(): BelongsTo
+    {
         return $this->belongsTo(Cause::class);
     }
-    
-    public function blogPhoto()
-{
-    return $this->morphOne(Photo::class, 'imageable');
-}
-    
-    public function likes()
-{
-    return $this->hasMany(Like::class);
-}
 
-public function comments(){
-    return $this->hasMany(Comment::class);
-}
+    /**
+     * Get the blog's photo (Polymorphic).
+     */
+    public function blogPhoto(): MorphOne
+    {
+        return $this->morphOne(Photo::class, 'imageable');
+    }
+
+    /**
+     * Get the likes for the blog.
+     */
+    public function likes(): HasMany
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    /**
+     * Get the comments for the blog.
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

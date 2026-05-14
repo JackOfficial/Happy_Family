@@ -236,9 +236,8 @@
             <p>Blogs <i class="right fas fa-angle-left"></i></p>
           </a>
           <ul class="nav nav-treeview">
-            <li class="nav-item"><a href="/admin/bloggers" class="nav-link"><i class="fas fa-users"></i><p>Bloggers</p></a></li>
-            <li class="nav-item"><a href="/admin/blogCategories" class="nav-link"><i class="fas fa-tags nav-icon"></i><p>Blog Categories</p></a></li>
             <li class="nav-item"><a href="/admin/blogs" class="nav-link"><i class="fa-solid fa-newspaper nav-icon"></i><p>All Blogs</p></a></li>
+            <li class="nav-item"><a href="/admin/blogCategories" class="nav-link"><i class="fas fa-tags nav-icon"></i><p>Blog Categories</p></a></li>
           </ul>
         </li>
 
