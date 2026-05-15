@@ -155,10 +155,6 @@ public function index()
         return view('donation');  
     }
 
-    function volunteer(){
-        return view('volunteer');  
-    }
-
     function post(Request $request){
         $request->validate([
           'comment' => 'required|string'

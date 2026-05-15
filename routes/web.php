@@ -78,7 +78,6 @@ Route::controller(Events::class)->group(function () {
 
 Route::get('/cause/{id}', [PageController::class, 'cause']);
 Route::get('/donate', [PageController::class, 'donate']);
-Route::get('/volunteer', [PageController::class, 'volunteer']);
 
 Route::get('/application-sent', [PageController::class, 'application_sent']);
 Route::get('blogs/search/{keyword}', [PageController::class, 'search']);
@@ -86,6 +85,8 @@ Route::resource('contact', ContactController::class);
 Route::resource('subscribe', SubscriptionsController::class);
 
 Route::group(['prefix' => 'volunteer', 'as' => 'volunteer.'], function () {
+
+    Route::get('/volunteer', [VolunteerController::class, 'index'])->name('index');
     
     // Display the application form
     Route::get('/apply', [VolunteerController::class, 'create'])->name('apply');

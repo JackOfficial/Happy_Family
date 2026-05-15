@@ -11,6 +11,10 @@ use App\Mail\VolunteerApplicationSent;
 
 class VolunteerController extends Controller
 {
+    public function index(){
+        return view('volunteers.index'); 
+    }
+
     /**
      * Show the volunteer application form.
      */
