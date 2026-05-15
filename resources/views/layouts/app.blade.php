@@ -62,8 +62,8 @@
     <script src="{{ asset('frontend/lib/owlcarousel/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('frontend/lib/lightbox/js/lightbox.min.js') }}"></script>
     
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
+    {{-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script> --}}
+   @livewireScripts
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const observerOptions = { threshold: 0.1 };
@@ -78,8 +78,7 @@
             document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
         });
     </script>
-
+ 
     @stack('scripts')
-    @livewireScripts
 </body>
 </html>
