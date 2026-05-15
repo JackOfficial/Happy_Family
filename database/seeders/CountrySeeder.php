@@ -4,52 +4,41 @@ namespace Database\Seeders;
 
 use App\Models\Country;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class CountrySeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Clear existing to avoid duplicates if necessary
-        // Country::truncate(); 
+        $countries = [
+            ['iso_code' => 'RW', 'name' => 'Rwanda', 'phone_code' => '250'],
+            ['iso_code' => 'KE', 'name' => 'Kenya', 'phone_code' => '254'],
+            ['iso_code' => 'UG', 'name' => 'Uganda', 'phone_code' => '256'],
+            ['iso_code' => 'TZ', 'name' => 'Tanzania', 'phone_code' => '255'],
+            ['iso_code' => 'BI', 'name' => 'Burundi', 'phone_code' => '257'],
+            ['iso_code' => 'CD', 'name' => 'DR Congo', 'phone_code' => '243'],
+            ['iso_code' => 'US', 'name' => 'United States', 'phone_code' => '1'],
+            ['iso_code' => 'GB', 'name' => 'United Kingdom', 'phone_code' => '44'],
+            ['iso_code' => 'CA', 'name' => 'Canada', 'phone_code' => '1'],
+            ['iso_code' => 'FR', 'name' => 'France', 'phone_code' => '33'],
+            ['iso_code' => 'DE', 'name' => 'Germany', 'phone_code' => '49'],
+            ['iso_code' => 'IN', 'name' => 'India', 'phone_code' => '91'],
+            ['iso_code' => 'CN', 'name' => 'China', 'phone_code' => '86'],
+            ['iso_code' => 'AE', 'name' => 'United Arab Emirates', 'phone_code' => '971'],
+            ['iso_code' => 'ZA', 'name' => 'South Africa', 'phone_code' => '27'],
+            ['iso_code' => 'NG', 'name' => 'Nigeria', 'phone_code' => '234'],
+        ];
 
-        try {
-            // Added a User-Agent and a longer timeout
-            $response = Http::withHeaders([
-                'Accept' => 'application/json',
-                'User-Agent' => 'Laravel-App-Seeder'
-            ])
-            ->timeout(60) 
-            ->get('https://restcountries.com/v3.1/all');
-
-            if ($response->successful()) {
-                $countries = $response->json();
-
-                foreach ($countries as $data) {
-                    // Extracting phone code safely
-                    $root = $data['idd']['root'] ?? '';
-                    $suffix = $data['idd']['suffixes'][0] ?? '';
-                    $fullPhoneCode = $root . $suffix;
-
-                    Country::updateOrCreate(
-                        ['iso_code' => $data['cca2']], 
-                        [
-                            'name' => $data['name']['common'],
-                            'phone_code' => $fullPhoneCode ?: null,
-                            'is_active' => true,
-                        ]
-                    );
-                }
-                
-                $this->command->info('Countries seeded successfully!');
-            } else {
-                $this->command->error('API Request failed with status: ' . $response->status());
-            }
-
-        } catch (\Exception $e) {
-            Log::error('Seeder Error: ' . $e->getMessage());
-            $this->command->error('Error seeding countries: ' . $e->getMessage());
+        foreach ($countries as $country) {
+            Country::updateOrCreate(
+                ['iso_code' => $country['iso_code']],
+                [
+                    'name' => $country['name'],
+                    'phone_code' => $country['phone_code'],
+                    'is_active' => true,
+                ]
+            );
         }
+
+        $this->command->info('Successfully seeded ' . count($countries) . ' countries.');
     }
 }
