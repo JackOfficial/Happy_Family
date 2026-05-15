@@ -11,8 +11,13 @@ use App\Mail\VolunteerApplicationSent;
 
 class VolunteerController extends Controller
 {
-    public function index(){
-        return view('volunteers.index'); 
+    public function index()
+    {
+        $volunteers = Volunteer::with(['country', 'address'])
+        ->latest()
+        ->paginate(15);
+
+        return view('volunteers.index', compact('volunteers'));
     }
 
     /**
