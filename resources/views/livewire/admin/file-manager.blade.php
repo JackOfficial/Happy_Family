@@ -3,7 +3,6 @@
      x-data="{ 
         showModal: false, 
         isDragging: false, 
-        selectedCount: @entangle('selectedFiles').live,
      }" 
      @show-file-modal.window="showModal = true" 
      @hide-file-modal.window="showModal = false" 
