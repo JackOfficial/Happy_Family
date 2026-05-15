@@ -3,7 +3,12 @@
      x-data="{ 
         showModal: false, 
         isDragging: false, 
-     }">
+        selectedCount: @entangle('selectedFiles').live, 
+        copyToClipboard(url) { 
+            navigator.clipboard.writeText(url); 
+            $dispatch('notify', {type: 'info', message: 'URL copied to clipboard!'}); 
+        } 
+     }" x-cloak>
     
      <div class="file-manager-wrapper container-fluid px-3">
         <!-- Header Actions -->
