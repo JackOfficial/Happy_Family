@@ -5,13 +5,15 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Application;
+use App\Models\Country; // Ensure this is imported
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CareerApplicationForm extends Component
 {
     use WithFileUploads;
 
-    // Data passed from parent
+    // Data passed from parent or loaded in mount
     public $job;
     public $countries;
 
@@ -28,27 +30,38 @@ class CareerApplicationForm extends Component
     // File upload
     public $cv;
 
-    public function mount($job, $countries)
+    /**
+     * Initialize the component
+     */
+    public function mount($job, $countries = null)
     {
         $this->job = $job;
-        $this->countries = $countries;
+        
+        // If countries aren't passed from the parent, load active ones here
+        $this->countries = $countries ?? Country::where('is_active', true)->orderBy('name')->get();
     }
 
+    /**
+     * Validation Rules
+     */
     protected function rules()
     {
         return [
-            'first_name' => 'required|string|max:255',
-            'last_name'  => 'required|string|max:255',
-            'email'      => 'required|email|max:255',
-            'phone'      => 'required|string|max:25',
-            'country_id' => 'required|exists:countries,id',
-            'gender'     => 'nullable|string',
+            'first_name'   => 'required|string|max:255',
+            'last_name'    => 'required|string|max:255',
+            'email'        => 'required|email|max:255',
+            'phone'        => 'required|string|max:25',
+            'country_id'   => 'required|exists:countries,id',
+            'gender'       => 'nullable|string',
             'linkedin_url' => 'nullable|url',
             'additional_notes' => 'nullable|string|max:2000',
-            'cv'         => 'required|mimes:pdf,doc,docx|max:10240', // 10MB limit
+            'cv'           => 'required|mimes:pdf,doc,docx|max:10240', // 10MB limit
         ];
     }
 
+    /**
+     * Process Application Submission
+     */
     public function save()
     {
         $this->validate();
@@ -69,20 +82,20 @@ class CareerApplicationForm extends Component
                     'status'           => 'pending',
                 ]);
 
-                // 2. Handle Polymorphic Attachment
+                // 2. Handle Polymorphic Attachment (CV)
                 if ($this->cv) {
+                    // Store on private disk for security
                     $path = $this->cv->store('applications/cvs', 'private');
 
                     $application->attachments()->create([
                         'file_path' => $path,
                         'file_name' => $this->cv->getClientOriginalName(),
                         'file_type' => 'cv',
-                        // Add other fields required by your Attachment model migration
                     ]);
                 }
             });
 
-            session()->flash('message', 'Application for ' . $this->job->title . ' submitted successfully!');
+            session()->flash('message', "Your application for {$this->job->title} was submitted successfully!");
             
             // Reset form fields
             $this->reset([
@@ -92,8 +105,8 @@ class CareerApplicationForm extends Component
             ]);
 
         } catch (\Exception $e) {
-            // Log the error if needed: Log::error($e->getMessage());
-            $this->addError('application_error', 'Something went wrong. Please try again later.');
+            Log::error('Job Application Error: ' . $e->getMessage());
+            $this->addError('application_error', 'There was a problem submitting your application. Please try again.');
         }
     }
 
