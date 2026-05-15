@@ -24,13 +24,13 @@ class ContactComponent extends Component
             'message' => 'required|string|min:10',
         ]);
 
-        try {
+        //try {
             // 2. Create the contact record in the database
             $contact = Contact::create($validatedData);
 
             if ($contact) {
                 // 3. Send the notification email to your Gmail
-                $toMail = "musengimanajacques@gmail.com";
+                $toMail = "info@happyfamilyrwanda.org";
                 
                 // We pass the $contact object directly for a cleaner Mailable
                 Mail::to($toMail)->send(new ContactMail($contact));
@@ -41,12 +41,13 @@ class ContactComponent extends Component
                 // 5. Success Feedback
                 session()->flash('contactSuccess', 'Thank you for reaching out! Your message was sent successfully.');
             }
-        } catch (\Exception $e) {
-            // Log the error for debugging on server349
-            Log::error('Contact Form Error: ' . $e->getMessage());
+        //} 
+        // catch (\Exception $e) {
+        //     // Log the error for debugging on server349
+        //     Log::error('Contact Form Error: ' . $e->getMessage());
             
-            session()->flash('contactFail', 'Oops! Something went wrong. Please try again later.');
-        }
+        //     session()->flash('contactFail', 'Oops! Something went wrong. Please try again later.');
+        // }
     }
 
     public function render()
