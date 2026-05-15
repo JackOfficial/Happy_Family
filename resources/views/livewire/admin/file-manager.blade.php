@@ -1,5 +1,4 @@
-<div class="livewire-component-wrapper">
-    <div class="file-manager-container" 
+<div class="file-manager-container" 
      x-data="{ 
         showModal: false, 
         isDragging: false, 
@@ -179,5 +178,4 @@
             </div>
         </div>
      </div>
-    </div>
 </div>
