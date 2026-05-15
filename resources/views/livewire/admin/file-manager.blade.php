@@ -3,9 +3,7 @@
      x-data="{ 
         showModal: false, 
         isDragging: false, 
-     }" 
-     @show-file-modal.window="showModal = true" 
-     @hide-file-modal.window="showModal = false">
+     }">
     
      <div class="file-manager-wrapper container-fluid px-3">
         <!-- Header Actions -->
