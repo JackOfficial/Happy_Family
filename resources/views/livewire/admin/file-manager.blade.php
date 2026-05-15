@@ -1,16 +1,4 @@
-<div class="file-manager-container" 
-     x-data="{ 
-        showModal: false, 
-        isDragging: false, 
-        selectedCount: @entangle('selectedFiles').live, 
-        copyToClipboard(url) { 
-            navigator.clipboard.writeText(url); 
-            $dispatch('notify', {type: 'info', message: 'URL copied to clipboard!'}); 
-        } 
-     }" 
-     @show-file-modal.window="showModal = true" 
-     @hide-file-modal.window="showModal = false" 
-     x-cloak>
+<div>
     
     <div class="file-manager-wrapper container-fluid px-3">
         <!-- Header Actions -->
