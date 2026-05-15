@@ -165,6 +165,8 @@ Route::middleware(['auth', 'role:admin|super-admin'])->prefix('admin')->name('ad
     Route::resource('careers', Careers::class);
     Route::resource('applications', ApplicationsController::class);
     Route::patch('/applications/{application}/status', [ApplicationsController::class, 'updateStatus'])->name('applications.updateStatus');
+    Route::get('/attachments/{application}/download', [ApplicationsController::class, 'downloadAttachment'])->name('attachments.download');
+    
     Route::post('applications/shortlist', [ApplicationsController::class, 'shortlist']);
     Route::post('/applications/export-all', [ApplicationsController::class, 'exportAll']);
     Route::get('/applications/export-selected', [ApplicationsController::class, 'exportSelected']);
