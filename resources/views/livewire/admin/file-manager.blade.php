@@ -8,7 +8,10 @@
             navigator.clipboard.writeText(url); 
             $dispatch('notify', {type: 'info', message: 'URL copied to clipboard!'}); 
         } 
-     }" x-cloak>
+     }" 
+     x-on:show-file-modal.window="showModal = true" 
+     x-on:hide-file-modal.window="showModal = false" 
+     x-cloak>
     
      <div class="file-manager-wrapper container-fluid px-3">
         <!-- Header Actions -->
