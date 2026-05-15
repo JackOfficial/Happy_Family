@@ -7,8 +7,14 @@
     <title>Contact Us</title>
 </head>
 <body>
-   <p>Name: {{ $name }}</p>
-   <p>email: {{ $email }}</p>
-   <p>message: {{ $textMessage }}</p>
+   <h2>New Contact Message</h2>
+<p><strong>From:</strong> {{ $contact->name }} ({{ $contact->email }})</p>
+<p><strong>Phone:</strong> {{ $contact->phone ?? 'N/A' }}</p>
+<p><strong>Subject:</strong> {{ $contact->subject }}</p>
+<hr>
+<p><strong>Message:</strong></p>
+<p>{{ $contact->message }}</p>
+<br>
+<small>Sent from the Happy Family Rwanda contact form.</small>
 </body>
 </html>
