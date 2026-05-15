@@ -66,7 +66,7 @@ class CareerApplicationForm extends Component
     {
         $this->validate();
 
-        try {
+ 
             DB::transaction(function () {
                 // 1. Create Application
                 $application = Application::create([
@@ -104,10 +104,7 @@ class CareerApplicationForm extends Component
                 'additional_notes', 'cv'
             ]);
 
-        } catch (\Exception $e) {
-            Log::error('Job Application Error: ' . $e->getMessage());
-            $this->addError('application_error', 'There was a problem submitting your application. Please try again.');
-        }
+        
     }
 
     public function render()
