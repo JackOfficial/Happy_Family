@@ -104,7 +104,10 @@
                     </div>
 
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.4308441253006!2d30.106314674487564!3d-1.9822218367817352!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca7f61695a5ad%3A0x8991a02cf324e51a!2sHappy%20Family%20Rwanda%20Organization!5e0!3m2!1sen!2srw!4v1778814254528!5m2!1sen!2srw" 
-                    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    class="w-100" 
+                        style="height: 480px; border:0; filter: grayscale(0.2) contrast(1.1);" 
+                        allowfullscreen="" 
+                        loading="lazy"></iframe>
                 </div>
             </div>
         </div>
