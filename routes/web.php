@@ -84,8 +84,20 @@ Route::get('/application-sent', [PageController::class, 'application_sent']);
 Route::get('blogs/search/{keyword}', [PageController::class, 'search']);
 Route::resource('contact', ContactController::class);
 Route::resource('subscribe', SubscriptionsController::class);
-Route::get('/volunteer', [VolunteerController::class, 'index'])->name('volunteer');
-Route::post('/volunteer', [VolunteerController::class, 'store']);
+
+Route::group(['prefix' => 'volunteer', 'as' => 'volunteer.'], function () {
+    
+    // Display the application form
+    Route::get('/apply', [VolunteerController::class, 'create'])->name('apply');
+    
+    // Process the form submission
+    Route::post('/store', [VolunteerController::class, 'store'])->name('store');
+    
+    // Success/Thank You page
+    Route::get('/thanks', [VolunteerController::class, 'thanks'])->name('thanks');
+    
+});
+
 Route::get('/donate', [DonateController::class, 'index']);
 Route::post('/donate', [DonateController::class, 'store'])->name('donation.store');
 
@@ -176,7 +188,7 @@ Route::middleware(['auth', 'role:admin|super-admin'])->prefix('admin')->name('ad
     Route::get('/downloadfiles', [ApplicationsController::class, 'downloadfiles']);
     Route::post('applications/hire', [ApplicationsController::class, 'hire']);
     Route::post('applications/reject', [ApplicationsController::class, 'reject']);
-    Route::resource('volunteers', VolunteersController::class);
+    Route::resource('volunteers', VolunteerController::class);
     Route::resource('events', EventController::class);
     Route::get('/events/{event:slug}/download-pdf', [EventController::class, 'downloadPdf'])->name('events.download-pdf');
     Route::resource('users', UsersController::class);
