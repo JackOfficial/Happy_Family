@@ -86,7 +86,7 @@ Route::resource('subscribe', SubscriptionsController::class);
 
 Route::group(['prefix' => 'volunteer', 'as' => 'volunteer.'], function () {
 
-    Route::get('/volunteer', [VolunteerController::class, 'index'])->name('index');
+    Route::get('/', [VolunteerController::class, 'index'])->name('index');
     
     // Display the application form
     Route::get('/apply', [VolunteerController::class, 'create'])->name('apply');
