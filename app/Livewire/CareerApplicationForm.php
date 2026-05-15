@@ -85,7 +85,7 @@ class CareerApplicationForm extends Component
                 // 2. Handle Polymorphic Attachment (CV)
                 if ($this->cv) {
                     // Store on private disk for security
-                    $path = $this->cv->store('applications/cvs', 'private');
+                    $path = $this->cv->store('applications/cvs', 'public');
 
                     $application->attachments()->create([
                         'file_path' => $path,
