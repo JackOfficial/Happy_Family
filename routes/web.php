@@ -40,6 +40,8 @@ use App\Http\Controllers\CauseController as Causes;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EventController as Events;
 use App\Http\Controllers\ProjectController as Projects;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\Admin\ReportController as Reporting;
 use App\Http\Controllers\StoryController as Stories;
 use App\Models\JobCategory;
 
@@ -83,6 +85,7 @@ Route::get('/application-sent', [PageController::class, 'application_sent']);
 Route::get('blogs/search/{keyword}', [PageController::class, 'search']);
 Route::resource('contact', ContactController::class);
 Route::resource('subscribe', SubscriptionsController::class);
+
 
 Route::group(['prefix' => 'volunteer', 'as' => 'volunteer.'], function () {
 
@@ -154,6 +157,10 @@ Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
     Route::get('/home', [PageController::class, 'index'])->name('home');
     Route::post('/comment', [PagesController::class, 'post']);
     Route::post('/deleteComment/{id}', [PagesController::class, 'deleteComment']);
+
+    Route::get('/my-reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/create', [ReportController::class, 'create'])->name('reports.create');
+    Route::post('/reports', [ReportController::class, 'store'])->name('reports.store');
 });
 
 //Admin and super admin Routes
@@ -195,6 +202,9 @@ Route::middleware(['auth', 'role:admin|super-admin'])->prefix('admin')->name('ad
     Route::resource('users', UsersController::class);
     Route::resource('partners', PartnerController::class);
     Route::resource('organization', OrganizationController::class);
+
+    Route::get('/all-reports', [Reporting::class, 'adminIndex'])->name('admin.reports.index');
+    Route::get('/reports/{report}/download', [Reporting::class, 'download'])->name('admin.reports.download');
 });
 
 //Testing routes

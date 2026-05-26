@@ -126,6 +126,11 @@ public function editor(): BelongsTo
         return $this->hasMany(Donation::class);
     }
 
+    public function reports()
+    {
+        return $this->morphMany(Report::class, 'reportable');
+    }
+
     /* -------------------------------------------------------------------------- */
     /* ACCESSORS                                                                  */
     /* -------------------------------------------------------------------------- */
